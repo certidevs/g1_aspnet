@@ -1,0 +1,1 @@
+// entidad ClothingItem: representa una prenda de vestir, una prenda de ropa
