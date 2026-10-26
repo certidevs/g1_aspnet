@@ -38,6 +38,24 @@ public static class DbInitializer
             displayName: "Usuario de demo",
             password: "User123!",
             role: RoleNames.User);
+
+        // Crear Categories demo
+        if (!context.Categories.Any())
+        {
+            context.Categories.AddRange(
+                new Category { Name = "Pantalones" },
+                new Category { Name = "Camisas" },
+                new Category { Name = "Camisetas" },
+                new Category { Name = "Polos" },
+                new Category { Name = "Americanas" },
+                new Category { Name = "Calzado" }
+                );
+            context.SaveChanges();
+        }
+
+
+        Console.WriteLine($"Categorias en la base de datos: {context.Categories.Count()}");
+
     }
 
     private static async Task EnsureRoleAsync(RoleManager<IdentityRole> roleManager, string roleName)
