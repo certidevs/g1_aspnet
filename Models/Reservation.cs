@@ -19,7 +19,7 @@ public class Reservation
 
     public int ClothingItemId {get; set;}
 
-    public ClothingItem ClothingItem {get; set;} = new();
+    // public ClothingItem ClothingItem {get; set;} = new();
 
 
 }
