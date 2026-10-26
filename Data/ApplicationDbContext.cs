@@ -16,6 +16,11 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
     }
 
+
+    // dbSet
+    public DbSet<Location> Locations => Set<Location>();
+
+
     /// <summary>Configura las columnas añadidas a la tabla de usuarios de Identity.</summary>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
