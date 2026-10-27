@@ -24,11 +24,8 @@ public class ClothingItem
 
     public string? ImageFileName { get; set; } = string.Empty;
 
-    // TODO: Consultar [Required(ErrorMessage = "La categría es obligatoria")]
     public int CategoryId { get; set; }
     public Category? Category;
-
-    // TODO: Consultar [Required(ErrorMessage = "La dirección es obligatoria")]
     
     public int LocationId { get; set; }
     public Location? Location;

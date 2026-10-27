@@ -8,9 +8,9 @@ public class Category
 
     [Required(ErrorMessage = "El nombre es obligatorio")]
     public string Name { get; set; } = string.Empty;
-    
+
     public string Description { get; set; } = string.Empty;
 
     // Relación con ClothingItem
-    // public List<ClothigItem> ClothigItems { get; set; } = new();
+    public List<ClothingItem> ClothingItems { get; set; } = new();
 }
