@@ -19,6 +19,8 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     // dbSet
     public DbSet<Location> Locations => Set<Location>();
+    public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Donation> Donations => Set<Donation>();
 
 
     /// <summary>Configura las columnas añadidas a la tabla de usuarios de Identity.</summary>
