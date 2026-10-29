@@ -22,10 +22,11 @@ public class ClothingItem
     [Required(ErrorMessage = "La talla es obligatoria")]
     public string Size { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "El estgado de la prenda es obligatorio")]
+    [Required(ErrorMessage = "El estado de la prenda es obligatorio")]
     public ItemCondition Condition { get; set; }
 
-    // Status Enum
+    [Required(ErrorMessage = "El estado de reserva es obligatorio")]
+    public ReservationStatus Starus { get; set; }
 
     public string? ImageFileName { get; set; } = string.Empty;
 
