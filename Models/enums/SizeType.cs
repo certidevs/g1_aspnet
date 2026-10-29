@@ -1,13 +1,14 @@
 
+using System.ComponentModel.DataAnnotations;
+
 namespace G1AspNet.Enums;
 
 public enum SizeType
 {
-    XS,
-    S,
-    M,
-    L,
-    XL,
-    XXL,
-    XXXL
+    [Display(Name = "Letra")]
+    Letter,
+    [Display(Name = "Numerico")]
+    Numeric,
+    [Display(Name = "Zapato")]
+    Shoe
 }
