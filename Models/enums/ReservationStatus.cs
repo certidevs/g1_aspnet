@@ -1,7 +1,8 @@
+
+
 using System.ComponentModel.DataAnnotations;
 
-namespace G1AspNet.Models;
-
+namespace G1AspNet.Enums;
 public enum ReservationStatus
 {
         

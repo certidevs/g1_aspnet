@@ -1,5 +1,5 @@
 
-namespace G1AspNet.enums;
+namespace G1AspNet.Enums;
 
 public enum Color
 {
