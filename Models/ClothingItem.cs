@@ -22,7 +22,8 @@ public class ClothingItem
     [Required(ErrorMessage = "La talla es obligatoria")]
     public string Size { get; set; } = string.Empty;
 
-    // Condition Enum
+    [Required(ErrorMessage = "El estgado de la prenda es obligatorio")]
+    public ItemCondition Condition { get; set; }
 
     // Status Enum
 
