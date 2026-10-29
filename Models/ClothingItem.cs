@@ -11,10 +11,10 @@ public class ClothingItem
     public string Name { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "El color es obligatorio")]
-    public Color Color { get; set; }
+    public ClothingColor Color { get; set; }
 
     [Required(ErrorMessage = "El material es obligatorio")]
-    public Material Material { get; set; } 
+    public ClothingMaterial Material { get; set; } 
 
     [Required(ErrorMessage = "El tipo de talla es obligatorio")]
     public SizeType SizeType {get; set; }
