@@ -20,6 +20,7 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     // dbSet
     public DbSet<Location> Locations => Set<Location>();
     public DbSet<Category> Categories => Set<Category>();
+    public DbSet<ClothingItem> ClothingItems => Set<ClothingItem>();
     public DbSet<Donation> Donations => Set<Donation>();
 
 
