@@ -1,4 +1,4 @@
-namespace G1AspNet.Models;
+namespace G1AspNet.Enums;
 using System.ComponentModel.DataAnnotations;
 
 public enum ItemStatus
