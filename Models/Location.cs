@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using G1AspNet.Enums;
+using G1AspNet.Models;
 
 
 public class Location
@@ -17,6 +19,10 @@ public class Location
     public string OpeningHours { get; set; } = string.Empty; // "L-V 9:00-14:00"
 
     public bool IsActive { get; set; } = false; // por defecto false
+
+    public List<ClothingItem> ClothingItems {get; set;} = new();
+    
+    public List<Donation> Donations {get; set;} = new();
 
 
     // relaciones:

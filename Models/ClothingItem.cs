@@ -18,7 +18,7 @@ public class ClothingItem
 
     [Required(ErrorMessage = "El tipo de talla es obligatorio")]
     public SizeType SizeType {get; set; }
-     
+    
     [Required(ErrorMessage = "La talla es obligatoria")]
     public string Size { get; set; } = string.Empty;
 
