@@ -1,5 +1,5 @@
-using System;
 
+using G1AspNet.Enums;
 namespace G1AspNet.Models;
 
 public class Reservation
@@ -13,8 +13,8 @@ public class Reservation
     public DateTime ExpiresAt  {get; set;}
     public string? Notes {get; set;} = string.Empty;
 
-    public string UserId {get; set;} = string.Empty;
-
+    public string? UserId {get; set;} = string.Empty;    
+    
     public ApplicationUser ApplicationUser {get; set;} = new();
 
     public int ClothingItemId {get; set;}

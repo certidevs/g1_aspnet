@@ -1,7 +1,7 @@
 
 namespace G1AspNet.Enums;
 
-public enum Material
+public enum ClothingMaterial
 {
     Cotton,
     Polyester,

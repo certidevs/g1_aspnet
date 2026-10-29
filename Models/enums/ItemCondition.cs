@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace G1AspNet.Models.Enums;
+namespace G1AspNet.Enums;
 
 public enum ItemCondition
 {
