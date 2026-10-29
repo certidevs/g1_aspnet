@@ -1,5 +1,3 @@
-
-
 using System.ComponentModel.DataAnnotations;
 
 namespace G1AspNet.Enums;
@@ -16,8 +14,4 @@ public enum ReservationStatus
         Cancelled,
         [Display( Name = "Expirada")]
         Expired
-
-
-
-
 }
