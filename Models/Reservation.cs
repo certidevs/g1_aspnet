@@ -1,6 +1,5 @@
 
-
-
+using G1AspNet.Enums;
 namespace G1AspNet.Models;
 
 public class Reservation

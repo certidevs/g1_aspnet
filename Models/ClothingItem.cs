@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using G1AspNet.enums;
+using G1AspNet.Enums;
 
 namespace G1AspNet.Models;
 
