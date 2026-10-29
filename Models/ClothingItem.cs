@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using G1AspNet.enums;
 
 namespace G1AspNet.Models;
 
@@ -9,11 +10,14 @@ public class ClothingItem
     [Required(ErrorMessage = "El nombre es obligatorio")]
     public string Name { get; set; } = string.Empty;
 
-    // Color Enum
+    [Required(ErrorMessage = "El color es obligatorio")]
+    public Color Color { get; set; }
 
-    // Material Enum
+    [Required(ErrorMessage = "El material es obligatorio")]
+    public Material Material { get; set; } 
 
-    // SizeType Enum
+    [Required(ErrorMessage = "El tipo de talla es obligatorio")]
+    public SizeType SizeType {get; set; }
      
     [Required(ErrorMessage = "La talla es obligatoria")]
     public string Size { get; set; } = string.Empty;
