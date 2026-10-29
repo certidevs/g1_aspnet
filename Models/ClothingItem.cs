@@ -26,7 +26,7 @@ public class ClothingItem
     public ItemCondition Condition { get; set; }
 
     [Required(ErrorMessage = "El estado de reserva es obligatorio")]
-    public ReservationStatus Starus { get; set; }
+    public ReservationStatus Status { get; set; }
 
     public string? ImageFileName { get; set; } = string.Empty;
 
