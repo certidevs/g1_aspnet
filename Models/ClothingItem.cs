@@ -8,24 +8,19 @@ public class ClothingItem
     public int Id { get; set; }
 
     [Required(ErrorMessage = "El nombre es obligatorio")]
+    [StringLength(100, ErrorMessage = "El nombre no puede superar los 100 caracteres.")]
     public string Name { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "El color es obligatorio")]
+    public string? Description { get; set; } = string.Empty;
     public ClothingColor Color { get; set; }
-
-    [Required(ErrorMessage = "El material es obligatorio")]
     public ClothingMaterial Material { get; set; }
-
-    [Required(ErrorMessage = "El tipo de talla es obligatorio")]
     public SizeType SizeType { get; set; }
 
     [Required(ErrorMessage = "La talla es obligatoria")]
+    [StringLength(10)]
     public string Size { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "El estado de la prenda es obligatorio")]
     public ItemCondition Condition { get; set; }
 
-    [Required(ErrorMessage = "El estado de reserva es obligatorio")]
     public ItemStatus Status { get; set; }
 
     public string? ImageFileName { get; set; }
