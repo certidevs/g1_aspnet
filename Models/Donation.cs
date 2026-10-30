@@ -10,6 +10,7 @@ public class Donation
     [Required(ErrorMessage = "El nombre del benefactor es obligatorio")]
     public required string DonorName { get; set; }
 
+    [EmailAddress]
     [Required(ErrorMessage = "El email del benefactor es obligatorio")]
     public required string DonorEmail { get; set; }
 
