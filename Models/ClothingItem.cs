@@ -10,7 +10,9 @@ public class ClothingItem
     [Required(ErrorMessage = "El nombre es obligatorio")]
     [StringLength(100, ErrorMessage = "El nombre no puede superar los 100 caracteres.")]
     public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; } = string.Empty;
+
+    [StringLength(300, ErrorMessage = "La descripción no puede superar los 300 caracteres.")]
+    public string? Description { get; set; }
     public ClothingColor Color { get; set; }
     public ClothingMaterial Material { get; set; }
     public SizeType SizeType { get; set; }
