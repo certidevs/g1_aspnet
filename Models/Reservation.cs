@@ -11,7 +11,7 @@ public class Reservation
     public DateTime ExpiresAt { get; set; }
     public string? Notes { get; set; }
 
-    public string UserId { get; set; } = string.Empty;
+    public string ApplicationUserId { get; set; } = string.Empty;
     public ApplicationUser ApplicationUser { get; set; } = null!;
 
     public int ClothingItemId { get; set; }
