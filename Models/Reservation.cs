@@ -1,25 +1,19 @@
-
 using G1AspNet.Enums;
 namespace G1AspNet.Models;
 
 public class Reservation
 {
+    public int Id { get; set; }
 
-    public int Id {get; set;}
-    
-    public ReservationStatus ReservationStatus {get; set;} = new();
-    public DateTime CreatedAt {get; set;} 
-    public DateTime PickupDate {get; set;}
-    public DateTime ExpiresAt  {get; set;}
-    public string? Notes {get; set;} = string.Empty;
+    public ReservationStatus ReservationStatus { get; set; } = ReservationStatus.Pending;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime PickupDate { get; set; }
+    public DateTime ExpiresAt { get; set; }
+    public string? Notes { get; set; }
 
-    public string? UserId {get; set;} = string.Empty;    
-    
-    public ApplicationUser ApplicationUser {get; set;} = new();
+    public string UserId { get; set; } = string.Empty;
+    public ApplicationUser ApplicationUser { get; set; } = null!;
 
-    public int ClothingItemId {get; set;}
-
-    public ClothingItem ClothingItem {get; set;} = new();
-
-
+    public int ClothingItemId { get; set; }
+    public ClothingItem ClothingItem { get; set; } = null!;
 }

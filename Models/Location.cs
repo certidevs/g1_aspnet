@@ -1,12 +1,11 @@
 using System.ComponentModel.DataAnnotations;
-using G1AspNet.Enums;
-using G1AspNet.Models;
 
+namespace G1AspNet.Models;
 
 public class Location
 {
     public int Id { get; set; }
-    
+
     [Required(ErrorMessage = "El nombre es obligatorio")]
     [StringLength(100, ErrorMessage = "El nombre no puede superar los 100 caracteres.")]
     public string Name { get; set; } = string.Empty; // "Oficina Madrid", "Oficina Barcelona"
@@ -20,9 +19,9 @@ public class Location
 
     public bool IsActive { get; set; } = false; // por defecto false
 
-    public List<ClothingItem> ClothingItems {get; set;} = new();
-    
-    public List<Donation> Donations {get; set;} = new();
+    public List<ClothingItem> ClothingItems { get; set; } = new();
+
+    public List<Donation> Donations { get; set; } = new();
 
 
     // relaciones:

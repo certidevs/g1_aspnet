@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace G1AspNet.Models;
 
@@ -19,4 +19,6 @@ public sealed class ApplicationUser : IdentityUser
 
     /// <summary>Permite desactivar una cuenta sin borrar la información futura que posea.</summary>
     public bool IsActive { get; set; } = true;
+
+    public List<Reservation> Reservations { get; set; } = new();
 }

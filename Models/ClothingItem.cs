@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using G1AspNet.Enums;
 
 namespace G1AspNet.Models;
@@ -14,11 +14,11 @@ public class ClothingItem
     public ClothingColor Color { get; set; }
 
     [Required(ErrorMessage = "El material es obligatorio")]
-    public ClothingMaterial Material { get; set; } 
+    public ClothingMaterial Material { get; set; }
 
     [Required(ErrorMessage = "El tipo de talla es obligatorio")]
-    public SizeType SizeType {get; set; }
-    
+    public SizeType SizeType { get; set; }
+
     [Required(ErrorMessage = "La talla es obligatoria")]
     public string Size { get; set; } = string.Empty;
 
@@ -26,16 +26,18 @@ public class ClothingItem
     public ItemCondition Condition { get; set; }
 
     [Required(ErrorMessage = "El estado de reserva es obligatorio")]
-    public ReservationStatus Status { get; set; }
+    public ItemStatus Status { get; set; }
 
-    public string? ImageFileName { get; set; } = string.Empty;
+    public string? ImageFileName { get; set; }
 
     public int CategoryId { get; set; }
-    public Category? Category;
-    
+    public Category Category { get; set; } = null!;
+
     public int LocationId { get; set; }
-    public Location? Location;
+    public Location Location { get; set; } = null!;
 
     public int? DonationId { get; set; }
-    public Donation? Donation;
+    public Donation? Donation { get; set; }
+
+    public List<Reservation> Reservations { get; set; } = new();
 }
