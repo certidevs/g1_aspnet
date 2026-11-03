@@ -5,7 +5,7 @@ public class Reservation
 {
     public int Id { get; set; }
 
-    public ReservationStatus ReservationStatus { get; set; } = ReservationStatus.Pending;
+    public ReservationStatus Status { get; set; } = ReservationStatus.Pending;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime PickupDate { get; set; }
     public DateTime ExpiresAt { get; set; }
