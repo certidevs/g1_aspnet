@@ -1,4 +1,5 @@
 using G1AspNet.Data;
+using G1AspNet.Enums;
 using G1AspNet.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +15,11 @@ public class ClothingItemsController : Controller
         this.context = context;
     }
 
-    public IActionResult Index(string? search)
+    public IActionResult Index(string? search, ClothingColor? color, ClothingMaterial? Material, SizeType? SizeType, string? Size, ItemCondition? Condition, ItemStatus? Status)
     {
 
+        // TODO: ¿Filtrar por periodo en el que está libre
+        // TODO: ¿Valores por defecto de Condition y Status?
         // TODO: ¿Filtrar por Location debe llegar parametro LocationId (o es un objeto tipo location)?
         var query = context.ClothingItems.AsQueryable();
 
