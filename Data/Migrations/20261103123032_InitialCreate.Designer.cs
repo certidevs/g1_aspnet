@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace G1AspNet.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20261030112021_CreateWardrobeDomain")]
-    partial class CreateWardrobeDomain
+    [Migration("20261103123032_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -105,11 +105,12 @@ namespace G1AspNet.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
-                        .IsRequired()
+                        .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -132,6 +133,10 @@ namespace G1AspNet.Data.Migrations
                     b.Property<int>("Condition")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
                     b.Property<int?>("DonationId")
                         .HasColumnType("INTEGER");
 
@@ -146,10 +151,12 @@ namespace G1AspNet.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Size")
                         .IsRequired()
+                        .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("SizeType")
@@ -245,6 +252,7 @@ namespace G1AspNet.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ApplicationUserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("ClothingItemId")
@@ -262,12 +270,8 @@ namespace G1AspNet.Data.Migrations
                     b.Property<DateTime>("PickupDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ReservationStatus")
+                    b.Property<int>("Status")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -446,7 +450,9 @@ namespace G1AspNet.Data.Migrations
                 {
                     b.HasOne("G1AspNet.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Reservations")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("G1AspNet.Models.ClothingItem", "ClothingItem")
                         .WithMany("Reservations")

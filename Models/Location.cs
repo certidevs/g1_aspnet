@@ -19,12 +19,12 @@ public class Location
 
     public bool IsActive { get; set; } = false; // por defecto false
 
-    public List<ClothingItem> ClothingItems { get; set; } = new();
-
-    public List<Donation> Donations { get; set; } = new();
 
 
     // relaciones:
     // 1 Location → N ClothingItem (dónde está guardada la prenda)
+    public List<ClothingItem> ClothingItems { get; set; } = new();
+
     // 1 Location → N Donation
+    public List<Donation> Donations { get; set; } = new();
 }
