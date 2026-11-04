@@ -1,19 +1,19 @@
-using G1AspNet.Data;
+﻿using G1AspNet.Data;
 using G1AspNet.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace G1AspNet.Controllers
 {
-    public class DonationControler : Controller
+    public class DonationController : Controller
     {
         private readonly ApplicationDbContext context;
 
-        public DonationControler(ApplicationDbContext context)
+        public DonationController(ApplicationDbContext context)
         {
             this.context = context;
         }
-        // GET: DonationControler
+        // GET: DonationController
         public IActionResult Index()
         {
             var donations = context.Donations
@@ -24,12 +24,16 @@ namespace G1AspNet.Controllers
         }
         public IActionResult Details(int id)
         {
-            var donations = context.Donations
-            .Include(l => l.Location)
-            .Include(c => c.ClothingItems)
+            var donation = context.Donations
+            .Include(d => d.Location)
+            .Include(d => d.ClothingItems)
             .FirstOrDefault(d => d.Id == id);
-            return View(donations);
+
+            // añadir qué pasa si no encuentra la donación
+
+            return View(donation);
         }
+        
         /*[HttpGet]
         public IActionResult Create()
         {
