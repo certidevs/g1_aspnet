@@ -1,0 +1,21 @@
+@model List<ClothingItem>
+@{
+    ViewData["Title"] = "Vestuario";
+}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">Vestuario</h1>
+        <p class="text-secondary mb-0">Prendas disponibles en nuestro ropero solidario.</p>
+    </div>
+</div>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <p class="text-secondary mb-0">Se han encontrado @Model.Count prendas con los criterios de búsqueda.</p>
+    </div>
+</div>
+
+@if (Model.Count > 0)
+{
+    
+}
