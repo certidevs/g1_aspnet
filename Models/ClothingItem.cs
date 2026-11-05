@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using G1AspNet.Enums;
 
 namespace G1AspNet.Models;
@@ -28,10 +28,10 @@ public class ClothingItem
     public string? ImageFileName { get; set; }
 
     public int CategoryId { get; set; }
-    public Category Category { get; set; } = null!;
+    public Category? Category { get; set; }
 
     public int LocationId { get; set; }
-    public Location Location { get; set; } = null!;
+    public Location? Location { get; set; }
 
     public int? DonationId { get; set; }
     public Donation? Donation { get; set; }
