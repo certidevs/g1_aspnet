@@ -22,7 +22,7 @@
                 <td><a asp-action="Details" asp-route-id="@donation.Id">@donation.DonorName</a></td>
                 <td>@donation.DonatedAt</td>
                 <td>@donation.?Notes</td>
-                <td>@donation.Location.Name</td>
+                <td>@donation.Location?.Name</td>
             </tr>
         }
     </tbody>
