@@ -24,16 +24,20 @@ namespace G1AspNet.Controllers
         }
         public IActionResult Details(int id)
         {
+
             var donation = context.Donations
             .Include(d => d.Location)
             .Include(d => d.ClothingItems)
             .FirstOrDefault(d => d.Id == id);
-
-            // añadir qué pasa si no encuentra la donación
-
+            
+            if (donation == null)
+            {
+                return NotFound();
+            }
+            
             return View(donation);
         }
-        
+
         /*[HttpGet]
         public IActionResult Create()
         {
