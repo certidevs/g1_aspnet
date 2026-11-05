@@ -1,10 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using G1AspNet.Data;
 
 
-namespace RestaurantesAspNet.Controllers;
+namespace G1AspNet.Controllers;
 
 public class LocationController : Controller
 {
