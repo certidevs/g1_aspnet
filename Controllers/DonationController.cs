@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace G1AspNet.Controllers
 {
-    public class DonationControler : Controller
+    public class DonationController : Controller
     {
         private readonly ApplicationDbContext context;
 
-        public DonationControler(ApplicationDbContext context)
+        public DonationController(ApplicationDbContext context)
         {
             this.context = context;
         }
