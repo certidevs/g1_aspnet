@@ -1,0 +1,50 @@
+@model Donation
+@{
+    ViewData["Title"] = Model.DonorName;
+}
+
+<h1>Donacion de @Model.DonorEmail</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Nombre del Donante</dt>
+    <dd class="col-sm-9">@Model.DonorName</dd>
+
+    <dt class="col-sm-3">Email</dt>
+    <dd class="col-sm-9">@Model.DonorEmail</dd>
+
+    <dt class="col-sm-3">Fecha de la donacion</dt>
+    <dd class="col-sm-9">@Model.DonatedAt.ToString("dd/MM/yyyy")</dd>
+
+    <dt class="col-sm-3">Notas</dt>
+    <dd class="col-sm-9">@(String.IsNullOrWhiteSpace(Model.Notes) ? Model.Notes : "No hay notas" )</dd>
+
+    <dt class="col-sm-3">Oficina</dt>
+    <dd class="col-sm-9">@Model.Location?.Name</dd>
+</dl>
+
+<h2 class="h4 mt-4">Lista de ropa</h2>
+@if (Model.ClothingItems.Count == 0)
+{
+    <p class="text-secondary">No se dono ropa en esta donacion.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre de la prenda</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var clothingItem in Model.ClothingItems.OrderBy(c => c.Name))
+            {
+                <tr>
+                    <td><a asp-controller="ClothingItem" asp-action="Details" asp-route-id="@clothingItem.Id">@clothingItem.Name</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+<a class="btn btn-secondary" asp-action="Index">Volver al listado</a>
