@@ -1,0 +1,29 @@
+@model List<Donation>
+@{
+    ViewData [ "Title"] = "Donaciones";
+}
+<h1>Donaciones</h1>
+
+<p>Hay @Model.Count Donaciones.</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre del benefactor</th>
+            <th>Fecha de la donacion</th>
+            <th>Notas</th>
+            <th>Oficina</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var donation in Model)
+        {
+            <tr>
+                <td><a asp-action="Details" asp-route-id="@donation.Id">@donation.DonorName</a></td>
+                <td>@donation.DonatedAt</td>
+                <td>@donation.?Notes</td>
+                <td>@donation.Location.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -12,8 +12,8 @@ public class Reservation
     public string? Notes { get; set; }
 
     public string ApplicationUserId { get; set; } = string.Empty;
-    public ApplicationUser ApplicationUser { get; set; } = null!;
+    public ApplicationUser? ApplicationUser { get; set; }
 
     public int ClothingItemId { get; set; }
-    public ClothingItem ClothingItem { get; set; } = null!;
+    public ClothingItem? ClothingItem { get; set; }
 }
