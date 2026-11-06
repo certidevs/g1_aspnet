@@ -6,6 +6,8 @@
 
 <p>Hay @Model.Count Donaciones.</p>
 
+@* DESCOMENTA: <a class="btn btn-primary mb-3" asp-action="Create">Nueva donación</a> *@
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -13,6 +15,7 @@
             <th>Fecha de la donacion</th>
             <th>Notas</th>
             <th>Oficina</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -21,8 +24,11 @@
             <tr>
                 <td><a asp-action="Details" asp-route-id="@donation.Id">@donation.DonorName</a></td>
                 <td>@donation.DonatedAt</td>
-                <td>@donation.?Notes</td>
+                <td>@donation.Notes</td>
                 <td>@donation.Location?.Name</td>
+                <td class="text-end">
+                    @* DESCOMENTA: <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@donation.Id">Editar</a> *@
+                </td>
             </tr>
         }
     </tbody>

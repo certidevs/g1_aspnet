@@ -1,0 +1,89 @@
+@model ClothingItem
+@{
+    // Un solo formulario para crear (Id = 0) y editar (Id > 0).
+    var isNew = Model.Id == 0;
+    ViewData["Title"] = isNew ? "Nueva prenda" : "Editar prenda";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h2 mb-0">@ViewData["Title"]</h1>
+    <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+</div>
+
+<div class="alert alert-warning">TODO (issue #16): descomenta el formulario y ajústalo</div>
+
+@* DESCOMENTA DESDE AQUÍ
+<form asp-action="Save" method="post" class="card">
+    <div class="card-body p-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ImageFileName" />
+        <div class="row g-3">
+            <div class="col-md-8">
+                <label asp-for="Name" class="form-label">Nombre</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="CategoryId" class="form-label">Categoría</label>
+                <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="Description" class="form-label">Descripción</label>
+                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Color" class="form-label">Color</label>
+                <select asp-for="Color" asp-items="Html.GetEnumSelectList<ClothingColor>()" class="form-select"></select>
+                <span asp-validation-for="Color" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Material" class="form-label">Material</label>
+                <select asp-for="Material" asp-items="Html.GetEnumSelectList<ClothingMaterial>()" class="form-select"></select>
+                <span asp-validation-for="Material" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="SizeType" class="form-label">Tipo de talla</label>
+                <select asp-for="SizeType" asp-items="Html.GetEnumSelectList<SizeType>()" class="form-select"></select>
+                <span asp-validation-for="SizeType" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Size" class="form-label">Talla</label>
+                <input asp-for="Size" class="form-control" placeholder="M, 42..." />
+                <span asp-validation-for="Size" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Condition" class="form-label">Condición</label>
+                <select asp-for="Condition" asp-items="Html.GetEnumSelectList<ItemCondition>()" class="form-select"></select>
+                <span asp-validation-for="Condition" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Status" class="form-label">Estado</label>
+                <select asp-for="Status" asp-items="Html.GetEnumSelectList<ItemStatus>()" class="form-select"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="LocationId" class="form-label">Sede</label>
+                <select asp-for="LocationId" asp-items="ViewBag.Locations" class="form-select"></select>
+                <span asp-validation-for="LocationId" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="DonationId" class="form-label">Donación (opcional)</label>
+                <select asp-for="DonationId" asp-items="ViewBag.Donations" class="form-select">
+                    <option value="">Sin donación</option>
+                </select>
+                <span asp-validation-for="DonationId" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer bg-transparent text-end">
+        <button class="btn btn-primary" type="submit">Guardar</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+FIN DESCOMENTA *@

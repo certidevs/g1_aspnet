@@ -1,0 +1,92 @@
+@model Location
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h1 class="h2 mb-0">@Model.Name</h1>
+    <div class="d-flex align-items-center gap-2">
+        <span class="badge fs-6 @(Model.IsActive ? "text-bg-success" : "text-bg-secondary")">@(Model.IsActive ? "Activa" : "Inactiva")</span>
+        @if (User.IsInRole(RoleNames.Admin))
+        {
+            <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
+
+            @* Desactivar no borra la sede: llama por POST a Delete (que pone IsActive = false).
+               onsubmit pide confirmación; si se cancela, el formulario no se envía. *@
+            if (Model.IsActive)
+            {
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline"
+                      onsubmit="return confirm('¿Seguro que quieres desactivar esta localización?');">
+                    <button class="btn btn-outline-danger" type="submit">Desactivar</button>
+                </form>
+            }
+        }
+    </div>
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Dirección</dt>
+    <dd class="col-sm-9">@Model.Address</dd>
+
+    <dt class="col-sm-3">Ciudad</dt>
+    <dd class="col-sm-9">@Model.PostalCode @Model.City</dd>
+
+    <dt class="col-sm-3">Teléfono</dt>
+    <dd class="col-sm-9">@Model.Phone</dd>
+
+    <dt class="col-sm-3">Horario</dt>
+    <dd class="col-sm-9">@Model.OpeningHours</dd>
+</dl>
+
+<h2 class="h4 mt-4">Prendas guardadas aquí (@Model.ClothingItems.Count)</h2>
+@if (Model.ClothingItems.Count == 0)
+{
+    <p class="text-secondary">No hay prendas guardadas en esta sede.</p>
+}
+else
+{
+    <div class="table-responsive border rounded mb-4">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr><th>Prenda</th><th>Talla</th><th>Estado</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ClothingItems.OrderBy(i => i.Name))
+                {
+                    <tr>
+                        <td><a asp-controller="ClothingItems" asp-action="Details" asp-route-id="@item.Id">@item.Name</a></td>
+                        <td>@item.Size</td>
+                        <td>@Html.DisplayFor(m => item.Status)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<h2 class="h4 mt-4">Donaciones recibidas (@Model.Donations.Count)</h2>
+@if (Model.Donations.Count == 0)
+{
+    <p class="text-secondary">Todavía no se ha recibido ninguna donación en esta sede.</p>
+}
+else
+{
+    <div class="table-responsive border rounded mb-4">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr><th>Benefactor</th><th>Fecha</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var donation in Model.Donations.OrderByDescending(d => d.DonatedAt))
+                {
+                    <tr>
+                        <td><a asp-controller="Donation" asp-action="Details" asp-route-id="@donation.Id">@donation.DonorName</a></td>
+                        <td>@donation.DonatedAt.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<a class="btn btn-outline-secondary" asp-action="Index">Volver al listado</a>

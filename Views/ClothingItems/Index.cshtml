@@ -7,6 +7,7 @@
         <h1 class="h2 mb-1">Vestuario</h1>
         <p class="text-secondary mb-0">Prendas disponibles en nuestro ropero solidario.</p>
     </div>
+    @* DESCOMENTA: <a class="btn btn-primary" asp-action="Create">Nueva prenda</a> *@
 </div>
 
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
@@ -15,7 +16,44 @@
     </div>
 </div>
 
-@if (Model.Count > 0)
+<form method="get" class="card card-body mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md">
+            <label for="search" class="form-label">Buscar</label>
+            <input id="search" name="search" value="@ViewBag.Search" class="form-control" placeholder="Nombre de la prenda" />
+        </div>
+        <div class="col-md-auto"><button class="btn btn-primary" type="submit">Buscar</button></div>
+    </div>
+</form>
+
+@if (Model.Count == 0)
 {
-    
+    <div class="alert alert-info">No hay prendas que coincidan con la búsqueda.</div>
+}
+else
+{
+    <div class="table-responsive border rounded">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr><th>Prenda</th><th>Categoría</th><th>Talla</th><th>Color</th><th>Estado</th><th>Sede</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@item.Name</td>
+                        <td>@item.Category?.Name</td>
+                        <td>@item.Size</td>
+                        <td>@Html.DisplayFor(m => item.Color)</td>
+                        <td><span class="badge @(item.Status == ItemStatus.Available ? "text-bg-success" : "text-bg-secondary")">@Html.DisplayFor(m => item.Status)</span></td>
+                        <td>@item.Location?.Name</td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@item.Id">Ver</a>
+                            @* DESCOMENTA: <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Id">Editar</a> *@
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }

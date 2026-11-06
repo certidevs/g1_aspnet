@@ -1,0 +1,62 @@
+@model Reservation
+@{
+    // Un solo formulario para crear (Id = 0) y editar (Id > 0).
+    var isNew = Model.Id == 0;
+    ViewData["Title"] = isNew ? "Nueva reserva" : "Editar reserva";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h2 mb-0">@ViewData["Title"]</h1>
+    <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+</div>
+
+<div class="alert alert-warning">TODO (issue #18): descomenta el formulario y ajústalo</div>
+
+@* DESCOMENTA DESDE AQUÍ
+<form asp-action="Save" method="post" class="card">
+    <div class="card-body p-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="CreatedAt" />
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="ClothingItemId" class="form-label">Prenda</label>
+                <select asp-for="ClothingItemId" asp-items="ViewBag.ClothingItems" class="form-select"></select>
+                <span asp-validation-for="ClothingItemId" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="ApplicationUserId" class="form-label">Usuario</label>
+                <select asp-for="ApplicationUserId" asp-items="ViewBag.Users" class="form-select"></select>
+                <span asp-validation-for="ApplicationUserId" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Status" class="form-label">Estado</label>
+                <select asp-for="Status" asp-items="Html.GetEnumSelectList<ReservationStatus>()" class="form-select"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="PickupDate" class="form-label">Fecha de recogida</label>
+                <input asp-for="PickupDate" type="date" class="form-control" />
+                <span asp-validation-for="PickupDate" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="ExpiresAt" class="form-label">Caduca el</label>
+                <input asp-for="ExpiresAt" type="date" class="form-control" />
+                <span asp-validation-for="ExpiresAt" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="Notes" class="form-label">Notas</label>
+                <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer bg-transparent text-end">
+        <button class="btn btn-primary" type="submit">Guardar</button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+FIN DESCOMENTA *@

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using G1AspNet.Models;
 using G1AspNet.Services;
 using G1AspNet.Utilities;
@@ -115,7 +116,18 @@ public sealed class UsersController : Controller
     [HttpPost, ActionName("Delete")]
     public async Task<IActionResult> DeleteConfirmed(string id)
     {
-        var result = await userService.DeleteAsync(id, User.GetRequiredUserId());
+        IdentityResult result;
+        try
+        {
+            result = await userService.DeleteAsync(id, User.GetRequiredUserId());
+        }
+        catch (DbUpdateException)
+        {
+            // La relación Reservation → ApplicationUser es Restrict: un usuario con reservas no se borra.
+            TempData["Error"] = "No se puede eliminar un usuario que tiene reservas. Desactívalo en su lugar.";
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
         if (!result.Succeeded)
         {
             TempData["Error"] = string.Join(" ", result.Errors.Select(error => error.Description));

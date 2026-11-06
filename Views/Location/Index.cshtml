@@ -1,0 +1,63 @@
+@model List<Location>
+@{
+    ViewData["Title"] = "Localizaciones";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="h2 mb-1">Localizaciones</h1>
+        <p class="text-secondary mb-0">Sedes donde se reciben donaciones y se guarda la ropa.</p>
+    </div>
+    @if (User.IsInRole(RoleNames.Admin))
+    {
+        <a class="btn btn-primary" asp-action="Create">Nueva localización</a>
+    }
+</div>
+
+<form method="get" class="card card-body mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md">
+            <label for="search" class="form-label">Nombre</label>
+            <input id="search" name="search" class="form-control" placeholder="Nombre de la sede" />
+        </div>
+        <div class="col-md">
+            <label for="city" class="form-label">Ciudad</label>
+            <input id="city" name="city" class="form-control" placeholder="Ciudad" />
+        </div>
+        <div class="col-md-auto"><button class="btn btn-primary" type="submit">Buscar</button></div>
+    </div>
+</form>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info">No hay localizaciones que coincidan con la búsqueda.</div>
+}
+else
+{
+    <div class="table-responsive border rounded">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr><th>Nombre</th><th>Ciudad</th><th>Dirección</th><th>Teléfono</th><th>Estado</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var location in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@location.Name</td>
+                        <td>@location.City</td>
+                        <td>@location.Address</td>
+                        <td>@location.Phone</td>
+                        <td><span class="badge @(location.IsActive ? "text-bg-success" : "text-bg-secondary")">@(location.IsActive ? "Activa" : "Inactiva")</span></td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@location.Id">Ver</a>
+                            @if (User.IsInRole(RoleNames.Admin))
+                            {
+                                <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@location.Id">Editar</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

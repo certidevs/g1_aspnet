@@ -1,0 +1,94 @@
+@model ClothingItem
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h1 class="h2 mb-0">@Model.Name</h1>
+    <div class="d-flex align-items-center gap-2">
+        <span class="badge fs-6 @(Model.Status == ItemStatus.Available ? "text-bg-success" : "text-bg-secondary")">@Html.DisplayFor(m => m.Status)</span>
+        @* DESCOMENTA: <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id">Editar</a> *@
+        @* DESCOMENTA DESDE AQUÍ
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline"
+              onsubmit="return confirm('¿Seguro que quieres eliminar esta prenda?');">
+            <button class="btn btn-outline-danger" type="submit">Eliminar</button>
+        </form>
+        FIN DESCOMENTA *@
+    </div>
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Descripción</dt>
+    <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.Description) ? "Sin descripción" : Model.Description)</dd>
+
+    <dt class="col-sm-3">Categoría</dt>
+    <dd class="col-sm-9">
+        @if (Model.Category != null)
+        {
+            <a asp-controller="Categories" asp-action="Details" asp-route-id="@Model.Category.Id">@Model.Category.Name</a>
+        }
+    </dd>
+
+    <dt class="col-sm-3">Color</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(m => m.Color)</dd>
+
+    <dt class="col-sm-3">Material</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(m => m.Material)</dd>
+
+    <dt class="col-sm-3">Tipo de talla</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(m => m.SizeType)</dd>
+
+    <dt class="col-sm-3">Talla</dt>
+    <dd class="col-sm-9">@Model.Size</dd>
+
+    <dt class="col-sm-3">Condición</dt>
+    <dd class="col-sm-9">@Html.DisplayFor(m => m.Condition)</dd>
+
+    <dt class="col-sm-3">Sede</dt>
+    <dd class="col-sm-9">
+        @if (Model.Location != null)
+        {
+            <a asp-controller="Location" asp-action="Details" asp-route-id="@Model.Location.Id">@Model.Location.Name</a>
+        }
+    </dd>
+
+    <dt class="col-sm-3">Donación</dt>
+    <dd class="col-sm-9">
+        @if (Model.Donation != null)
+        {
+            <a asp-controller="Donation" asp-action="Details" asp-route-id="@Model.Donation.Id">Donación de @Model.Donation.DonorName</a>
+        }
+        else
+        {
+            <span class="text-secondary">Sin donación</span>
+        }
+    </dd>
+</dl>
+
+<h2 class="h4 mt-4">Reservas de esta prenda (@Model.Reservations.Count)</h2>
+@if (Model.Reservations.Count == 0)
+{
+    <p class="text-secondary">Esta prenda no tiene reservas.</p>
+}
+else
+{
+    <div class="table-responsive border rounded mb-4">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr><th>Fecha de reserva</th><th>Estado</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var reservation in Model.Reservations.OrderByDescending(r => r.CreatedAt))
+                {
+                    <tr>
+                        <td>@reservation.CreatedAt.ToString("dd/MM/yyyy")</td>
+                        <td>@Html.DisplayFor(m => reservation.Status)</td>
+                        <td class="text-end"><a class="btn btn-sm btn-outline-primary" asp-controller="Reservations" asp-action="Details" asp-route-id="@reservation.Id">Ver</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<a class="btn btn-outline-secondary" asp-action="Index">Volver al listado</a>

@@ -1,0 +1,53 @@
+@model Category
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h1 class="h2 mb-0">Categoría: @Model.Name</h1>
+    <div class="d-flex align-items-center gap-2">
+        @* DESCOMENTA: <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id">Editar</a> *@
+        @* DESCOMENTA DESDE AQUÍ
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline"
+              onsubmit="return confirm('¿Seguro que quieres eliminar esta categoría?');">
+            <button class="btn btn-outline-danger" type="submit">Eliminar</button>
+        </form>
+        FIN DESCOMENTA *@
+    </div>
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Nombre</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+
+    <dt class="col-sm-3">Descripción</dt>
+    <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.Description) ? "Sin descripción" : Model.Description)</dd>
+</dl>
+
+<h2 class="h4 mt-4">Prendas de esta categoría (@Model.ClothingItems.Count)</h2>
+@if (Model.ClothingItems.Count == 0)
+{
+    <p class="text-secondary">Todavía no hay prendas en esta categoría.</p>
+}
+else
+{
+    <div class="table-responsive border rounded mb-4">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr><th>Prenda</th><th>Talla</th><th>Estado</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ClothingItems.OrderBy(i => i.Name))
+                {
+                    <tr>
+                        <td><a asp-controller="ClothingItems" asp-action="Details" asp-route-id="@item.Id">@item.Name</a></td>
+                        <td>@item.Size</td>
+                        <td>@Html.DisplayFor(m => item.Status)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<a class="btn btn-outline-secondary" asp-action="Index">Volver al listado</a>
