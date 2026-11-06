@@ -1,0 +1,77 @@
+@model Location
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h1>Localización de @Model.Name</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Nombre de la Localización</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+
+    <dt class="col-sm-3">Ciudad</dt>
+    <dd class="col-sm-9">@Model.City</dd>
+
+    <dt class="col-sm-3">Codigo postal</dt>
+    <dd class="col-sm-9">@Model.PostalCode</dd>
+
+    <dt class="col-sm-3">Numero de telefono</dt>
+    <dd class="col-sm-9">@Model.Phone</dd>
+
+    <dt class="col-sm-3">Horas de apertura</dt>
+    <dd class="col-sm-9">@Model.OpeningHours</dd>
+</dl>
+
+<h2 class="h4 mt-4">Lista de ropa</h2>
+@if (Model.ClothingItems.Count == 0)
+{
+    <p class="text-secondary">No se dono ropa en esta localización.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre de la prenda</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var clothingItem in Model.ClothingItems.OrderBy(c => c.Name))
+            {
+                <tr>
+                    <td><a asp-controller="ClothingItem" asp-action="Details" asp-route-id="@clothingItem.Id">@clothingItem.Name</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+
+<h2 class="h4 mt-4">Lista de donaciones</h2>
+@if (Model.Donations.Count == 0)
+{
+    <p class="text-secondary">No se hicieron donaciones a esta localización.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre del donador</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var donation in Model.Donations.OrderBy(c => c.DonatedAt))
+            {
+                <tr>
+                    <td><a asp-controller="Donation" asp-action="Details" asp-route-id="@donation.Id">@donation.DonorName</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+<a class="btn btn-secondary" asp-action="Index">Volver al listado</a>
