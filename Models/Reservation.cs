@@ -14,9 +14,11 @@ public class Reservation
     [StringLength(500)]
     public string? Notes { get; set; }
 
+    // N Reservation → 1 ApplicationUser (quién reserva)
     public string ApplicationUserId { get; set; } = string.Empty;
     public ApplicationUser? ApplicationUser { get; set; }
 
+    // N Reservation → 1 ClothingItem (qué prenda se reserva)
     public int ClothingItemId { get; set; }
     public ClothingItem? ClothingItem { get; set; }
 }

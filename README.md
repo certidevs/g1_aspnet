@@ -33,7 +33,7 @@ Punto de partida común de todos los grupos: **solo la entidad `ApplicationUser`
 | Cuenta | Registro, login por usuario o email, logout y página de acceso denegado. |
 | Perfil | Consulta y edición del perfil, avatar y cambio de contraseña. |
 | Administración | Panel `/Users` (solo `Admin`): alta, edición, activación y borrado de usuarios. |
-| Datos | Entity Framework Core + SQLite (`App_Data/g1.db`), migración inicial de Identity y datos demo al arrancar. |
+| Datos | Entity Framework Core + SQLite (`App_Data/g1.db`), base recreada y datos demo al arrancar. |
 | Imágenes | `ImageStorage` para guardar imágenes subidas; hoy solo avatares (añadid vuestras carpetas en `ImageFolder`). |
 | Interfaz | Razor + Bootstrap 5 en local, con tema claro/oscuro. |
 | Calidad y despliegue | Proyecto de tests xUnit, GitHub Actions (compilar y testear) y `Dockerfile`. |
@@ -115,36 +115,52 @@ dotnet tool restore
 dotnet run --project G1AspNet.csproj --launch-profile http
 ```
 
-Abre `http://localhost:5107`. El primer arranque crea `App_Data/g1.db`, aplica la migración de Identity y añade los usuarios demo:
+Abre `http://localhost:5107`. El primer arranque crea `App_Data/g1.db`, crea las tablas y añade los usuarios demo:
 
 - `admin` / `Admin123!`
 - `user` / `User123!`
 
+## Entidades y quién las hace
+
+Las entidades del dominio ya están creadas y cada una tiene su carpeta de vistas, su controlador con `Index` y `Details`, y un enlace en el menú. Lo que falta por entidad (`Create`, `Edit`, `Save` y `Delete` con su vista `Form`) es el trabajo de las issues de la tabla, marcado con un `TODO` en cada controlador.
+
+| Entidad | Controlador | Vistas |
+| --- | --- | --- |
+| `Category` · issue #5 · jmachin-learning | `CategoriesController` · issue #11 · cgaq100 | `Views/Categories` · issue #12 · cgaq100 |
+| `Location` · issue #6 · cgaq100 | `LocationController` · issue #13 · cgaq100 | `Views/Location` · issue #14 · cgaq100 |
+| `ClothingItem` · issue #1 · jmachin-learning | `ClothingItemsController` · issue #15 · jmachin-learning | `Views/ClothingItems` · issue #16 · jmachin-learning |
+| `Reservation` · issue #7 · Jowey92 | `ReservationsController` · issue #17 · Jowey92 | `Views/Reservations` · issue #18 · Jowey92 |
+| `Donation` · issue #8 · gonzaloriveroantonio-droid | `DonationController` · issue #19 · gonzaloriveroantonio-droid | `Views/Donation` · issue #20 · gonzaloriveroantonio-droid |
+
+**Ejemplo completo:** `Location` ya tiene crear, editar y desactivar funcionando (`LocationController` y `Views/Location`): copiad su código. En el resto de entidades, `Create`, `Edit`, `Save`, `Delete`, `Form.cshtml` y los botones de `Index` y `Details` están escritos pero comentados con el marcador `DESCOMENTA`: descomentadlos, ajustadlos y completadlos.
+
 ## Trabajo en equipo en GitHub
 
-Todo el grupo tiene permiso de escritura en este repositorio. Para no pisaros el trabajo:
+Todo el grupo tiene permiso de escritura en este repositorio y **se trabaja directamente en `main`**. Para no pisaros el trabajo:
 
-1. **Una rama por tarea**, partiendo de `main` actualizado:
+1. **Siempre `git pull` antes de `git push`** (y también antes de empezar a trabajar):
 
    ```bash
-   git switch main
    git pull
-   git switch -c feature/nombre-corto
+   # ... trabajáis, probáis y hacéis commit ...
+   git pull
+   git push
    ```
 
-2. **Commits pequeños y con mensaje claro** (`feat: ...`, `fix: ...`, `docs: ...`).
-3. **Subid la rama y abrid una Pull Request hacia `main`** (`git push -u origin feature/nombre-corto`). Que la revise al menos otra persona del equipo antes de fusionarla y que el *check* de GitHub Actions esté en verde.
-4. **No hagáis `push` directo a `main` ni `git push --force`.**
-5. Antes de abrir la PR, y cada vez que `main` avance, actualizad vuestra rama: `git pull --rebase origin main`.
+2. **Un commit pequeño por cada cambio**, con mensaje claro (`feat: ...`, `fix: ...`, `docs: ...`).
+3. **No toquéis la entidad, el controlador o las vistas de otra persona sin avisarle antes.** Mirad en la tabla de arriba quién se encarga de cada cosa.
+4. **No hagáis `git push --force`.**
+5. Quien ya sepa usar ramas puede usarlas; no es obligatorio.
 6. Repartid el trabajo con **Issues** (una persona por issue) y, si queréis, un tablero de **Projects**.
 
-### Migraciones de EF Core en equipo
+### Base de datos en desarrollo
 
-Las migraciones (`Data/Migrations`) son lo que más choca al trabajar en paralelo, sobre todo `ApplicationDbContextModelSnapshot.cs`:
+Este proyecto **no usa migraciones**. Al arrancar, la aplicación borra `App_Data/g1.db`, la vuelve a crear a partir de las entidades y carga los datos demo de `Data/DbInitializer.cs` (es el equivalente a `create-drop` con H2 en Spring Boot). Por eso:
 
-- Avisad al equipo antes de crear una migración y fusionad su PR cuanto antes.
-- Si al actualizar con `main` hay conflicto en `Data/Migrations`, no lo resolváis a mano: descartad vuestros cambios en esa carpeta, integrad `main`, borrad vuestra base local (`App_Data/*.db`) y volved a crear la migración con `dotnet ef migrations add`.
-- Nunca editéis ni borréis migraciones que ya estén en `main`.
+- Si cambias una entidad o una relación, **solo tienes que volver a ejecutar la aplicación**.
+- Si haces `git pull` con cambios de otras personas, **solo tienes que volver a ejecutarla**.
+- No hay que ejecutar `dotnet ef` ni borrar la base a mano.
+- Los datos que crees a mano al probar se pierden al reiniciar. Lo que deba existir siempre se añade a `DbInitializer`.
 
 ## Comandos de trabajo diario
 
@@ -168,18 +184,7 @@ dotnet test G1AspNet.sln
 
 ### Entity Framework y SQLite
 
-`dotnet-ef` está fijado en `.config/dotnet-tools.json`, por lo que `dotnet tool restore` lo deja disponible sin instalar nada de forma global.
-
-```bash
-# Después de cambiar una entidad: crear y aplicar una migración
-dotnet ef migrations add NombreDescriptivo
-dotnet ef database update
-
-# Corregir la última migración solo antes de aplicarla a la base de datos
-dotnet ef migrations remove
-```
-
-Las migraciones se aplican también al arrancar la aplicación. El comando `database update` se incluye para conocer el flujo explícito.
+La base de datos se recrea al arrancar (ver *Base de datos en desarrollo*): no hay migraciones que crear ni aplicar.
 
 ### CI y Docker
 

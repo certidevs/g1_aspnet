@@ -6,7 +6,7 @@ public enum ClothingMaterial
 {
     [Display(Name = "Algodón")]
     Cotton,
-    [Display(Name = "Poliester")]
+    [Display(Name = "Poliéster")]
     Polyester,
     [Display(Name = "Lana")]
     Wool,

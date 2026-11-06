@@ -5,14 +5,16 @@ using G1AspNet.Enums;
 
 namespace G1AspNet.Data;
 
-/// <summary>Aplica migraciones y prepara roles y cuentas demo de forma idempotente.</summary>
+/// <summary>Recrea la base de datos desde las entidades y prepara roles y cuentas demo.</summary>
 public static class DbInitializer
 {
     public static async Task InitializeAsync(IServiceProvider services)
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        // Facilita arrancar en clase sin ejecutar comandos SQL manuales.
-        context.Database.Migrate();
+        // Proyecto de clase sin migraciones: la base se borra y se vuelve a crear
+        // desde las entidades en cada arranque (como create-drop con H2 en Spring).
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
 
         var configuration = services.GetRequiredService<IConfiguration>();
         if (!configuration.GetValue("SeedData:Enabled", true))
@@ -184,7 +186,9 @@ public static class DbInitializer
 
             for (int i = 0; i < 35; i++)
             {
-                var donation = donations[random.Next(donations.Count)];
+                // Una de cada cinco prendas no viene de ninguna donación (DonationId = NULL),
+                // por ejemplo ropa que compra la propia asociación.
+                Donation? donation = i % 5 == 4 ? null : donations[random.Next(donations.Count)];
 
                 context.ClothingItems.Add(new ClothingItem
                 {
@@ -201,10 +205,10 @@ public static class DbInitializer
 
                     CategoryId = categories[random.Next(categories.Count)].Id,
 
-                    // La prenda se guarda en la ubicación
-                    // donde se recibió su donación.
-                    LocationId = donation.LocationId,
-                    DonationId = donation.Id
+                    // La prenda se guarda en la ubicación donde se recibió su donación;
+                    // si no tiene donación, en una ubicación cualquiera.
+                    LocationId = donation?.LocationId ?? locations[random.Next(locations.Count)].Id,
+                    DonationId = donation?.Id
                 });
             }
 
@@ -228,9 +232,28 @@ public static class DbInitializer
                     .Take(Math.Min(8, clothingItems.Count))
                     .ToList();
 
+                // Se reparten los estados de reserva para que haya ejemplos de todos.
+                var reservationStatuses = Enum.GetValues<ReservationStatus>();
+                var reservationNumber = 0;
+
                 foreach (var item in selectedItems)
                 {
-                    var createdAt = DateTime.UtcNow.AddDays(-random.Next(1, 60));
+                    var status = reservationStatuses[reservationNumber % reservationStatuses.Length];
+                    reservationNumber++;
+
+                    // El estado de la prenda sigue al de su reserva.
+                    item.Status = status switch
+                    {
+                        ReservationStatus.Pending or ReservationStatus.Confirmed => ItemStatus.Reserved,
+                        ReservationStatus.PickedUp => ItemStatus.Delivered,
+                        _ => ItemStatus.Available
+                    };
+
+                    // Las reservas vivas (pendientes o confirmadas) son recientes para que no hayan caducado ya.
+                    var daysAgo = status is ReservationStatus.Pending or ReservationStatus.Confirmed
+                        ? random.Next(1, 5)
+                        : random.Next(1, 60);
+                    var createdAt = DateTime.UtcNow.AddDays(-daysAgo);
                     var pickupDate = createdAt.AddDays(random.Next(1, 8));
 
                     context.Reservations.Add(new Reservation
@@ -238,6 +261,7 @@ public static class DbInitializer
                         ApplicationUserId = demoUser.Id,
                         ClothingItemId = item.Id,
 
+                        Status = status,
                         CreatedAt = createdAt,
                         PickupDate = pickupDate,
                         ExpiresAt = pickupDate.AddDays(7),
