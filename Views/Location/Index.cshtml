@@ -1,4 +1,34 @@
-@model List<Location>
+﻿@model List<Location>
+@{
+    ViewData [ "Title"] = "Localizaciones";
+}
+<h1>Localizaciones</h1>
+
+<p>Hay @Model.Count Localizaciones.</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Ciudad</th>
+            <th>Direccion</th>
+            <th>Numero telefono</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var location in Model)
+        {
+            <tr>
+                <td><a asp-action="Details" asp-route-id="@location.Id">@location.Name</a></td>
+                <td>@location.City</td>
+                <td>@location.Address</td>
+                <td>@location.Phone</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@* DESCOMENTA DESDE AQUÍ si quieres la opción que puso Alan
 @{
     ViewData["Title"] = "Localizaciones";
 }
@@ -61,3 +91,5 @@ else
         </table>
     </div>
 }
+
+*@

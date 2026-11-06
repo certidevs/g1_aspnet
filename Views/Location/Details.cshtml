@@ -1,8 +1,83 @@
-@model Location
+﻿@model Location
 @{
     ViewData["Title"] = Model.Name;
 }
 
+<h1>Localización de @Model.Name</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Nombre de la Localización</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+
+    <dt class="col-sm-3">Ciudad</dt>
+    <dd class="col-sm-9">@Model.City</dd>
+
+    <dt class="col-sm-3">Codigo postal</dt>
+    <dd class="col-sm-9">@Model.PostalCode</dd>
+
+    <dt class="col-sm-3">Numero de telefono</dt>
+    <dd class="col-sm-9">@Model.Phone</dd>
+
+    <dt class="col-sm-3">Horas de apertura</dt>
+    <dd class="col-sm-9">@Model.OpeningHours</dd>
+</dl>
+
+<h2 class="h4 mt-4">Lista de ropa</h2>
+@if (Model.ClothingItems.Count == 0)
+{
+    <p class="text-secondary">No se dono ropa en esta localización.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre de la prenda</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var clothingItem in Model.ClothingItems.OrderBy(c => c.Name))
+            {
+                <tr>
+                    <td><a asp-controller="ClothingItem" asp-action="Details" asp-route-id="@clothingItem.Id">@clothingItem.Name</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+
+<h2 class="h4 mt-4">Lista de donaciones</h2>
+@if (Model.Donations.Count == 0)
+{
+    <p class="text-secondary">No se hicieron donaciones a esta localización.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre del donador</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var donation in Model.Donations.OrderBy(c => c.DonatedAt))
+            {
+                <tr>
+                    <td><a asp-controller="Donation" asp-action="Details" asp-route-id="@donation.Id">@donation.DonorName</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+<a class="btn btn-secondary" asp-action="Index">Volver al listado</a>
+
+
+@* cambio sugerido por Alan
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
     <h1 class="h2 mb-0">@Model.Name</h1>
     <div class="d-flex align-items-center gap-2">
@@ -11,8 +86,7 @@
         {
             <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
 
-            @* Desactivar no borra la sede: llama por POST a Delete (que pone IsActive = false).
-               onsubmit pide confirmación; si se cancela, el formulario no se envía. *@
+
             if (Model.IsActive)
             {
                 <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline"
@@ -90,3 +164,4 @@ else
 }
 
 <a class="btn btn-outline-secondary" asp-action="Index">Volver al listado</a>
+*@
