@@ -7,7 +7,7 @@ public enum SizeType
 {
     [Display(Name = "Letra")]
     Letter,
-    [Display(Name = "Numerico")]
+    [Display(Name = "Numérico")]
     Numeric,
     [Display(Name = "Zapato")]
     Shoe

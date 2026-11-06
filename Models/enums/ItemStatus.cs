@@ -6,7 +6,7 @@ public enum ItemStatus
 {
     [Display(Name = "Disponible")]
     Available,
-    [Display(Name = "Reservado")]
+    [Display(Name = "Reservada")]
     Reserved,
     [Display(Name = "Entregada")]
     Delivered,

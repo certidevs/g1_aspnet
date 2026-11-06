@@ -17,7 +17,7 @@ public enum ClothingColor
     Red,
     [Display(Name = "Verde")]
     Green,
-    [Display(Name = "Marron")]
+    [Display(Name = "Marrón")]
     Brown,
     [Display(Name = "Beis")]
     Beige,

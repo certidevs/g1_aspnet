@@ -6,9 +6,9 @@ public enum ReservationStatus
         
         [Display( Name = "Pendiente")]
         Pending,
-        [Display( Name = "Confirmado")]
+        [Display( Name = "Confirmada")]
         Confirmed,
-        [Display( Name = "Cogida")]
+        [Display( Name = "Recogida")]
         PickedUp,
         [Display( Name = "Cancelada")]
         Cancelled,
