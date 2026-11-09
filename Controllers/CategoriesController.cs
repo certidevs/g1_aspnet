@@ -1,5 +1,6 @@
 using G1AspNet.Data;
 using G1AspNet.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,15 +41,17 @@ public class CategoriesController : Controller
         return View(category);
     }
 
+
+
     // TODO (issue #11): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #12)
     // El código ya está escrito aquí abajo, comentado. El modelo que funciona es LocationController.
 
     // TODO (issue #11): Create, Edit, Save y Delete
     // Pasos: 1) borra la línea «/* DESCOMENTA DESDE AQUÍ» y la línea «FIN DESCOMENTA */», 2) ajusta los campos de tu entidad, 3) crea Views/Categories/Form.cshtml, 4) descomenta los botones de Index y Details.
-    /* DESCOMENTA DESDE AQUÍ
 
     // GET /Categories/Create
     // Enseña el formulario vacío (la vista Form sirve para crear y para editar).
+    [Authorize(Roles = RoleNames.Admin)]
     [HttpGet]
     public IActionResult Create()
     {
@@ -59,6 +62,7 @@ public class CategoriesController : Controller
 
     // GET /Categories/Edit/3
     // Enseña el mismo formulario relleno con los datos de la categoría.
+    [Authorize(Roles = RoleNames.Admin)]
     [HttpGet]
     public IActionResult Edit(int id)
     {
@@ -71,8 +75,11 @@ public class CategoriesController : Controller
         return View("Form", category);
     }
 
+
+
     // POST /Categories/Save
     // Recibe el formulario. Id == 0 es una categoría nueva; Id > 0 es una que se edita.
+    [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
     public IActionResult Save(Category category)
     {
@@ -82,23 +89,45 @@ public class CategoriesController : Controller
             return View("Form", category);
         }
 
-        if (category.Id == 0)
+
+        // si el category no repite su nombre con otro ya contenido en la base de datos y si da el caso, no es el mismo, lo guarda
+        // si no lo cumple, no lo guarda y salta un mensaje de error
+
+        Console.WriteLine(context.Categories.Any(c => c.Name.ToLower() == category.Name.ToLower() && c.Id != category.Id));
+
+
+        if (!context.Categories.Any(c => c.Name.ToLower() == category.Name.ToLower() && c.Id != category.Id))
         {
-            context.Categories.Add(category);
+            if (category.Id == 0)
+            {
+                context.Categories.Add(category);
+            }
+            else
+            {
+                context.Categories.Update(category);
+            }
+
+            context.SaveChanges();
+
+            TempData["Message"] = "Categoría guardada correctamente.";
+
+            return RedirectToAction("Details", new { id = category.Id });
         }
         else
         {
-            context.Categories.Update(category);
+            TempData["Error"] = "Categoría no guardada, nombre duplicado y no el mismo.";
         }
 
-        context.SaveChanges();
+        return RedirectToAction("Create");
 
-        TempData["Message"] = "Categoría guardada correctamente.";
-        return RedirectToAction("Details", new { id = category.Id });
+        
     }
+
+
 
     // POST /Categories/Delete/3
     // Borra la categoría solo si no tiene prendas (la relación es Restrict: la base de datos no lo permitiría).
+    [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
     public IActionResult Delete(int id)
     {
@@ -122,5 +151,4 @@ public class CategoriesController : Controller
         TempData["Message"] = "Categoría eliminada correctamente.";
         return RedirectToAction("Index");
     }
-    FIN DESCOMENTA */
 }
