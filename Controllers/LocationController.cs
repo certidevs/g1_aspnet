@@ -163,7 +163,7 @@ public class LocationController : Controller
         // Comprobamos los dependientes ANTES de tocar nada.
         if (location.ClothingItems.Count <= 0 && location.Donations.Count <= 0)
         {
-            location.IsActive = false;
+            context.Locations.Remove(location);
             context.SaveChanges();
 
             TempData["Message"] = "Localización desactivada correctamente.";
