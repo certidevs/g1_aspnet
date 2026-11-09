@@ -13,7 +13,7 @@ En definitiva, CorporaDress busca convertir la gestión de un recurso solidario 
 # 2 Funcionalidades principales
 
 - Catálogo de prendas (trajes, americanas, vestidos, camisas, zapatos, etc.) con fotos, tallas y disponibilidad.
- -   Búsqueda y filtros por categoría, talla y tipo de prenda.
+-   Búsqueda y filtros por categoría, talla y tipo de prenda.
 -    Registro e inicio de sesión de usuarios.
 -    Reserva de una o varias prendas para una entrevista de trabajo.
 -    Gestión de préstamos y devoluciones, con fechas previstas.
