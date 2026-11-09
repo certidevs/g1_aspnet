@@ -93,7 +93,7 @@ public class CategoriesController : Controller
         // si el category no repite su nombre con otro ya contenido en la base de datos y si da el caso, no es el mismo, lo guarda
         // si no lo cumple, no lo guarda y salta un mensaje de error
 
-        Console.WriteLine(context.Categories.Any(c => c.Name.ToLower() == category.Name.ToLower() && c.Id != category.Id));
+        // Console.WriteLine(context.Categories.Any(c => c.Name.ToLower() == category.Name.ToLower() && c.Id != category.Id));
 
 
         if (!context.Categories.Any(c => c.Name.ToLower() == category.Name.ToLower() && c.Id != category.Id))
