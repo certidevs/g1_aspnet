@@ -74,4 +74,5 @@ erDiagram
     }
 ```
 
-pequeño cambio jiji
+pequeño cambio jiji 
+2
