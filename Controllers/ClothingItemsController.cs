@@ -64,6 +64,16 @@ public class ClothingItemsController : Controller
         return View("Form", clothingItem);
     }
 
+    [HttpPost]
+    public IActionResult Save(ClothingItem clothingItem)
+    {
+        context.ClothingItems.Add(clothingItem);
+        context.SaveChanges();
+
+        TempData["Message"] = "Prenda guardada correctamente.";
+        return RedirectToAction("Details", new { id = clothingItem.Id});
+    }
+    
     // TODO (issue #15): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #16)
     // El código ya está escrito aquí abajo, comentado. El modelo que funciona es LocationController.
 
