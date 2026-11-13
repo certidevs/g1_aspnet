@@ -57,6 +57,13 @@ public class ClothingItemsController : Controller
         return View(clothingItem);
     }
 
+    [HttpGet]
+    public IActionResult Create()
+    {
+        var clothingItem = new ClothingItem {};
+        return View("Form", clothingItem);
+    }
+
     // TODO (issue #15): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #16)
     // El código ya está escrito aquí abajo, comentado. El modelo que funciona es LocationController.
 
