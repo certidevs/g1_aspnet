@@ -8,6 +8,12 @@ Nuestro objetivo es ofrecer una aplicación **útil, intuitiva y accesible**, qu
 
 En definitiva, CorporaDress busca convertir la gestión de un recurso solidario en un proceso sencillo, organizado y accesible para todos.
 
+-----
+Repositorio del Grupo 1 del curso de .NET: aplicación web con C#, ASP.NET Core MVC, Razor y Entity Framework Core, desarrollada en equipo con Git y GitHub.
+Temática del grupo: Ropero Solidario – Fundación Adecco
+
+Aplicación web para gestionar un ropero solidario con ropa donada, destinada a personas que necesitan vestimenta adecuada para entrevistas de trabajo y no disponen de recursos para adquirirla.
+
 # 2 Funcionalidades principales
 
 - Llevar un catálogo de prendas con fotos, tallas y disponibilidad.
