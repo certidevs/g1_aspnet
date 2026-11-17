@@ -58,9 +58,14 @@ public class ClothingItemsController : Controller
     }
 
     [HttpGet]
-    public IActionResult Create()
+    public IActionResult Create(int? donationId)
     {
         var clothingItem = new ClothingItem {};
+        if (donationId != null)
+        {
+            clothingItem.DonationId = donationId;
+        }
+
         return View("Form", clothingItem);
     }
 
@@ -72,6 +77,36 @@ public class ClothingItemsController : Controller
 
         TempData["Message"] = "Prenda guardada correctamente.";
         return RedirectToAction("Details", new { id = clothingItem.Id});
+    }
+
+    private void LoadDonations(int? donationId)
+    {
+        var donations = context.Donations.OrderByDescending(d => d.DonatedAt).ToList();
+
+        var selectDonations = donations.Select(d => new
+        {
+            Id = d.Id,
+            Name = $"{d.DonorName} - {d.DonatedAt.ToString("dd-MM-yyyy")}"
+        });
+
+        ViewBag.Donations = new SelectList(selectDonations, "Id", "Name", donationId);
+    }
+
+    private void LoadLocations()
+    {
+        var locations = context.Locations
+        .Where(l => l.IsActive)
+        .OrderBy(l => l.Name)
+        .ToList();
+
+        ViewBag.Locations = new SelectList(locations, "Id", "Name");
+        
+    }
+
+    private void LoadCategories()
+    {
+        var categories = context.Categories.OrderBy(c => c.Name).ToList();
+        ViewBag.Categories = new SelectList(categories, "Id", "Name");
     }
     
     // TODO (issue #15): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #16)
