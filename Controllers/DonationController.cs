@@ -39,13 +39,6 @@ namespace G1AspNet.Controllers
             return View(donation);
         }
 
-        // TODO (issue #19): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #20)
-        // El código ya está escrito aquí abajo, comentado. El modelo que funciona es LocationController.
-
-        // TODO (issue #19): Create, Edit, Save y Delete
-        // Pasos: 1) borra la línea «/* DESCOMENTA DESDE AQUÍ» y la línea «FIN DESCOMENTA */», 2) ajusta los campos de tu entidad, 3) crea Views/Donation/Form.cshtml, 4) descomenta los botones de Index y Details.
-        /* DESCOMENTA DESDE AQUÍ
-
         // Rellena el desplegable de sedes del formulario (la vista lo lee de ViewBag.Locations).
         private void LoadLists()
         {
@@ -123,6 +116,5 @@ namespace G1AspNet.Controllers
             TempData["Message"] = "Donación eliminada correctamente.";
             return RedirectToAction("Index");
         }
-        FIN DESCOMENTA */
     }
 }
