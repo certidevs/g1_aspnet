@@ -3,17 +3,40 @@
     ViewData["Title"] = "Categorías";
 }
 
+
+
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
     <div>
         <h1 class="h2 mb-1">Categorías</h1>
         <p class="text-secondary mb-0">Tipos de prenda del ropero solidario.</p>
     </div>
-    <a class="btn btn-primary" asp-action="Create">Nueva categoría</a>
+    @if (User.IsInRole(RoleNames.Admin))
+    {
+        <a class="btn btn-primary" asp-action="Create">Nueva categoría</a>
+    }
 </div>
+
+
+
+<form method="get" class="card card-body mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md">
+            <label for="search" class="form-label">Nombre</label>
+            <input id="search" name="search" class="form-control" placeholder="Nombre de la categoría" />
+        </div>
+        <div class="col-md">
+            <label for="cantPrendas" class="form-label">Cantidad</label>
+            <input id="cantPrendas" name="cantPrendas" class="form-control" placeholder="Cantidad de prendas" />
+        </div>
+        <div class="col-md-auto"><button class="btn btn-primary" type="submit">Buscar</button></div>
+    </div>
+</form>
+
+
 
 @if (Model.Count == 0)
 {
-    <div class="alert alert-info">Todavía no hay categorías.</div>
+    <div class="alert alert-info">No hay Categorías que coincidan con la busqueda.</div>
 }
 else
 {
