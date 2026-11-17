@@ -46,8 +46,11 @@
                         @if (User.IsInRole(RoleNames.Admin))
                         {
                             <li class="nav-item"><a class='@NavClass("Users")' asp-controller="Users" asp-action="Index">Administración de usuarios</a></li>
-                        }
+                        } 
+                        @if (User.IsInRole(RoleNames.Admin))
+                        {
                         <li class="nav-item"><a class='@NavClass("Donation")' asp-controller="Donation" asp-action="Index">Donaciones</a></li>
+                        }
                         <li class="nav-item"><a class='@NavClass("Location")' asp-controller="Location" asp-action="Index">Localizaciones</a></li>
                         <li class="nav-item"><a class='@NavClass("Reservations")' asp-controller="Reservations" asp-action="Index">Reservas</a></li>
                     </ul>
