@@ -52,3 +52,5 @@ Thumbs.db
 *.snupkg
 packages/
 artifacts/
+
+NotasToni.md

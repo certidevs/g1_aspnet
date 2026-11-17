@@ -16,13 +16,25 @@ public class CategoriesController : Controller
     }
 
     // Listado de categorías con su número de prendas.
-    public IActionResult Index()
+    public IActionResult Index(string? search, int? cantPrendas)
     {
-        var categories = context.Categories
-            .Include(c => c.ClothingItems)
-            .OrderBy(c => c.Name)
-            .ToList();
+        var query = context.Categories.AsQueryable();
 
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            query = query.Where(r =>  r.Name.ToLower().Contains(search.ToLower()));
+        }
+
+        if (cantPrendas != null)
+        {
+            query = query.Where(r => r.ClothingItems.Count() == cantPrendas);
+        }
+
+        query = query.Include(c => c.ClothingItems);
+
+        // ToList() es lo que ejecuta la consulta en la base de datos.
+        var categories = query.OrderBy(r => r.Name).ToList();
         return View(categories);
     }
 

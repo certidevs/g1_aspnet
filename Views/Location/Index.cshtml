@@ -5,45 +5,6 @@
 
 
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="mb-0">Localizaciones</h1>
-    @if (User.IsInRole(RoleNames.Admin))
-    {
-        <a class="btn btn-success" asp-action="Create">Nueva Localización</a>
-    }
-</div>
-
-
-
-<p>Hay @Model.Count Localizaciones.</p>
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Ciudad</th>
-            <th>Direccion</th>
-            <th>Numero telefono</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var location in Model)
-        {
-            <tr>
-                <td><a asp-action="Details" asp-route-id="@location.Id">@location.Name</a></td>
-                <td>@location.City</td>
-                <td>@location.Address</td>
-                <td>@location.Phone</td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-@* DESCOMENTA DESDE AQUÍ si quieres la opción que puso Alan
-@{
-    ViewData["Title"] = "Localizaciones";
-}
-
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
     <div>
         <h1 class="h2 mb-1">Localizaciones</h1>
@@ -103,4 +64,4 @@ else
     </div>
 }
 
-*@
+
