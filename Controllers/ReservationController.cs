@@ -100,10 +100,24 @@ public class ReservationsController : Controller
         }
 
 
-        
+        if (reserve.Id == 0)
+        {
+            
+            context.Reservations.Add(reserve);
 
-        context.Reservations.Add(reserve);
+        }
+        else
+        {
+            
+            context.Reservations.Update(reserve);
+
+        }
+
         context.SaveChanges();
+
+        TempData["Message"] = "Reserva añadida correctamente";
+        return RedirectToAction("Details", new {id = reserve.Id});
+        
 
 
     }
