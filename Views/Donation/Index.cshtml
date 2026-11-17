@@ -27,13 +27,12 @@
         {
             <tr>
 
-                <td>@donation.DonorName</td>
+                <td><a asp-action="Details" asp-route-id="@donation.Id">@donation.DonorName</a></td>
                 <td>@donation.DonatedAt</td>
                 <td>@donation.Notes</td>
                 <td>@donation.Location?.Name</td>
                 <td class="text-end">
                     <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@donation.Id">Ver</a>
-      
                     <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@donation.Id">Editar</a>
                 </td>
             </tr>

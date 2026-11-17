@@ -105,40 +105,92 @@ public static class DbInitializer
 
         if (!await context.Donations.AnyAsync())
         {
-            var locations = await context.Locations.ToListAsync();
 
-            string[] names =
-            {
-                "María García", "Carlos López", "Laura Sánchez",
-                "Antonio Martín", "Lucía Fernández", "Javier Pérez",
-                "Carmen Ruiz", "Daniel Gómez", "Elena Torres",
-                "Miguel Díaz", "Paula Romero", "David Navarro"
-            };
+            var madrid = context.Locations.First(l => l.Name == "Oficina Madrid");
+            var barcelona = context.Locations.First(l => l.Name == "Oficina Barcelona");
+            var valencia = context.Locations.First(l => l.Name == "Oficina Valencia");
 
-            string[] notes =
-            {
-                "Donación de ropa formal",
-                "Ropa de oficina en buen estado",
-                "Donación de prendas de temporada",
-                "Ropa para entrevistas de trabajo",
-                "Varias prendas de vestir",
-                "Donación de ropa poco utilizada"
-            };
-
-            for (int i = 0; i < 12; i++)
-            {
-                var donorName = names[i];
-
-                context.Donations.Add(new Donation
+            context.Donations.AddRange(
+                new Donation
                 {
-                    DonorName = donorName,
-                    DonorEmail = $"donante{i + 1}@example.com",
-                    DonatedAt = DateTime.UtcNow.AddDays(-random.Next(1, 240)),
-                    Notes = notes[random.Next(notes.Length)],
-                    LocationId = locations[random.Next(locations.Count)].Id
+                    DonorName = "Maria del Olmo",
+                    DonorEmail = "Dolmo@example.com",
+                    DonatedAt = new DateTime(2026, 2, 2),
+                    Notes = "Donación de ropa poco utilizada",
+                    Location = barcelona
+                },
+                new Donation
+                {
+                    DonorName = "Alan Sastre",
+                    DonorEmail = "Alan@certidevs.com",
+                    DonatedAt = new DateTime(2026, 3, 3),
+                    Notes = "Ropa de oficina en buen estado",
+                    Location = valencia
+                },
+                new Donation
+                {
+                    DonorName = "Elena Nito Del Bosque",
+                    DonorEmail = "ElenaBosque@example.com",
+                    DonatedAt = new DateTime(2026, 1, 1),
+                    Notes = "Donación de ropa formal",
+                    Location = madrid
+                },
+                new Donation
+                {
+                    DonorName = "Maria Mucha Gracia",
+                    DonorEmail = "MariaGraciosilla@comicos.com",
+                    DonatedAt = new DateTime(2026, 4, 4),
+                    Notes = "Ropa de oficina, revisar",
+                    Location = madrid
+                },
+                new Donation
+                {
+                    DonorName = "Luz Cuesta Mucho",
+                    DonorEmail = "Iluminada73@example.com",
+                    DonatedAt = new DateTime(2026, 5, 5),
+                    Notes = "Dona ropa variada, Hay prendas que no valen, llevarlas a cruz roja",
+                    Location = barcelona
+                },
+                new Donation
+                {
+                    DonorName = "Armando Bronca Segura",
+                    DonorEmail = "Cabreadito@example.com",
+                    DonatedAt = new DateTime(2026, 6, 6),
+                    Notes = "Ropa en perfecto estado",
+                    Location = valencia
+                },
+                new Donation
+                {
+                    DonorName = "Dolores Fuertes de Barriga",
+                    DonorEmail = "LaDolo93@example.com",
+                    DonatedAt = new DateTime(2026, 7, 7),
+                    Notes = "Casi todo en perfecto estado, una chaqueta hay que mandarla a remendar",
+                    Location = madrid
+                },
+                new Donation
+                {
+                    DonorName = "Elsa Pato",
+                    DonorEmail = "LaDeFrozen@example.com",
+                    DonatedAt = new DateTime(2026, 8, 8),
+                    Notes = "Ropa principalmente blanca y azul, toda recien salida de la lavanderia, directa al armario",
+                    Location = barcelona
+                },
+                new Donation
+                {
+                    DonorName = "Mario Neta",
+                    DonorEmail = "MarioN@TitiriterosAnonimos.com",
+                    DonatedAt = new DateTime(2026, 9, 9),
+                    Notes = "Ropa en perfecto estado, se le ha colado un traje de muñeco, llamar para devolverselo",
+                    Location = valencia
+                },
+                new Donation
+                {
+                    DonorName = "Susana Oria",
+                    DonorEmail = "Susan@VeganosUnidos.com",
+                    DonatedAt = new DateTime(2026, 10, 10),
+                    Notes = "Ropa bastante gastada, revisar",
+                    Location = madrid
                 });
-            }
-
             await context.SaveChangesAsync();
         }
 
@@ -278,7 +330,7 @@ public static class DbInitializer
     }
 
 
-    
+
 
     private static async Task EnsureRoleAsync(RoleManager<IdentityRole> roleManager, string roleName)
     {

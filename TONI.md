@@ -7,13 +7,6 @@ Desde el **Grupo Adecco**, contamos con un amplio ropero solidario a disposició
 Nuestro objetivo es ofrecer una aplicación **útil, intuitiva y accesible**, que permita tanto a los administradores como a los usuarios.
 
 En definitiva, CorporaDress busca convertir la gestión de un recurso solidario en un proceso sencillo, organizado y accesible para todos.
-
------
-Repositorio del Grupo 1 del curso de .NET: aplicación web con C#, ASP.NET Core MVC, Razor y Entity Framework Core, desarrollada en equipo con Git y GitHub.
-Temática del grupo: Ropero Solidario – Fundación Adecco
-
-Aplicación web para gestionar un ropero solidario con ropa donada, destinada a personas que necesitan vestimenta adecuada para entrevistas de trabajo y no disponen de recursos para adquirirla.
-
 # 2 Funcionalidades principales
 
 - Llevar un catálogo de prendas con fotos, tallas y disponibilidad.
@@ -27,31 +20,12 @@ Aplicación web para gestionar un ropero solidario con ropa donada, destinada a 
 
 # 3 Entidades asignadas
 
-
-| Entidad        | Realizada por | Controlador               | Realizado por | Vista                 | Realizado por |
-| -------------- | ------------- | ------------------------- | ------------- | --------------------- | ------------- |
-| `Category`     | Jordi         | `CategoriesController`    | Cesar         | `Views/Categories`    | Cesar         |
-| `Location`     | Cesar         | `LocationController`      | Cesar         | `Views/Location`      | Cesa          |
-| `ClothingItem` | Jordi         | `ClothingItemsController` | Jordi         | `Views/ClothingItems` | Jordi         |
-| `Reservation`  | Joel          | `ReservationsController`  | Joel          | `Views/Reservations`  | Joel          |
-| `Donation`     | Toni          | `DonationController`      | Toni          | `Views/Donation`      | Toni          |
-
-
-| Entidad                 | Controlador                        | Vistas                         |
-| ----------------------- | ---------------------------------- | ------------------------------ |
-| `Category` · Jordi     | `CategoriesController` · Cesar    | `Views/Categories` · Cesar    |
-| `Location` · Cesar     | `LocationController` · Cesar      | `Views/Location` Cesar         |
-| `ClothingItem` · Jordi | `ClothingItemsController` · Jordi | `Views/ClothingItems` · Jordi |
-| `Reservation` · Joel   | `ReservationsController` · Joel   | `Views/Reservations` · Joel   |
-| `Donation` · Toni      | `DonationController` · Toni       | `Views/Donation` · Toni       |
-
-
-| Compañero | Entidad                        | Controlador                                        | Vista                                   |
-| ---------- | ------------------------------ | -------------------------------------------------- | --------------------------------------- |
-| Jordi      | `Category` · `ClothingItem` | `ClothingItemsController`                          | `Views/ClothingItems`                   |
-| Cesar      | `Location`                     | `CategoriesController` · `LocationController`  | `Views/Categories` · `Views/Location` |
-| Joel       | `Reservation`                  | `ReservationsController`                           | `Views/Reservations`                    |
-| Toni       | `Donation`                     | `DonationController`                               | `Views/Donation`                        |
+| Compañero  | Entidad                        | Controlador                                        | Vista                                  |
+| ---------- | ------------------------------ | -------------------------------------------------- | ---------------------------------------|
+| Jordi      | `Category` , `ClothingItem`    | `ClothingItemsController`                          | `Views/ClothingItems`                  |
+| Cesar      | `Location`                     | `CategoriesController` , `LocationController`      | `Views/Categories` , `Views/Location`  |
+| Joel       | `Reservation`                  | `ReservationsController`                           | `Views/Reservations`                   |
+| Toni       | `Donation`                     | `DonationController`                               | `Views/Donation`                       |
 
 ## 4 Diagrama de entidades
 
