@@ -15,10 +15,12 @@ public class Reservation
     public string? Notes { get; set; }
 
     // N Reservation → 1 ApplicationUser (quién reserva)
+    [Required (ErrorMessage="El usuario es obligatorio")]
     public string ApplicationUserId { get; set; } = string.Empty;
     public ApplicationUser? ApplicationUser { get; set; }
 
     // N Reservation → 1 ClothingItem (qué prenda se reserva)
+    [Required (ErrorMessage="La prenda es obligatoria")]
     public int ClothingItemId { get; set; }
     public ClothingItem? ClothingItem { get; set; }
 }
