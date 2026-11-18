@@ -71,7 +71,7 @@ public class ReservationsController : Controller
     public IActionResult Create ()
     {
         
-        var reserve = new Reservation        
+        var reservation = new Reservation        
         {
                        
             PickupDate = DateTime.Today.AddDays(1),
@@ -80,10 +80,29 @@ public class ReservationsController : Controller
         };
 
         LoadData();
-        return View("Form", reserve);
+        return View("Form", reservation);
 
 
     }
+
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {
+        
+        var reservation = context.Reservations.Find(id);
+        if (reservation == null)
+        {
+            
+            return NotFound();
+
+        }
+
+        LoadData();
+        return View("Form", reservation);
+
+
+    }
+
 
     [HttpPost]
     public IActionResult Save(Reservation reserve)
@@ -122,6 +141,25 @@ public class ReservationsController : Controller
 
     }
 
+    [HttpPost]
+    public IActionResult Delete(int id)
+    {
+
+        var reservation = context.Reservations.Find(id);
+        if (reservation == null)
+        {
+            
+            return NotFound();
+
+        }
+
+        context.Reservations.Remove(reservation);
+
+        TempData["Message"] = "Reserva borrada";
+        return RedirectToAction("Index");
+
+
+    }
 
 
     // TODO (issue #17): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #18)
