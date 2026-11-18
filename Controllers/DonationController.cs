@@ -1,13 +1,16 @@
 ﻿using G1AspNet.Data;
 using G1AspNet.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace G1AspNet.Controllers
 {
+    [Authorize]
     public class DonationController : Controller
     {
+        private const string StaffRoles = RoleNames.Admin + "," + RoleNames.User;
         private readonly ApplicationDbContext context;
 
         public DonationController(ApplicationDbContext context)
@@ -15,6 +18,7 @@ namespace G1AspNet.Controllers
             this.context = context;
         }
         // GET: DonationController
+        [Authorize(Roles = RoleNames.Admin)]
         public IActionResult Index()
         {
             var donations = context.Donations
@@ -23,6 +27,7 @@ namespace G1AspNet.Controllers
             .ToList();
             return View(donations);
         }
+        [Authorize(Roles = RoleNames.Admin)]
         public IActionResult Details(int id)
         {
 
@@ -47,6 +52,7 @@ namespace G1AspNet.Controllers
 
         // GET /Donation/Create
         // Enseña el formulario vacío (la vista Form sirve para crear y para editar).
+        [Authorize(Roles = RoleNames.Admin)]
         [HttpGet]
         public IActionResult Create()
         {
@@ -58,6 +64,7 @@ namespace G1AspNet.Controllers
 
         // GET /Donation/Edit/3
         // Enseña el mismo formulario relleno con los datos de la donación.
+        [Authorize(Roles = RoleNames.Admin)]
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -73,6 +80,7 @@ namespace G1AspNet.Controllers
 
         // POST /Donation/Save
         // Recibe el formulario. Id == 0 es una donación nueva; Id > 0 es una que se edita.
+        [Authorize(Roles = RoleNames.Admin)]
         [HttpPost]
         public IActionResult Save(Donation donation)
         {
@@ -101,6 +109,7 @@ namespace G1AspNet.Controllers
         // POST /Donation/Delete/3
         // Borra la donación. Sus prendas NO se borran: la relación es SetNull, así que
         // a cada prenda su DonationId le pasa a NULL (la prenda física sigue existiendo).
+        [Authorize(Roles = RoleNames.Admin)]
         [HttpPost]
         public IActionResult Delete(int id)
         {
