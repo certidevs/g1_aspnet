@@ -1,13 +1,16 @@
 ﻿using G1AspNet.Data;
 using G1AspNet.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace G1AspNet.Controllers
 {
+    [Authorize]
     public class DonationController : Controller
     {
+        private const string StaffRoles = RoleNames.Admin + "," + RoleNames.User;
         private readonly ApplicationDbContext context;
 
         public DonationController(ApplicationDbContext context)
@@ -15,6 +18,7 @@ namespace G1AspNet.Controllers
             this.context = context;
         }
         // GET: DonationController
+        [Authorize(Roles = RoleNames.Admin)]
         public IActionResult Index()
         {
             var donations = context.Donations
@@ -23,6 +27,7 @@ namespace G1AspNet.Controllers
             .ToList();
             return View(donations);
         }
+        [Authorize(Roles = RoleNames.Admin)]
         public IActionResult Details(int id)
         {
 
@@ -39,13 +44,6 @@ namespace G1AspNet.Controllers
             return View(donation);
         }
 
-        // TODO (issue #19): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #20)
-        // El código ya está escrito aquí abajo, comentado. El modelo que funciona es LocationController.
-
-        // TODO (issue #19): Create, Edit, Save y Delete
-        // Pasos: 1) borra la línea «/* DESCOMENTA DESDE AQUÍ» y la línea «FIN DESCOMENTA */», 2) ajusta los campos de tu entidad, 3) crea Views/Donation/Form.cshtml, 4) descomenta los botones de Index y Details.
-
-
         // Rellena el desplegable de sedes del formulario (la vista lo lee de ViewBag.Locations).
         private void LoadLists()
         {
@@ -54,6 +52,7 @@ namespace G1AspNet.Controllers
 
         // GET /Donation/Create
         // Enseña el formulario vacío (la vista Form sirve para crear y para editar).
+        [Authorize(Roles = RoleNames.Admin)]
         [HttpGet]
         public IActionResult Create()
         {
@@ -65,6 +64,7 @@ namespace G1AspNet.Controllers
 
         // GET /Donation/Edit/3
         // Enseña el mismo formulario relleno con los datos de la donación.
+        [Authorize(Roles = RoleNames.Admin)]
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -80,6 +80,7 @@ namespace G1AspNet.Controllers
 
         // POST /Donation/Save
         // Recibe el formulario. Id == 0 es una donación nueva; Id > 0 es una que se edita.
+        [Authorize(Roles = RoleNames.Admin)]
         [HttpPost]
         public IActionResult Save(Donation donation)
         {
@@ -108,6 +109,7 @@ namespace G1AspNet.Controllers
         // POST /Donation/Delete/3
         // Borra la donación. Sus prendas NO se borran: la relación es SetNull, así que
         // a cada prenda su DonationId le pasa a NULL (la prenda física sigue existiendo).
+        [Authorize(Roles = RoleNames.Admin)]
         [HttpPost]
         public IActionResult Delete(int id)
         {
