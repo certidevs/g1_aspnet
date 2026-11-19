@@ -23,31 +23,40 @@
         <input class="form-control" asp-for="Description" />
     </div>
 
-    @* TODO: input de elegir categoria *@
+    <div class="mb-3">
+        <label class="form-label" asp-for="CategoryId">Categoría</label>
+        <select class="form-select" asp-for="CategoryId" asp-items="ViewBag.Categories"></select>
+    </div>
 
-    @* TODO: input de elegir location *@
+    <div class="mb-3">
+        <label class="form-label" asp-for="LocationId">Localización</label>
+        <select class="form-select" asp-for="LocationId" asp-items="ViewBag.Locations"></select>
+    </div>
 
-    @* TODO: input de elegir donation o donatión llega como un campo oculto si se crea desde una donación? *@
+    <div class="mb-3">
+        <label class="form-label" asp-for="DonationId">Donación</label>
+        <select class="form-select" asp-for="DonationId" asp-items="ViewBag.Donations"></select>
+    </div>
 
-
+    @* TODO: Los select de enums no seleccionan por defecto los options placeholder *@
     <div class="mb-3">
         <label class="form-label" asp-for="Color">Color</label>
         <select class="form-select" asp-for="Color" asp-items="Html.GetEnumSelectList<ClothingColor>()">
-            <option value="">Selecciona un color</option>
+            <option value="">Selecciona el color</option>
         </select>
     </div>
 
     <div class="mb-3">
         <label class="form-label" asp-for="Material">Material</label>
         <select class="form-select" asp-for="Material" asp-items="Html.GetEnumSelectList<ClothingMaterial>()">
-            <option value="">Selecciona un material</option>
+            <option value="">Selecciona el material</option>
         </select>
     </div>
     
     <div class="mb-3">
         <label class="form-label" asp-for="SizeType">Tipo de talla</label>
         <select class="form-select" asp-for="SizeType" asp-items="Html.GetEnumSelectList<SizeType>()">
-            <option value="">Selecciona un tipo de talla</option>
+            <option value="">Selecciona el tipo de talla</option>
         </select>
     </div>
 
