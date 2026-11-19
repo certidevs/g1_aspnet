@@ -19,9 +19,21 @@ namespace G1AspNet.Controllers
         }
         // GET: DonationController
         [Authorize(Roles = RoleNames.Admin)]
-        public IActionResult Index()
+        public IActionResult Index(string? search)
         {
-            var donations = context.Donations
+            var query = context.Donations.AsQueryable();
+
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(r => r.DonorName.ToLower().Contains(search.ToLower()));
+            }
+
+
+            query = query.Include(c => c.ClothingItems);
+
+            // ToList() es lo que ejecuta la consulta en la base de datos.
+            var donations = query.OrderBy(d => d.DonorName)
             .Include(l => l.Location)
             .Include(c => c.ClothingItems)
             .ToList();
@@ -35,12 +47,12 @@ namespace G1AspNet.Controllers
             .Include(d => d.Location)
             .Include(d => d.ClothingItems)
             .FirstOrDefault(d => d.Id == id);
-            
+
             if (donation == null)
             {
                 return NotFound();
             }
-            
+
             return View(donation);
         }
 
