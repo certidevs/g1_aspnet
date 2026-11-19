@@ -1,4 +1,5 @@
-﻿using G1AspNet.Data;
+﻿using System.Runtime.InteropServices;
+using G1AspNet.Data;
 using G1AspNet.Enums;
 using G1AspNet.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -66,6 +67,10 @@ public class ClothingItemsController : Controller
             clothingItem.DonationId = donationId;
         }
 
+        LoadDonations(null);
+        LoadLocations();
+        LoadCategories();
+
         return View("Form", clothingItem);
     }
 
@@ -83,13 +88,21 @@ public class ClothingItemsController : Controller
     {
         var donations = context.Donations.OrderByDescending(d => d.DonatedAt).ToList();
 
-        var selectDonations = donations.Select(d => new
+        var donationOptions = donations.Select(d => new
         {
             Id = d.Id,
-            Name = $"{d.DonorName} - {d.DonatedAt.ToString("dd-MM-yyyy")}"
+            Name = $"{d.DonorName} ({d.DonatedAt.ToString("dd-MM-yyyy")})"
         });
 
-        ViewBag.Donations = new SelectList(selectDonations, "Id", "Name", donationId);
+        var placeholderOption = new SelectListItem
+        {
+           Value = "",
+           Text = "Selecciona la donación de origen",
+           Selected = donationId is null 
+        };
+
+        ViewBag.Donations = new SelectList(donationOptions, "Id", "Name", donationId)
+        .Prepend(placeholderOption);
     }
 
     private void LoadLocations()
@@ -99,14 +112,29 @@ public class ClothingItemsController : Controller
         .OrderBy(l => l.Name)
         .ToList();
 
-        ViewBag.Locations = new SelectList(locations, "Id", "Name");
-        
+        var placeholderOption = new SelectListItem
+        {
+           Value = "",
+           Text = "Selecciona la localización",
+           Selected = true 
+        };
+
+        ViewBag.Locations = new SelectList(locations, "Id", "Name")
+        .Prepend(placeholderOption);
     }
 
     private void LoadCategories()
     {
         var categories = context.Categories.OrderBy(c => c.Name).ToList();
-        ViewBag.Categories = new SelectList(categories, "Id", "Name");
+        var placeholderOption = new SelectListItem
+        {
+           Value = "",
+           Text = "Selecciona la categoría",
+           Selected = true 
+        };
+    
+        ViewBag.Categories = new SelectList(categories, "Id", "Name")
+        .Prepend(placeholderOption);
     }
     
     // TODO (issue #15): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #16)
