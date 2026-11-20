@@ -28,7 +28,7 @@ namespace G1AspNet.Controllers
             {
                 query = query.Where(r => r.DonorName.ToLower().Contains(search.ToLower()));
             }
-
+            ViewBag.Search = search;
 
             query = query.Include(c => c.ClothingItems);
 

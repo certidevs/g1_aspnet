@@ -13,10 +13,11 @@
     <div class="row g-2 align-items-end">
         <div class="col-md">
             <label for="search" class="form-label">Nombre del benefactor</label>
-            <input id="search" name="search" class="form-control" placeholder="Nombre del benefactor" />
+            <input id="search" name="search" value="@ViewBag.Search" class="form-control"
+                   placeholder="Nombre del benefactor" />
         </div>
         <div class="col-md-auto"><button class="btn btn-primary" type="submit">Buscar</button></div>
-        <div class="col-md-auto"><button class="btn btn-primary" type="submit">Limpiar</button></div>
+        <div class="col-md-auto"><a class="btn btn-outline-secondary" asp-action="Index">Limpiar</a></div>
     </div>
 </form>
 
