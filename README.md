@@ -22,8 +22,8 @@ En definitiva, CorporaDress busca convertir la gestión de un recurso solidario 
 
 | Compañero  | Entidad                        | Controlador                                        | Vista                                  |
 | ---------- | ------------------------------ | -------------------------------------------------- | ---------------------------------------|
-| Jordi      | `Category` , `ClothingItem`    | `ClothingItemsController`                          | `Views/ClothingItems`                  |
-| Cesar      | `Location`                     | `CategoriesController` , `LocationController`      | `Views/Categories` , `Views/Location`  |
+| Jordi      | `Category`, `ClothingItem`     | `ClothingItemsController`                          | `Views/ClothingItems`                  |
+| Cesar      | `Location`                     | `CategoriesController`, `LocationController`       | `Views/Categories`, `Views/Location`   |
 | Joel       | `Reservation`                  | `ReservationsController`                           | `Views/Reservations`                   |
 | Toni       | `Donation`                     | `DonationController`                               | `Views/Donation`                       |
 
