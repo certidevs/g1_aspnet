@@ -8,36 +8,101 @@ using Microsoft.EntityFrameworkCore;
 namespace G1AspNet.Controllers
 {
     [Authorize]
-    public class DonationController : Controller
+    public class DonationsController : Controller
     {
         private const string StaffRoles = RoleNames.Admin + "," + RoleNames.User;
         private readonly ApplicationDbContext context;
 
-        public DonationController(ApplicationDbContext context)
+        public DonationsController(ApplicationDbContext context)
         {
             this.context = context;
         }
         // GET: DonationController
         [Authorize(Roles = RoleNames.Admin)]
-        public IActionResult Index(string? search)
+        public IActionResult Index(string? search, string? shortBy, bool descending)
         {
             var query = context.Donations.AsQueryable();
 
 
             if (!string.IsNullOrEmpty(search))
             {
-                query = query.Where(r => r.DonorName.ToLower().Contains(search.ToLower()));
+                query = query.Where(r => r.DonorName.ToLower().Contains(search.ToLower().Trim()));
             }
             ViewBag.Search = search;
 
             query = query.Include(c => c.ClothingItems);
 
             // ToList() es lo que ejecuta la consulta en la base de datos.
-            var donations = query.OrderBy(d => d.DonorName)
-            .Include(l => l.Location)
-            .Include(c => c.ClothingItems)
-            .ToList();
-            return View(donations);
+            if (shortBy == "date")
+            {
+                if (!descending)
+                {
+                    var donations = query.OrderBy(d => d.DonatedAt)
+                    .Include(l => l.Location)
+                    .Include(c => c.ClothingItems)
+                    .ToList();
+                    return View(donations);
+                }
+                else
+                {
+                    var donations = query.OrderByDescending(d => d.DonatedAt)
+                    .Include(l => l.Location)
+                    .Include(c => c.ClothingItems)
+                    .ToList();
+                    return View(donations);
+                }
+
+            }
+            else if (shortBy == "location")
+            {
+                if (!descending)
+                {
+                    var donations = query.OrderBy(d => d.Location.Name)
+                    .Include(l => l.Location)
+                    .Include(c => c.ClothingItems)
+                    .ToList();
+                    return View(donations);
+                }
+                else
+                {
+                    var donations = query.OrderByDescending(d => d.Location.Name)
+                    .Include(l => l.Location)
+                    .Include(c => c.ClothingItems)
+                    .ToList();
+                    return View(donations);
+                }
+
+            }
+            else if (shortBy == "name")
+            {
+                if (!descending)
+                {
+                    var donations = query.OrderBy(d => d.DonorName)
+                    .Include(l => l.Location)
+                    .Include(c => c.ClothingItems)
+                    .ToList();
+                    return View(donations);
+                }
+                else
+                {
+                    var donations = query.OrderByDescending(d => d.DonorName)
+                    .Include(l => l.Location)
+                    .Include(c => c.ClothingItems)
+                    .ToList();
+                    return View(donations);
+                }
+
+            }
+            else
+            {
+                var donations = query.OrderBy(d => d.DonorName)
+                .Include(l => l.Location)
+                .Include(c => c.ClothingItems)
+                .ToList();
+                return View(donations);
+            }
+
+
         }
         [Authorize(Roles = RoleNames.Admin)]
         public IActionResult Details(int id)

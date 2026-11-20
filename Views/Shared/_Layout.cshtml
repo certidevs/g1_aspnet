@@ -28,6 +28,7 @@
             })();
     </script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 
@@ -50,7 +51,7 @@
                                                             asp-action="Index">Categorías</a></li>
                                     @if (User.IsInRole(RoleNames.Admin))
                                     {
-                                        <li class="nav-item"><a class='@NavClass("Donation")' asp-controller="Donation"
+                                        <li class="nav-item"><a class='@NavClass("Donation")' asp-controller="Donations"
                                                                     asp-action="Index">Donaciones</a></li>
                                         }
                                         <li class="nav-item"><a class='@NavClass("Location")' asp-controller="Location"
