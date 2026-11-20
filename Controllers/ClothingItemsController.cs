@@ -160,7 +160,6 @@ public class ClothingItemsController : Controller
         {
            Value = "",
            Text = "Selecciona la sede",
-           Selected = true 
         };
 
         ViewBag.Locations = new SelectList(locations, "Id", "Name")
@@ -174,7 +173,6 @@ public class ClothingItemsController : Controller
         {
            Value = "",
            Text = "Selecciona la categoría",
-           Selected = true 
         };
     
         ViewBag.Categories = new SelectList(categories, "Id", "Name")
