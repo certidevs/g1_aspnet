@@ -77,6 +77,11 @@ public class ClothingItemsController : Controller
     [HttpPost]
     public IActionResult Save(ClothingItem clothingItem)
     {
+        if (!ModelState.IsValid)
+        {
+            return View("Form", clothingItem);
+        }
+        
         context.ClothingItems.Add(clothingItem);
         context.SaveChanges();
 
