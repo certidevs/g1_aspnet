@@ -11,31 +11,37 @@
 </div>
 
 <form asp-action="Save" method="post" class="col-lg-8">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
     <input type="hidden" asp-for="Id" />
 
     <div class="mb-3">
         <label class="form-label" asp-for="Name">Nombre</label>
         <input class="form-control" asp-for="Name" />
+        <span class="text-danger" asp-validation-for="Name"></span>
     </div>
 
     <div class="mb-3">
         <label class="form-label" asp-for="Description">Descripción</label>
         <input class="form-control" asp-for="Description" />
+        <span class="text-danger" asp-validation-for="Description"></span>
     </div>
 
     <div class="mb-3">
         <label class="form-label" asp-for="CategoryId">Categoría</label>
         <select class="form-select" asp-for="CategoryId" asp-items="ViewBag.Categories"></select>
+        <span class="text-danger" asp-validation-for="CategoryId"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label" asp-for="LocationId">Localización</label>
+        <label class="form-label" asp-for="LocationId">Sede</label>
         <select class="form-select" asp-for="LocationId" asp-items="ViewBag.Locations"></select>
+        <span class="text-danger" asp-validation-for="LocationId"></span>
     </div>
 
     <div class="mb-3">
         <label class="form-label" asp-for="DonationId">Donación</label>
         <select class="form-select" asp-for="DonationId" asp-items="ViewBag.Donations"></select>
+        <span class="text-danger" asp-validation-for="DonationId"></span>
     </div>
 
     @* TODO: Los select de enums no seleccionan por defecto los options placeholder *@
@@ -44,6 +50,7 @@
         <select class="form-select" asp-for="Color" asp-items="Html.GetEnumSelectList<ClothingColor>()">
             <option value="">Selecciona el color</option>
         </select>
+        <span class="text-danger" asp-validation-for="Color"></span>
     </div>
 
     <div class="mb-3">
@@ -51,6 +58,7 @@
         <select class="form-select" asp-for="Material" asp-items="Html.GetEnumSelectList<ClothingMaterial>()">
             <option value="">Selecciona el material</option>
         </select>
+        <span class="text-danger" asp-validation-for="Material"></span>
     </div>
     
     <div class="mb-3">
@@ -58,6 +66,7 @@
         <select class="form-select" asp-for="SizeType" asp-items="Html.GetEnumSelectList<SizeType>()">
             <option value="">Selecciona el tipo de talla</option>
         </select>
+        <span class="text-danger" asp-validation-for="SizeType"></span>
     </div>
 
     <div class="mb-3">
@@ -71,6 +80,7 @@
         <select class="form-select" asp-for="Condition" asp-items="Html.GetEnumSelectList<ItemCondition>()">
             <option value="">Selecciona la condición de la prenda</option>
         </select>
+        <span class="text-danger" asp-validation-for="Condition"></span>
     </div>
 
     <div class="mb-3">
@@ -78,6 +88,7 @@
         <select class="form-select" asp-for="Status" asp-items="Html.GetEnumSelectList<ItemStatus>()">
             <option value="">Selecciona el estado de la prenda</option>
         </select>
+        <span class="text-danger" asp-validation-for="Status"></span>
     </div>
 
     @* TODO: Añadir input de fichero para subir una imagen *@
@@ -86,6 +97,10 @@
     <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
     
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
 
 @* DESCOMENTA DESDE AQUÍ
 <form asp-action="Save" method="post" class="card">

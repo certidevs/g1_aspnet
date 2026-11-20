@@ -120,7 +120,7 @@ public class ClothingItemsController : Controller
         var placeholderOption = new SelectListItem
         {
            Value = "",
-           Text = "Selecciona la localización",
+           Text = "Selecciona la sede",
            Selected = true 
         };
 
