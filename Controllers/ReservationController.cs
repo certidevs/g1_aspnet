@@ -61,8 +61,8 @@ public class ReservationsController : Controller
     private void LoadData ()
     {
 
-        ViewBag.ApplicationUser = new SelectList (context.Users.OrderBy(u => u.UserName), "Id", "Name");
-
+        ViewBag.Users = new SelectList(context.Users.OrderBy(u => u.UserName), "Id", "UserName");        
+        
         ViewBag.ClothingItems =  new SelectList (context.ClothingItems.OrderBy(c => c.Name), "Id", "Name");       
 
     }
