@@ -113,6 +113,22 @@ public class ClothingItemsController : Controller
         return View("Form", clothingItem);
     }
 
+    [HttpPost]
+    public IActionResult Delete(int id)
+    {
+        var clothingItem = context.ClothingItems.Find(id);
+        if(clothingItem == null)
+        {
+            return NotFound();
+        }
+
+        context.ClothingItems.Remove(clothingItem);
+        context.SaveChanges();
+
+        TempData["Message"] = "Prenda borrada.";
+        return RedirectToAction("Index");
+    }
+
     private void LoadDonations()
     {
         var donations = context.Donations.OrderByDescending(d => d.DonatedAt).ToList();
