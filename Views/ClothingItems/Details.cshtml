@@ -7,7 +7,7 @@
     <h1 class="h2 mb-0">@Model.Name</h1>
     <div class="d-flex align-items-center gap-2">
         <span class="badge fs-6 @(Model.Status == ItemStatus.Available ? "text-bg-success" : "text-bg-secondary")">@Html.DisplayFor(m => m.Status)</span>
-        @* DESCOMENTA: <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id">Editar</a> *@
+       <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
         @* DESCOMENTA DESDE AQUÍ
         <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline"
               onsubmit="return confirm('¿Seguro que quieres eliminar esta prenda?');">

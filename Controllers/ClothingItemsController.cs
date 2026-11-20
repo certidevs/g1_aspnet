@@ -67,7 +67,7 @@ public class ClothingItemsController : Controller
             clothingItem.DonationId = donationId;
         }
 
-        LoadDonations(null);
+        LoadDonations();
         LoadLocations();
         LoadCategories();
 
@@ -81,15 +81,39 @@ public class ClothingItemsController : Controller
         {
             return View("Form", clothingItem);
         }
+
+        if (clothingItem.Id == 0)
+        {
+            context.ClothingItems.Add(clothingItem);
+        }
+        else
+        {
+            context.ClothingItems.Update(clothingItem);
+        }
         
-        context.ClothingItems.Add(clothingItem);
         context.SaveChanges();
 
         TempData["Message"] = "Prenda guardada correctamente.";
         return RedirectToAction("Details", new { id = clothingItem.Id});
     }
 
-    private void LoadDonations(int? donationId)
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {
+        var clothingItem = context.ClothingItems.Find(id);
+        if(clothingItem == null)
+        {
+            return NotFound();
+        }
+
+        LoadDonations();
+        LoadLocations();
+        LoadCategories();
+
+        return View("Form", clothingItem);
+    }
+
+    private void LoadDonations()
     {
         var donations = context.Donations.OrderByDescending(d => d.DonatedAt).ToList();
 
@@ -103,10 +127,9 @@ public class ClothingItemsController : Controller
         {
            Value = "",
            Text = "Selecciona la donación de origen",
-           Selected = donationId is null 
         };
 
-        ViewBag.Donations = new SelectList(donationOptions, "Id", "Name", donationId)
+        ViewBag.Donations = new SelectList(donationOptions, "Id", "Name")
         .Prepend(placeholderOption);
     }
 

@@ -41,7 +41,7 @@ else
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td class="fw-semibold">@item.Name</td>
+                        <td class="fw-semibold"><a asp-action="Details" asp-route-id="@item.Id">@item.Name</a></td>
                         <td>@item.Category?.Name</td>
                         <td>@item.Size</td>
                         <td>@Html.DisplayFor(m => item.Color)</td>
@@ -49,7 +49,7 @@ else
                         <td>@item.Location?.Name</td>
                         <td class="text-end">
                             <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@item.Id">Ver</a>
-                            @* DESCOMENTA: <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Id">Editar</a> *@
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
                         </td>
                     </tr>
                 }
