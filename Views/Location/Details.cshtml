@@ -21,23 +21,43 @@
     }
 </div>
 
+<div class="row mt-4">
 
-<dl class="row">
-    <dt class="col-sm-3">Nombre de la Localización</dt>
-    <dd class="col-sm-9">@Model.Name</dd>
+    @* Columna izquierda *@
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-3">Nombre de la Localización</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
 
-    <dt class="col-sm-3">Ciudad</dt>
-    <dd class="col-sm-9">@Model.City</dd>
+            <dt class="col-sm-3">Ciudad</dt>
+            <dd class="col-sm-9">@Model.City</dd>
 
-    <dt class="col-sm-3">Codigo postal</dt>
-    <dd class="col-sm-9">@Model.PostalCode</dd>
+            <dt class="col-sm-3">Codigo postal</dt>
+            <dd class="col-sm-9">@Model.PostalCode</dd>
 
-    <dt class="col-sm-3">Numero de telefono</dt>
-    <dd class="col-sm-9">@Model.Phone</dd>
+            <dt class="col-sm-3">Numero de telefono</dt>
+            <dd class="col-sm-9">@Model.Phone</dd>
 
-    <dt class="col-sm-3">Horas de apertura</dt>
-    <dd class="col-sm-9">@Model.OpeningHours</dd>
-</dl>
+            <dt class="col-sm-3">Horas de apertura</dt>
+            <dd class="col-sm-9">@Model.OpeningHours</dd>
+        </dl>
+    </div>
+
+    @* Columna derecha *@
+    <div class="col-md-6">
+        <img src="https://ecool.es/img/cms/Tiendas/WhatsApp%20Image%202022-03-18%20at%2011-12-07%20(1)_1.jpeg" alt="" 
+            style="min-width: 150px;
+                max-width: 300px;
+                min-height: 150px;
+                max-height: 300px;
+                object-fit: cover;
+        ">
+    </div>
+
+</div>
+
+
+
 
 
 <div class="row mt-4">

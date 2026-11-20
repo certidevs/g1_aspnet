@@ -54,7 +54,10 @@ else
                         <td>@category.ClothingItems.Count</td>
                         <td class="text-end">
                             <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@category.Id">Ver</a>
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@category.Id">Editar</a>
+                            @if (User.IsInRole(RoleNames.Admin))
+                            {
+                                <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@category.Id">Editar</a>
+                            }
                         </td>
                     </tr>
                 }
