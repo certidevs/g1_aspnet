@@ -79,7 +79,7 @@ erDiagram
 ```
 # Imágenes de la aplicación
 
-![Página de inicio](URL_de_la_imagen_o_ruta_local)
+![Página de inicio](..\g1_aspnet\ImagesReadme\Index.png)
 ![Vista de datos de administrador](URL_de_la_imagen_o_ruta_local)
 ![Edición de datos](URL_de_la_imagen_o_ruta_local)
 ![Vista de datos de usuario](URL_de_la_imagen_o_ruta_local)
