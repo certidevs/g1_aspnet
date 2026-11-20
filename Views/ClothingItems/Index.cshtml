@@ -7,7 +7,7 @@
         <h1 class="h2 mb-1">Vestuario</h1>
         <p class="text-secondary mb-0">Prendas disponibles en nuestro ropero solidario.</p>
     </div>
-    @* DESCOMENTA: <a class="btn btn-primary" asp-action="Create">Nueva prenda</a> *@
+    <a class="btn btn-primary" asp-action="Create">Nueva prenda</a>
 </div>
 
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
@@ -41,7 +41,7 @@ else
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td class="fw-semibold">@item.Name</td>
+                        <td class="fw-semibold"><a asp-action="Details" asp-route-id="@item.Id">@item.Name</a></td>
                         <td>@item.Category?.Name</td>
                         <td>@item.Size</td>
                         <td>@Html.DisplayFor(m => item.Color)</td>
@@ -49,7 +49,7 @@ else
                         <td>@item.Location?.Name</td>
                         <td class="text-end">
                             <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@item.Id">Ver</a>
-                            @* DESCOMENTA: <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Id">Editar</a> *@
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
                         </td>
                     </tr>
                 }
