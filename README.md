@@ -1,4 +1,4 @@
-# 1 Presentacion de CorporaDress
+# Presentacion de CorporaDress
 
 **CorporaDress** nace como una iniciativa solidaria para ayudar a las personas que necesitan vestimenta adecuada para afrontar entrevistas de trabajo y otras situaciones profesionales.
 
@@ -7,7 +7,7 @@ Desde el **Grupo Adecco**, contamos con un amplio ropero solidario a disposició
 Nuestro objetivo es ofrecer una aplicación **útil, intuitiva y accesible**, que permita tanto a los administradores como a los usuarios.
 
 En definitiva, CorporaDress busca convertir la gestión de un recurso solidario en un proceso sencillo, organizado y accesible para todos.
-# 2 Funcionalidades principales
+# Funcionalidades principales
 
 - Llevar un catálogo de prendas con fotos, tallas y disponibilidad.
 - Gestión del inventario: añadir, editar y retirar prendas donadas.
@@ -27,7 +27,7 @@ En definitiva, CorporaDress busca convertir la gestión de un recurso solidario 
 | Joel       | `Reservation`                  | `ReservationsController`                           | `Views/Reservations`                   |
 | Toni       | `Donation`                     | `DonationController`                               | `Views/Donation`                       |
 
-## 4 Diagrama de entidades
+# Diagrama de entidades
 
 ```mermaid
 erDiagram
@@ -77,7 +77,7 @@ erDiagram
         int ClothingItemId FK
     }
 ```
-## 5 Imagenes de la aplicación
+# Imágenes de la aplicación
 
 ![Página de inicio](URL_de_la_imagen_o_ruta_local)
 ![Vista de datos de administrador](URL_de_la_imagen_o_ruta_local)
@@ -88,7 +88,7 @@ erDiagram
 
 
 
-## 6 Instalación inicial
+# Instalación inicial
 
 Instala .NET 10 SDK, Visual Studio Code y C# Dev Kit una sola vez en el ordenador.
 
@@ -160,4 +160,4 @@ Abre `http://localhost:5107`. El primer arranque crea `App_Data/g1.db`, crea las
 - `admin` / `Admin123!`
 - `user` / `User123!`
 
-## 6 Que hemos aprendido
+# Que hemos aprendido
