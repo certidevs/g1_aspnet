@@ -18,7 +18,7 @@ En definitiva, CorporaDress busca convertir la gestión de un recurso solidario 
 - Gestión de préstamos y devoluciones, con fechas previstas.
 - Historial de reservas y préstamos de cada usuario.
 
-# 3 Entidades asignadas
+# Entidades asignadas
 
 | Compañero  | Entidad                        | Controlador                                        | Vista                                  |
 | ---------- | ------------------------------ | -------------------------------------------------- | ---------------------------------------|
