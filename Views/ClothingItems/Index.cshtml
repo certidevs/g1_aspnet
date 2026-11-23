@@ -7,7 +7,10 @@
         <h1 class="h2 mb-1">Vestuario</h1>
         <p class="text-secondary mb-0">Prendas disponibles en nuestro ropero solidario.</p>
     </div>
-    <a class="btn btn-primary" asp-action="Create">Nueva prenda</a>
+    @if (User.IsInRole(RoleNames.Admin))
+    {
+        <a class="btn btn-primary" asp-action="Create">Nueva prenda</a>
+    }
 </div>
 
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
@@ -48,8 +51,14 @@ else
                         <td><span class="badge @(item.Status == ItemStatus.Available ? "text-bg-success" : "text-bg-secondary")">@Html.DisplayFor(m => item.Status)</span></td>
                         <td>@item.Location?.Name</td>
                         <td class="text-end">
-                            <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@item.Id">Ver</a>
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
+                            @if (User.IsInRole(RoleNames.Admin))
+                            {
+                                <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline"
+                                    onsubmit="return confirm('¿Seguro que quieres eliminar esta prenda?');">
+                                    <button class="btn btn-outline-danger" type="submit">Eliminar</button>
+                                </form>
+                            }
                         </td>
                     </tr>
                 }

@@ -7,12 +7,15 @@
     <h1 class="h2 mb-0">@Model.Name</h1>
     <div class="d-flex align-items-center gap-2">
         <span class="badge fs-6 @(Model.Status == ItemStatus.Available ? "text-bg-success" : "text-bg-secondary")">@Html.DisplayFor(m => m.Status)</span>
-       <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
-       @* TODO: Ocultar si esta prestada o tiene prestamos pendientes *@
-        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline"
-              onsubmit="return confirm('¿Seguro que quieres eliminar esta prenda?');">
-            <button class="btn btn-outline-danger" type="submit">Eliminar</button>
-        </form>
+        @* TODO: Mostrar botón de reservar para rol user *@
+        @if (User.IsInRole(RoleNames.Admin))
+        {
+            <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
+            <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline"
+                onsubmit="return confirm('¿Seguro que quieres eliminar esta prenda?');">
+                <button class="btn btn-outline-danger" type="submit">Eliminar</button>
+            </form>
+        }
     </div>
 </div>
 
