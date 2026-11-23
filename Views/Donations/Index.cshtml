@@ -23,14 +23,32 @@
 
 
 <table class="table table-striped">
-    <thead>
+    <thead class="text-nowrap">
         <tr>
 
-            <th>Nombre del benefactor</th>
-            <th>Fecha de la donacion</th>
+            <th>Nombre del
+                benefactor
+                 <a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="name"
+                              asp-route-descending="true"><i class="bi bi-arrow-up"></a></i>
+                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="name"
+                   asp-route-descending="false"><i class="bi bi-arrow-down"></i></a>
+
+
+            </th>
+            <th>Fecha de la
+                donacion<a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="date"
+                           asp-route-descending="true"><i class="bi bi-arrow-up"></a></i>
+                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="date"
+                   asp-route-descending="false"><i class="bi bi-arrow-down"></i></a>
+            </th>
             <th>Notas</th>
-            <th>Oficina</th>
+            <th>Oficina<a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="location"
+                              asp-route-descending="true"><i class="bi bi-arrow-up"></a></i>
+                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="location"
+                   asp-route-descending="false"><i class="bi bi-arrow-down"></i></a>
+            </th>
             <th></th>
+
         </tr>
     </thead>
     <tbody>
@@ -39,10 +57,10 @@
             <tr>
 
                 <td><a asp-action="Details" asp-route-id="@donation.Id">@donation.DonorName</a></td>
-                <td>@donation.DonatedAt</td>
+                <td>@donation.DonatedAt.ToString("dd/MM/yyyy")</td>
                 <td>@donation.Notes</td>
                 <td>@donation.Location?.Name</td>
-                <td class="text-end">
+                <td class="text-end text-nowrap">
                     <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@donation.Id">Ver</a>
                     <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@donation.Id">Editar</a>
                 </td>

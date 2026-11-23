@@ -1,4 +1,5 @@
-﻿using G1AspNet.Data;
+﻿using System.Runtime.InteropServices;
+using G1AspNet.Data;
 using G1AspNet.Enums;
 using G1AspNet.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -57,6 +58,127 @@ public class ClothingItemsController : Controller
         return View(clothingItem);
     }
 
+    [HttpGet]
+    public IActionResult Create(int? donationId)
+    {
+        var clothingItem = new ClothingItem {};
+        if (donationId != null)
+        {
+            clothingItem.DonationId = donationId;
+        }
+
+        LoadDonations();
+        LoadLocations();
+        LoadCategories();
+
+        return View("Form", clothingItem);
+    }
+
+    [HttpPost]
+    public IActionResult Save(ClothingItem clothingItem)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View("Form", clothingItem);
+        }
+
+        if (clothingItem.Id == 0)
+        {
+            context.ClothingItems.Add(clothingItem);
+        }
+        else
+        {
+            context.ClothingItems.Update(clothingItem);
+        }
+        
+        context.SaveChanges();
+
+        TempData["Message"] = "Prenda guardada correctamente.";
+        return RedirectToAction("Details", new { id = clothingItem.Id});
+    }
+
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {
+        var clothingItem = context.ClothingItems.Find(id);
+        if(clothingItem == null)
+        {
+            return NotFound();
+        }
+
+        LoadDonations();
+        LoadLocations();
+        LoadCategories();
+
+        return View("Form", clothingItem);
+    }
+
+    [HttpPost]
+    public IActionResult Delete(int id)
+    {
+        var clothingItem = context.ClothingItems.Find(id);
+        if(clothingItem == null)
+        {
+            return NotFound();
+        }
+
+        context.ClothingItems.Remove(clothingItem);
+        context.SaveChanges();
+
+        TempData["Message"] = "Prenda borrada.";
+        return RedirectToAction("Index");
+    }
+
+    private void LoadDonations()
+    {
+        var donations = context.Donations.OrderByDescending(d => d.DonatedAt).ToList();
+
+        var donationOptions = donations.Select(d => new
+        {
+            Id = d.Id,
+            Name = $"{d.DonorName} ({d.DonatedAt.ToString("dd-MM-yyyy")})"
+        });
+
+        var placeholderOption = new SelectListItem
+        {
+           Value = "",
+           Text = "Selecciona la donación de origen",
+        };
+
+        ViewBag.Donations = new SelectList(donationOptions, "Id", "Name")
+        .Prepend(placeholderOption);
+    }
+
+    private void LoadLocations()
+    {
+        var locations = context.Locations
+        .Where(l => l.IsActive)
+        .OrderBy(l => l.Name)
+        .ToList();
+
+        var placeholderOption = new SelectListItem
+        {
+           Value = "",
+           Text = "Selecciona la sede",
+        };
+
+        ViewBag.Locations = new SelectList(locations, "Id", "Name")
+        .Prepend(placeholderOption);
+    }
+
+    private void LoadCategories()
+    {
+        var categories = context.Categories.OrderBy(c => c.Name).ToList();
+        var placeholderOption = new SelectListItem
+        {
+           Value = "",
+           Text = "Selecciona la categoría",
+        };
+    
+        ViewBag.Categories = new SelectList(categories, "Id", "Name")
+        .Prepend(placeholderOption);
+    }
+    
     // TODO (issue #15): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #16)
     // El código ya está escrito aquí abajo, comentado. El modelo que funciona es LocationController.
 
