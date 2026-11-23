@@ -5,6 +5,7 @@ using G1AspNet.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace G1AspNet.Controllers;
 
@@ -27,7 +28,7 @@ public class ClothingItemsController : Controller
 
         if (!string.IsNullOrWhiteSpace(search))
         {
-            query = query.Where(i => i.Name.ToLower().Contains(search.ToLower()));
+            query = query.Where(i => i.Name.ToLower().Contains(search.Trim().ToLower()));
         }
 
         ViewBag.Search = search;
@@ -41,7 +42,7 @@ public class ClothingItemsController : Controller
         return View(clothingItems);
     }
 
-    public IActionResult Details(int id)
+    public IActionResult Details(int id, bool? returnToDonation = false)
     {
         var clothingItem = context.ClothingItems
             .Include(i => i.Category)
@@ -58,8 +59,9 @@ public class ClothingItemsController : Controller
         return View(clothingItem);
     }
 
+    [Authorize(Roles = RoleNames.Admin)]
     [HttpGet]
-    public IActionResult Create(int? donationId)
+    public IActionResult Create(int? donationId, bool? returnToDonation = false)
     {
         var clothingItem = new ClothingItem {};
         if (donationId != null)
@@ -74,8 +76,9 @@ public class ClothingItemsController : Controller
         return View("Form", clothingItem);
     }
 
+    [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
-    public IActionResult Save(ClothingItem clothingItem)
+    public IActionResult Save(ClothingItem clothingItem, bool? returnToDonation = false)
     {
         if (!ModelState.IsValid)
         {
@@ -97,8 +100,9 @@ public class ClothingItemsController : Controller
         return RedirectToAction("Details", new { id = clothingItem.Id});
     }
 
+    [Authorize(Roles = RoleNames.Admin)]
     [HttpGet]
-    public IActionResult Edit(int id)
+    public IActionResult Edit(int id, bool? returnToDonation = false)
     {
         var clothingItem = context.ClothingItems.Find(id);
         if(clothingItem == null)
@@ -113,8 +117,9 @@ public class ClothingItemsController : Controller
         return View("Form", clothingItem);
     }
 
+    [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
-    public IActionResult Delete(int id)
+    public IActionResult Delete(int id, bool? returnToDonation = false)
     {
         var clothingItem = context.ClothingItems.Find(id);
         if(clothingItem == null)
