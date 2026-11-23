@@ -56,6 +56,8 @@ public class ClothingItemsController : Controller
             return NotFound();
         }
 
+        ViewBag.ReturnToDonation = returnToDonation;
+
         return View(clothingItem);
     }
 
@@ -72,6 +74,7 @@ public class ClothingItemsController : Controller
         LoadDonations();
         LoadLocations();
         LoadCategories();
+        ViewBag.ReturnToDonation = returnToDonation;
 
         return View("Form", clothingItem);
     }
@@ -96,6 +99,7 @@ public class ClothingItemsController : Controller
         
         context.SaveChanges();
 
+        ViewBag.ReturnToDonation = returnToDonation;
         TempData["Message"] = "Prenda guardada correctamente.";
         return RedirectToAction("Details", new { id = clothingItem.Id});
     }
@@ -113,6 +117,7 @@ public class ClothingItemsController : Controller
         LoadDonations();
         LoadLocations();
         LoadCategories();
+        ViewBag.ReturnToDonation = returnToDonation;
 
         return View("Form", clothingItem);
     }
@@ -130,6 +135,7 @@ public class ClothingItemsController : Controller
         context.ClothingItems.Remove(clothingItem);
         context.SaveChanges();
 
+        ViewBag.ReturnToDonation = returnToDonation;
         TempData["Message"] = "Prenda borrada.";
         return RedirectToAction("Index");
     }
