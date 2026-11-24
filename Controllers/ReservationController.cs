@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using G1AspNet.ViewModels;
 using System.Runtime.CompilerServices;
 using System.Data;
+using Microsoft.VisualBasic;
 
 
 namespace G1AspNet.Controllers;
@@ -105,41 +106,51 @@ public class ReservationsController : Controller
 
 
     [HttpPost]
-    public IActionResult Save(Reservation reserve)
+  public IActionResult Save(Reservation reserve)
+{
+    if (!ModelState.IsValid)
     {
-        
-        
-        if (!ModelState.IsValid)
-        {   
+        LoadData();
+        return View("Form", reserve);
+    }
 
-            LoadData();          
-            return View("Form", reserve); 
+        bool reservaActiva =
+        reserve.Status == Enums.ReservationStatus.Confirmed ||
+        reserve.Status == Enums.ReservationStatus.Pending;
 
+    if (reservaActiva)
+    {
+        int reservasActivas = context.Reservations.Count(r =>
+            r.ClothingItemId == reserve.ClothingItemId &&
+            r.Id != reserve.Id &&
+            (r.Status == Enums.ReservationStatus.Confirmed ||
+             r.Status == Enums.ReservationStatus.Pending));
 
+        if (reservasActivas > 0)
+        {
+            ModelState.AddModelError(
+                "",
+                "Solo puede haber una reserva activa para esta prenda.");
+
+            LoadData();
+            return View("Form", reserve);
         }
-
+    }
 
         if (reserve.Id == 0)
         {
-            
             context.Reservations.Add(reserve);
-
         }
         else
         {
-            
-            context.Reservations.Update(reserve);
-
+        context.Reservations.Update(reserve);
         }
 
-        context.SaveChanges();
+            context.SaveChanges();
 
-        TempData["Message"] = "Reserva añadida correctamente";
-        return RedirectToAction("Details", new {id = reserve.Id});
-        
-
-
-    }
+            TempData["Message"] = "Reserva guardada correctamente";
+            return RedirectToAction("Details", new { id = reserve.Id });
+        }
 
     [HttpPost]
     public IActionResult Delete(int id)
