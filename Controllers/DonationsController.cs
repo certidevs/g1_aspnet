@@ -42,9 +42,10 @@ namespace G1AspNet.Controllers
                 query  = query.Where(r => r.LocationId == location);
             }
             ViewBag.date = date;
-            ViewBag.shortBy = sortBy;
+            ViewBag.sortBy = sortBy;
             ViewBag.Search = search;
             ViewBag.location = location;
+            ViewBag.descending = descending;
             LoadLists(location);
 
             query = query.Include(c => c.ClothingItems).Include(l => l.Location);

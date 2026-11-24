@@ -50,7 +50,7 @@ public class ClothingItemsController : Controller
             .Include(i => i.Donation)
             .Include(i => i.Reservations)
             .FirstOrDefault(r => r.Id == id);
-        
+
         if (clothingItem == null)
         {
             return NotFound();
@@ -63,7 +63,7 @@ public class ClothingItemsController : Controller
     [HttpGet]
     public IActionResult Create(int? donationId, bool? returnToDonation = false)
     {
-        var clothingItem = new ClothingItem {};
+        var clothingItem = new ClothingItem { };
         if (donationId != null)
         {
             clothingItem.DonationId = donationId;
@@ -78,7 +78,7 @@ public class ClothingItemsController : Controller
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
-    public IActionResult Save(ClothingItem clothingItem, bool? returnToDonation = false)
+    public IActionResult Save(ClothingItem clothingItem, int? donationId)
     {
         if (!ModelState.IsValid)
         {
@@ -93,19 +93,27 @@ public class ClothingItemsController : Controller
         {
             context.ClothingItems.Update(clothingItem);
         }
-        
+
         context.SaveChanges();
 
         TempData["Message"] = "Prenda guardada correctamente.";
-        return RedirectToAction("Details", new { id = clothingItem.Id});
+         if (donationId is not null)
+        {
+            return RedirectToAction("Details", "Donations",new{ id = donationId} );
+        }
+        else
+        {
+            return RedirectToAction("Details", new { id = clothingItem.Id });
+        }
+        
     }
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpGet]
-    public IActionResult Edit(int id, bool? returnToDonation = false)
+    public IActionResult Edit(int id, int? donationId)
     {
         var clothingItem = context.ClothingItems.Find(id);
-        if(clothingItem == null)
+        if (clothingItem == null)
         {
             return NotFound();
         }
@@ -115,6 +123,9 @@ public class ClothingItemsController : Controller
         LoadCategories();
 
         return View("Form", clothingItem);
+
+
+
     }
 
     [Authorize(Roles = RoleNames.Admin)]
@@ -122,7 +133,7 @@ public class ClothingItemsController : Controller
     public IActionResult Delete(int id, bool? returnToDonation = false)
     {
         var clothingItem = context.ClothingItems.Find(id);
-        if(clothingItem == null)
+        if (clothingItem == null)
         {
             return NotFound();
         }
@@ -146,8 +157,8 @@ public class ClothingItemsController : Controller
 
         var placeholderOption = new SelectListItem
         {
-           Value = "",
-           Text = "Selecciona la donación de origen",
+            Value = "",
+            Text = "Selecciona la donación de origen",
         };
 
         ViewBag.Donations = new SelectList(donationOptions, "Id", "Name")
@@ -163,8 +174,8 @@ public class ClothingItemsController : Controller
 
         var placeholderOption = new SelectListItem
         {
-           Value = "",
-           Text = "Selecciona la sede",
+            Value = "",
+            Text = "Selecciona la sede",
         };
 
         ViewBag.Locations = new SelectList(locations, "Id", "Name")
@@ -176,14 +187,14 @@ public class ClothingItemsController : Controller
         var categories = context.Categories.OrderBy(c => c.Name).ToList();
         var placeholderOption = new SelectListItem
         {
-           Value = "",
-           Text = "Selecciona la categoría",
+            Value = "",
+            Text = "Selecciona la categoría",
         };
-    
+
         ViewBag.Categories = new SelectList(categories, "Id", "Name")
         .Prepend(placeholderOption);
     }
-    
+
     // TODO (issue #15): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #16)
     // El código ya está escrito aquí abajo, comentado. El modelo que funciona es LocationController.
 
