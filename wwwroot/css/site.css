@@ -16,3 +16,26 @@
   font-size: .8rem;
   font-weight: 700;
 }
+
+.btn-primary {
+    --bs-btn-color: #173B3A;
+    --bs-btn-bg: #54C3BD;
+    --bs-btn-border-color: #54C3BD;
+
+    --bs-btn-hover-color: #173B3A;
+    --bs-btn-hover-bg: #43AAA4;
+    --bs-btn-hover-border-color: #43AAA4;
+
+    --bs-btn-active-color: #173B3A;
+    --bs-btn-active-bg: #39958F;
+    --bs-btn-active-border-color: #39958F;
+}
+
+
+.bg-primary {
+  background-color: #54C3BD !important;
+}
+
+.text-primary {
+  color: #54C3BD !important;
+}
