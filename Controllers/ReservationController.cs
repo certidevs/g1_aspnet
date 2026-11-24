@@ -155,6 +155,8 @@ public class ReservationsController : Controller
 
         context.Reservations.Remove(reservation);
 
+        context.SaveChanges();
+
         TempData["Message"] = "Reserva borrada";
         return RedirectToAction("Index");
 
