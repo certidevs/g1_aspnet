@@ -1,7 +1,12 @@
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
 @model List<Donation>
+
 @{
     ViewData["Title"] = "Donaciones";
+
+    // Preparamos las fechas y el orden una sola vez
+    string? dateFromStr = ViewBag.dateFrom != null ? ((DateTime)ViewBag.dateFrom).ToString("yyyy-MM-dd") : null;
+    string? dateToStr = ViewBag.dateTo != null ? ((DateTime)ViewBag.dateTo).ToString("yyyy-MM-dd") : null;
 }
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
 
@@ -22,42 +27,42 @@
 
 
 <form method="get" class="card card-body mb-4 shadow-sm">
-    <div class="row g-3 align-items-end">
+    <div class="row g-2 align-items-end">
 
-        <div class="col-md-4">
-            <label for="search" class="form-label">
-                Nombre del benefactor
-            </label>
-            <input id="search" name="search" value="@ViewBag.Search" class="form-control"
-                   placeholder="Nombre del benefactor" />
+        <!-- 3 columnas -->
+        <div class="col-lg-3 col-md-6">
+            <label for="search" class="form-label">Benefactor</label>
+            <input id="search" name="search" value="@ViewBag.Search" class="form-control" placeholder="Nombre..." />
         </div>
 
-        <div class="col-md-3">
-            <label for="date" class="form-label">
-                Fecha de la donación
-            </label>
-            <input id="date" name="date"
-                   value="@(ViewBag.date == null ? "" : ((DateTime)ViewBag.date).ToString("yyyy-MM-dd"))" type="date"
-                   class="form-control" />
+        <!-- 2 columnas -->
+        <div class="col-lg-2 col-md-6">
+            <label for="dateFrom" class="form-label">Desde</label>
+            <input id="dateFrom" name="dateFrom" type="date" class="form-control"
+                   value="@(ViewBag.dateFrom != null ? ((DateTime)ViewBag.dateFrom).ToString("yyyy-MM-dd") : "")" />
         </div>
 
-        <div class="col-md-3">
-            <label for="location" class="form-label">
-                Sede donde se entrega
-            </label>
+        <!-- 2 columnas -->
+        <div class="col-lg-2 col-md-6">
+            <label for="dateTo" class="form-label">Hasta</label>
+            <input id="dateTo" name="dateTo" type="date" class="form-control"
+                   value="@(ViewBag.dateTo != null ? ((DateTime)ViewBag.dateTo).ToString("yyyy-MM-dd") : "")" />
+        </div>
+
+        <!-- 3 columnas -->
+        <div class="col-lg-3 col-md-6">
+            <label for="location" class="form-label">Sede</label>
             <select id="location" name="location" asp-items="@ViewBag.locations" class="form-select">
-                <option value=""></option>
+                <option value="">Todas</option>
             </select>
         </div>
 
-        <div class="col-md-auto">
-            <button class="btn btn-primary" type="submit">
+        <!-- 2 columnas para los botones -->
+        <div class="col-lg-2 col-12 d-flex gap-2">
+            <button class="btn btn-primary w-100" type="submit">
                 Buscar
             </button>
-        </div>
-
-        <div class="col-md-auto">
-            <a class="btn btn-outline-secondary" asp-action="Index">
+            <a class="btn btn-outline-secondary w-100" asp-action="Index">
                 Limpiar
             </a>
         </div>
@@ -67,14 +72,14 @@
 
 
 
-
 <table class="table table-striped">
     <thead class="text-nowrap">
         <tr>
             <th>
                 <a class="text-reset text-decoration-none" asp-action="Index" asp-route-sortBy="name"
                    asp-route-descending="@(!(ViewBag.descending ?? false))" asp-route-search="@ViewBag.Search"
-                   asp-route-date="@ViewBag.date" asp-route-location="@ViewBag.location">
+                   asp-route-dateFrom="@dateFromStr" asp-route-dateTo="@dateToStr"
+                   asp-route-location="@ViewBag.location">
                     Nombre del
                     benefactor
                 </a>
@@ -87,7 +92,8 @@
             <th>
                 <a class="text-reset text-decoration-none" asp-action="Index" asp-route-sortBy="date"
                    asp-route-descending="@(!(ViewBag.descending ?? false))" asp-route-search="@ViewBag.Search"
-                   asp-route-date="@ViewBag.date" asp-route-location="@ViewBag.location">
+                   asp-route-dateFrom="@dateFromStr" asp-route-dateTo="@dateToStr"
+                   asp-route-location="@ViewBag.location">
                     Fecha de la
                     donacion
                 </a>
@@ -104,7 +110,8 @@
             <th>
                 <a class="text-reset text-decoration-none" asp-action="Index" asp-route-sortBy="location"
                    asp-route-descending="@(!(ViewBag.descending ?? false))" asp-route-search="@ViewBag.Search"
-                   asp-route-date="@ViewBag.date" asp-route-location="@ViewBag.location">
+                   asp-route-dateFrom="@dateFromStr" asp-route-dateTo="@dateToStr"
+                   asp-route-location="@ViewBag.location">
                     Oficina
                 </a>
                     

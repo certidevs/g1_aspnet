@@ -25,7 +25,8 @@ namespace G1AspNet.Controllers
         }
         // GET: DonationController
         [Authorize(Roles = RoleNames.Admin)]
-        public IActionResult Index(string? search, DateTime? date, int? location ,string? sortBy, bool descending)
+        public IActionResult Index(string? search, DateTime? dateFrom,
+    DateTime? dateTo, int? location, string? sortBy, bool descending)
         {
             var query = context.Donations.AsQueryable();
 
@@ -33,15 +34,22 @@ namespace G1AspNet.Controllers
             {
                 query = query.Where(r => r.DonorName.ToLower().Contains(search.ToLower().Trim()));
             }
-            if (date is not null)
+            if (dateFrom is not null)
             {
-                query = query.Where(r => r.DonatedAt.Date == date.Value.Date );
+                query = query.Where(r => r.DonatedAt >= dateFrom.Value.Date);
+            }
+
+            if (dateTo is not null)
+            {
+                var endDate = dateTo.Value.Date.AddDays(1);
+                query = query.Where(r => r.DonatedAt < endDate);
             }
             if (location is not null)
             {
-                query  = query.Where(r => r.LocationId == location);
+                query = query.Where(r => r.LocationId == location);
             }
-            ViewBag.date = date;
+            ViewBag.dateFrom = dateFrom;
+            ViewBag.dateTo = dateTo;
             ViewBag.sortBy = sortBy;
             ViewBag.Search = search;
             ViewBag.location = location;
