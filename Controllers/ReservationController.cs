@@ -7,6 +7,7 @@ using G1AspNet.ViewModels;
 using System.Runtime.CompilerServices;
 using System.Data;
 using Microsoft.VisualBasic;
+using G1AspNet.Enums;
 
 
 namespace G1AspNet.Controllers;
@@ -114,9 +115,32 @@ public class ReservationsController : Controller
         return View("Form", reserve);
     }
 
+
+        bool expires = reserve.Status == Enums.ReservationStatus.Cancelled || 
+        reserve.Status == Enums.ReservationStatus.Expired;
+
+
+
+        if (expires)
+        {
+
+            ClothingItem prenda = context.ClothingItems.             
+            FirstOrDefault(p => p.Id == reserve.ClothingItemId);
+
+            prenda.Status = ItemStatus.Available;
+
+            
+        }
+     
+        
+
+
+
         bool reservaActiva =
         reserve.Status == Enums.ReservationStatus.Confirmed ||
         reserve.Status == Enums.ReservationStatus.Pending;
+
+        
 
     if (reservaActiva)
     {
