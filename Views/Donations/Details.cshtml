@@ -54,7 +54,7 @@ else
             @foreach (var clothingItem in Model.ClothingItems.OrderBy(c => c.Name))
             {
                 <tr>
-                    <td><a asp-controller="ClothingItem" asp-action="Details"
+                    <td><a asp-controller="ClothingItems" asp-action="Details"
                                asp-route-id="@clothingItem.Id">@clothingItem.Name</a></td>
                     </tr>
                 }
