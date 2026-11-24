@@ -14,9 +14,9 @@ namespace G1AspNet.Controllers
         private readonly ApplicationDbContext context;
 
         // Rellena el desplegable de sedes del formulario (la vista lo lee de ViewBag.Locations).
-        private void LoadLists()
+        private void LoadLists(int? selectedLocation = null)
         {
-            ViewBag.Locations = new SelectList(context.Locations.OrderBy(l => l.Name), "Id", "Name");
+            ViewBag.Locations = new SelectList(context.Locations.OrderBy(l => l.Name), "Id", "Name", selectedLocation);
         }
 
         public DonationsController(ApplicationDbContext context)
@@ -25,7 +25,7 @@ namespace G1AspNet.Controllers
         }
         // GET: DonationController
         [Authorize(Roles = RoleNames.Admin)]
-        public IActionResult Index(string? search, string? shortBy, bool descending)
+        public IActionResult Index(string? search, DateTime? date, int? location ,string? shortBy, bool descending)
         {
             var query = context.Donations.AsQueryable();
 
@@ -33,9 +33,19 @@ namespace G1AspNet.Controllers
             {
                 query = query.Where(r => r.DonorName.ToLower().Contains(search.ToLower().Trim()));
             }
-            
+            if (date is not null)
+            {
+                query = query.Where(r => r.DonatedAt.Date == date.Value.Date );
+            }
+            if (location is not null)
+            {
+                query  = query.Where(r => r.LocationId == location);
+            }
+            ViewBag.date = date;
             ViewBag.shortBy = shortBy;
             ViewBag.Search = search;
+            ViewBag.location = location;
+            LoadLists(location);
 
             query = query.Include(c => c.ClothingItems).Include(l => l.Location);
 

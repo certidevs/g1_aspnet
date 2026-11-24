@@ -1,3 +1,4 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @model List<Donation>
 @{
     ViewData["Title"] = "Donaciones";
@@ -9,17 +10,51 @@
 
 <p>Hay @Model.Count Donaciones.</p>
 
-<form method="get" class="card card-body mb-4">
-    <div class="row g-2 align-items-end">
-        <div class="col-md">
-            <label for="search" class="form-label">Nombre del benefactor</label>
+
+
+<form method="get" class="card card-body mb-4 shadow-sm">
+    <div class="row g-3 align-items-end">
+
+        <div class="col-md-4">
+            <label for="search" class="form-label">
+                Nombre del benefactor
+            </label>
             <input id="search" name="search" value="@ViewBag.Search" class="form-control"
                    placeholder="Nombre del benefactor" />
         </div>
-        <div class="col-md-auto"><button class="btn btn-primary" type="submit">Buscar</button></div>
-        <div class="col-md-auto"><a class="btn btn-outline-secondary" asp-action="Index">Limpiar</a></div>
+
+        <div class="col-md-3">
+            <label for="date" class="form-label">
+                Fecha de la donación
+            </label>
+            <input id="date" name="date" value="@ViewBag.date" type="date" class="form-control" />
+        </div>
+
+        <div class="col-md-3">
+            <label for="location" class="form-label">
+                Sede donde se entrega
+            </label>
+            <select id="location" name="location" asp-items="@ViewBag.locations" class="form-select">
+                <option value=""></option>
+            </select>
+        </div>
+
+        <div class="col-md-auto">
+            <button class="btn btn-primary" type="submit">
+                Buscar
+            </button>
+        </div>
+
+        <div class="col-md-auto">
+            <a class="btn btn-outline-secondary" asp-action="Index">
+                Limpiar
+            </a>
+        </div>
+
     </div>
 </form>
+
+
 
 
 <table class="table table-striped">
@@ -28,24 +63,30 @@
 
             <th>Nombre del
                 benefactor
-                 <a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="name"
-                              asp-route-descending="true"><i class="bi bi-arrow-up"></a></i>
                 <a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="name"
-                   asp-route-descending="false"><i class="bi bi-arrow-down"></i></a>
+                   asp-route-descending="true" asp-route-search="@ViewBag.Search" asp-route-date="@ViewBag.date"
+                   asp-route-location="@ViewBag.location"><i class="bi bi-arrow-up"></a></i>
+                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="name"
+                   asp-route-descending="false" asp-route-search="@ViewBag.Search" asp-route-date="@ViewBag.date"
+                   asp-route-location="@ViewBag.location"><i class=" bi bi-arrow-down"></i></a>
 
 
             </th>
             <th>Fecha de la
                 donacion<a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="date"
-                           asp-route-descending="true"><i class="bi bi-arrow-up"></a></i>
+                           asp-route-descending="true" asp-route-search="@ViewBag.Search" asp-route-date="@ViewBag.date"
+                   asp-route-location="@ViewBag.location"><i class="bi bi-arrow-up"></a></i>
                 <a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="date"
-                   asp-route-descending="false"><i class="bi bi-arrow-down"></i></a>
+                   asp-route-descending="false" asp-route-search="@ViewBag.Search" asp-route-date="@ViewBag.date"
+                   asp-route-location="@ViewBag.location"><i class="bi bi-arrow-down"></i></a>
             </th>
             <th>Notas</th>
             <th>Oficina<a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="location"
-                              asp-route-descending="true"><i class="bi bi-arrow-up"></a></i>
+                              asp-route-descending="true" asp-route-search="@ViewBag.Search" asp-route-date="@ViewBag.date"
+                   asp-route-location="@ViewBag.location"><i class="bi bi-arrow-up"></a></i>
                 <a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="location"
-                   asp-route-descending="false"><i class="bi bi-arrow-down"></i></a>
+                   asp-route-descending="false" asp-route-search="@ViewBag.Search" asp-route-date="@ViewBag.date"
+                   asp-route-location="@ViewBag.location"><i class="bi bi-arrow-down"></i></a>
             </th>
             <th></th>
 
