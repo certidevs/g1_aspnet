@@ -42,7 +42,7 @@ public class ClothingItemsController : Controller
         return View(clothingItems);
     }
 
-    public IActionResult Details(int id, bool? returnToDonation = false)
+    public IActionResult Details(int id, int? donationId)
     {
         var clothingItem = context.ClothingItems
             .Include(i => i.Category)
@@ -56,12 +56,15 @@ public class ClothingItemsController : Controller
             return NotFound();
         }
 
-        return View(clothingItem);
+            return View(clothingItem);
+        
+
+
     }
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpGet]
-    public IActionResult Create(int? donationId, bool? returnToDonation = false)
+    public IActionResult Create(int? donationId)
     {
         var clothingItem = new ClothingItem { };
         if (donationId != null)
@@ -73,7 +76,10 @@ public class ClothingItemsController : Controller
         LoadLocations();
         LoadCategories();
 
-        return View("Form", clothingItem);
+            return View("Form", clothingItem);
+        
+
+
     }
 
     [Authorize(Roles = RoleNames.Admin)]
@@ -97,15 +103,15 @@ public class ClothingItemsController : Controller
         context.SaveChanges();
 
         TempData["Message"] = "Prenda guardada correctamente.";
-         if (donationId is not null)
+ /*        if (donationId is not null)
         {
-            return RedirectToAction("Details", "Donations",new{ id = donationId} );
+            return RedirectToAction("Details", "Donations", new { id = donationId });
         }
         else
-        {
+        { */
             return RedirectToAction("Details", new { id = clothingItem.Id });
-        }
         
+
     }
 
     [Authorize(Roles = RoleNames.Admin)]
@@ -122,15 +128,14 @@ public class ClothingItemsController : Controller
         LoadLocations();
         LoadCategories();
 
-        return View("Form", clothingItem);
-
-
+            return View("Form", clothingItem);
+        
 
     }
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
-    public IActionResult Delete(int id, bool? returnToDonation = false)
+    public IActionResult Delete(int id, int? donationId)
     {
         var clothingItem = context.ClothingItems.Find(id);
         if (clothingItem == null)
@@ -142,7 +147,9 @@ public class ClothingItemsController : Controller
         context.SaveChanges();
 
         TempData["Message"] = "Prenda borrada.";
-        return RedirectToAction("Index");
+            return RedirectToAction("Index");
+        
+
     }
 
     private void LoadDonations()
