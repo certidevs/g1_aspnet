@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace G1AspNet.Controllers;
 
@@ -18,8 +19,26 @@ public class ClothingItemsController : Controller
         this.context = context;
     }
 
-    public IActionResult Index(string? search, ClothingColor? color, ClothingMaterial? Material, SizeType? SizeType, string? Size, ItemCondition? Condition, ItemStatus? Status)
+    public IActionResult Index(string? search,
+        ClothingColor? color, 
+        ClothingMaterial? Material, 
+        SizeType? SizeType, 
+        string? Size, 
+        ItemCondition? Condition, 
+        ItemStatus? Status,
+        string? sortBy = "Name",
+        bool? sortDescending = false)
     {
+        ViewBag.Search = search;
+
+        string[] validSortBy = {"Name", "Category", "Size", "Color", "State", "Location"};
+        if (!validSortBy.Contains(sortBy))
+        {
+            sortBy = validSortBy[0];
+        }
+
+        ViewBag.sortBy = sortBy;
+        ViewBag.sortDescending = sortDescending;
 
         // TODO: ¿Filtrar por periodo en el que está libre
         // TODO: ¿Valores por defecto de Condition y Status?
@@ -31,13 +50,14 @@ public class ClothingItemsController : Controller
             query = query.Where(i => i.Name.ToLower().Contains(search.Trim().ToLower()));
         }
 
-        ViewBag.Search = search;
-
-        var clothingItems = query.OrderBy(i => i.Name)
+        query = query
             .Include(i => i.Category)
             .Include(i => i.Location)
-            .Include(i => i.Donation)
-            .ToList();
+            .Include(i => i.Donation);
+
+        // TODO: swicth de sortBy, teniendo en cuenta descending
+
+        var clothingItems = query.ToList();
 
         return View(clothingItems);
     }
