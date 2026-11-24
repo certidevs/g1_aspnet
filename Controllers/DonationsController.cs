@@ -60,7 +60,9 @@ namespace G1AspNet.Controllers
                         query = descending ? query.OrderBy(d => d.DonatedAt) : query.OrderByDescending(d => d.DonatedAt);
                         break;
                     case "location":
-                        query = descending ? query.OrderBy(d => d.Location.Name) : query.OrderByDescending(d => d.Location.Name);
+                        query = descending
+                            ? query.OrderBy(d => d.Location == null ? null : d.Location.Name)
+                            : query.OrderByDescending(d => d.Location == null ? null : d.Location.Name);
                         break;
                     default:
                         query = query.OrderBy(d => d.DonorName);
