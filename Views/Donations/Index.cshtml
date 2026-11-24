@@ -23,35 +23,40 @@
 
 </div>
 
-
-
-
 <form method="get" class="card card-body mb-4 shadow-sm">
     <div class="row g-2 align-items-end">
 
         <!-- 3 columnas -->
         <div class="col-lg-3 col-md-6">
-            <label for="search" class="form-label">Benefactor</label>
+            <label for="search" class="form-label">
+                Benefactor
+            </label>
             <input id="search" name="search" value="@ViewBag.Search" class="form-control" placeholder="Nombre..." />
         </div>
 
         <!-- 2 columnas -->
         <div class="col-lg-2 col-md-6">
-            <label for="dateFrom" class="form-label">Desde</label>
+            <label for="dateFrom" class="form-label">
+                Desde
+            </label>
             <input id="dateFrom" name="dateFrom" type="date" class="form-control"
                    value="@(ViewBag.dateFrom != null ? ((DateTime)ViewBag.dateFrom).ToString("yyyy-MM-dd") : "")" />
         </div>
 
         <!-- 2 columnas -->
         <div class="col-lg-2 col-md-6">
-            <label for="dateTo" class="form-label">Hasta</label>
+            <label for="dateTo" class="form-label">
+                Hasta
+            </label>
             <input id="dateTo" name="dateTo" type="date" class="form-control"
                    value="@(ViewBag.dateTo != null ? ((DateTime)ViewBag.dateTo).ToString("yyyy-MM-dd") : "")" />
         </div>
 
         <!-- 3 columnas -->
         <div class="col-lg-3 col-md-6">
-            <label for="location" class="form-label">Sede</label>
+            <label for="location" class="form-label">
+                Sede
+            </label>
             <select id="location" name="location" asp-items="@ViewBag.locations" class="form-select">
                 <option value="">Todas</option>
             </select>
@@ -69,8 +74,6 @@
 
     </div>
 </form>
-
-
 
 <table class="table table-striped">
     <thead class="text-nowrap">
@@ -120,25 +123,41 @@
                     <i class="bi @(ViewBag.descending == true ? "bi-arrow-down" : "bi-arrow-up")"></i>
                 }
             </th>
-
-            <th>
-
-            </th>
-
+            <th></th>
         </tr>
     </thead>
     <tbody>
+
         @foreach (var donation in Model)
         {
             <tr>
 
-                <td><a asp-action="Details" asp-route-id="@donation.Id">@donation.DonorName</a></td>
-                <td>@donation.DonatedAt.ToString("dd/MM/yyyy")</td>
-                <td>@donation.Notes</td>
-                <td>@donation.Location?.Name</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@donation.Id">
+                        @donation.DonorName
+                    </a>
+                </td>
+
+                <td>
+                    @donation.DonatedAt.ToString("dd/MM/yyyy")
+                </td>
+
+                <td>
+                    @donation.Notes
+                </td>
+
+                <td>
+                    @donation.Location?.Name
+                </td>
+
                 <td class="text-end text-nowrap">
-                    <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@donation.Id">Ver</a>
-                    <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@donation.Id">Editar</a>
+                    <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@donation.Id">
+                        Ver
+                    </a>
+
+                    <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@donation.Id">
+                        Editar
+                    </a>
                 </td>
             </tr>
         }
