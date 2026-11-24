@@ -37,7 +37,7 @@
             <label for="date" class="form-label">
                 Fecha de la donación
             </label>
-            <input id="date" name="date" value="@ViewBag.date" type="date" class="form-control" />
+            <input id="date" name="date" value="@(ViewBag.date == null ? "" : ((DateTime)ViewBag.date).ToString("yyyy-MM-dd"))" type="date" class="form-control" />
         </div>
 
         <div class="col-md-3">
@@ -73,28 +73,28 @@
 
             <th>Nombre del
                 benefactor
-                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="name"
+                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-sortBy="name"
                    asp-route-descending="true" asp-route-search="@ViewBag.Search" asp-route-date="@ViewBag.date"
                    asp-route-location="@ViewBag.location"><i class="bi bi-arrow-up"></a></i>
-                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="name"
+                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-sortBy="name"
                    asp-route-descending="false" asp-route-search="@ViewBag.Search" asp-route-date="@ViewBag.date"
                    asp-route-location="@ViewBag.location"><i class=" bi bi-arrow-down"></i></a>
 
 
             </th>
             <th>Fecha de la
-                donacion<a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="date"
+                donacion<a class="text-reset text-decoration-none" asp-action="Index" asp-route-sortBy="date"
                            asp-route-descending="true" asp-route-search="@ViewBag.Search" asp-route-date="@ViewBag.date"
                            asp-route-location="@ViewBag.location"><i class="bi bi-arrow-up"></a></i>
-                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="date"
+                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-sortBy="date"
                    asp-route-descending="false" asp-route-search="@ViewBag.Search" asp-route-date="@ViewBag.date"
                    asp-route-location="@ViewBag.location"><i class="bi bi-arrow-down"></i></a>
             </th>
             <th>Notas</th>
-            <th>Oficina<a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="location"
+            <th>Oficina<a class="text-reset text-decoration-none" asp-action="Index" asp-route-sortBy="location"
                               asp-route-descending="true" asp-route-search="@ViewBag.Search" asp-route-date="@ViewBag.date"
                               asp-route-location="@ViewBag.location"><i class="bi bi-arrow-up"></a></i>
-                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-shortBy="location"
+                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-sortBy="location"
                    asp-route-descending="false" asp-route-search="@ViewBag.Search" asp-route-date="@ViewBag.date"
                    asp-route-location="@ViewBag.location"><i class="bi bi-arrow-down"></i></a>
             </th>
