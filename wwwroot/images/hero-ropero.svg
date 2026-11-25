@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 400" role="img" aria-label="Ilustración de un ropero solidario con prendas formales colgadas">
+  <title>Ropero solidario</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFF6CF"/>
+      <stop offset="1" stop-color="#CDEEEB"/>
+    </linearGradient>
+  </defs>
+  <rect width="480" height="400" rx="28" fill="url(#bg)"/>
+  <circle cx="400" cy="70" r="46" fill="#FFD43B" opacity=".9"/>
+  <circle cx="60" cy="340" r="62" fill="#FFD43B" opacity=".45"/>
+  <!-- suelo -->
+  <ellipse cx="240" cy="362" rx="190" ry="14" fill="#000000" opacity=".15"/>
+  <!-- perchero -->
+  <g stroke="#000000" stroke-width="7" stroke-linecap="round" fill="none">
+    <line x1="64" y1="64" x2="416" y2="64"/>
+    <line x1="64" y1="64" x2="64" y2="360"/>
+    <line x1="416" y1="64" x2="416" y2="360"/>
+    <line x1="44" y1="360" x2="84" y2="360"/>
+    <line x1="396" y1="360" x2="436" y2="360"/>
+  </g>
+  <!-- americana -->
+  <g>
+    <path d="M120 64v14" stroke="#000000" stroke-width="4" fill="none"/>
+    <path d="M90 104 L120 80 L150 104" stroke="#000000" stroke-width="4" fill="none" stroke-linejoin="round"/>
+    <path d="M88 108 L68 132 L74 262 L166 262 L172 132 L152 108 L128 130 L120 160 L112 130 Z" fill="#000000"/>
+    <path d="M112 130 L120 160 L128 130 L120 112 Z" fill="#54C3BD"/>
+    <circle cx="120" cy="196" r="3" fill="#54C3BD"/>
+    <circle cx="120" cy="222" r="3" fill="#54C3BD"/>
+  </g>
+  <!-- camisa -->
+  <g>
+    <path d="M205 64v14" stroke="#000000" stroke-width="4" fill="none"/>
+    <path d="M175 104 L205 80 L235 104" stroke="#000000" stroke-width="4" fill="none" stroke-linejoin="round"/>
+    <path d="M176 108 L150 132 L168 170 L178 160 L178 250 L232 250 L232 160 L242 170 L260 132 L234 108 L205 128 Z" fill="#FFFFFF" stroke="#2B2B2B" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M176 108 L205 128 L234 108 L222 104 L205 118 L188 104 Z" fill="#EEF9F8" stroke="#2B2B2B" stroke-width="2"/>
+    <line x1="205" y1="128" x2="205" y2="250" stroke="#54C3BD" stroke-width="2"/>
+  </g>
+  <!-- camisa con corbata -->
+  <g>
+    <path d="M290 64v14" stroke="#000000" stroke-width="4" fill="none"/>
+    <path d="M260 104 L290 80 L320 104" stroke="#000000" stroke-width="4" fill="none" stroke-linejoin="round"/>
+    <path d="M261 108 L235 132 L253 170 L263 160 L263 258 L317 258 L317 160 L327 170 L345 132 L319 108 L290 128 Z" fill="#54C3BD" stroke="#2B2B2B" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M261 108 L290 128 L319 108 L307 104 L290 118 L273 104 Z" fill="#FFFFFF" opacity=".8"/>
+    <path d="M290 130 L283 142 L290 150 L297 142 Z M290 150 L282 200 L290 214 L298 200 Z" fill="#000000"/>
+  </g>
+  <!-- pantalón -->
+  <g>
+    <path d="M370 64v14" stroke="#000000" stroke-width="4" fill="none"/>
+    <path d="M345 100 L370 80 L395 100" stroke="#000000" stroke-width="4" fill="none" stroke-linejoin="round"/>
+    <path d="M346 104 L394 104 L398 300 L376 300 L370 170 L364 300 L342 300 Z" fill="#2B2B2B"/>
+    <rect x="346" y="104" width="48" height="10" fill="#000000"/>
+    <line x1="370" y1="114" x2="370" y2="170" stroke="#000000" stroke-width="2"/>
+  </g>
+  <!-- maletín -->
+  <g transform="translate(180 296)">
+    <path d="M26 0 v-10 a6 6 0 0 1 6 -6 h28 a6 6 0 0 1 6 6 v10" fill="none" stroke="#000000" stroke-width="5"/>
+    <rect x="0" y="0" width="92" height="56" rx="8" fill="#FFD43B" stroke="#000000" stroke-width="4"/>
+    <rect x="0" y="22" width="92" height="6" fill="#000000" opacity=".25"/>
+    <rect x="40" y="18" width="12" height="14" rx="2" fill="#000000"/>
+  </g>
+</svg>

@@ -9,6 +9,7 @@ using System.Data;
 using Microsoft.VisualBasic;
 using G1AspNet.Enums;
 using G1AspNet.Utilities;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace G1AspNet.Controllers;
@@ -219,6 +220,40 @@ public class ReservationsController : Controller
 
     }
 
+
+    // este metodo establece el estado de la reserva indicada como "PickedUp" y su prenda correspondiente como "Delivered"
+    [Authorize(Roles = RoleNames.Admin)]
+    [HttpPost]
+    public IActionResult SetPickedUp(int id)
+    {
+        var reservation = context.Reservations.Find(id);
+
+        // se comprueba que la reserva existe y si su estado es Pending o confirmed
+        if (reservation != null && 
+            (reservation.Status == ReservationStatus.Pending || 
+             reservation.Status == ReservationStatus.Confirmed)
+        )
+        {
+            reservation.Status = ReservationStatus.PickedUp; // asigna la reserva como Recogida
+
+            // si tiene prenda, asigna la prenda como enviada
+            var clothingItem = context.ClothingItems.Find(reservation.ClothingItemId);
+            if (clothingItem != null) {
+                clothingItem.Status = ItemStatus.Delivered; 
+                context.Update(clothingItem);
+            }
+
+            context.Update(reservation);
+            context.SaveChanges();
+
+            TempData["Message"] = "Entrega realizada con exito.";
+            return RedirectToAction("Index");
+        }
+
+        TempData["Message"] = "No se pudo actualizar el estado de la reserva.";
+        return RedirectToAction("Details", new { id } );
+        
+    }
 
     // TODO (issue #17): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #18)
     // El código ya está escrito aquí abajo, comentado. El modelo que funciona es LocationController.

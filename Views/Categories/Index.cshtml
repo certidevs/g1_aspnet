@@ -28,7 +28,14 @@
             <label for="cantPrendas" class="form-label">Cantidad</label>
             <input id="cantPrendas" name="cantPrendas" class="form-control" placeholder="Cantidad de prendas" />
         </div>
-        <div class="col-md-auto"><button class="btn btn-primary" type="submit">Buscar</button></div>
+        <div class="col-lg-2 col-12 d-flex gap-2">
+            <button class="btn btn-primary" type="submit">
+                Buscar
+            </button>
+            <a class="btn btn-outline-secondary w-100" asp-action="Index">
+                Limpiar
+            </a>
+        </div>
     </div>
 </form>
 
@@ -49,7 +56,7 @@ else
                 @foreach (var category in Model)
                 {
                     <tr>
-                        <td class="fw-semibold">@category.Name</td>
+                        <td class="fw-semibold"><a asp-action="Details" asp-route-id="@category.Id">@category.Name</a></td>
                         <td>@category.Description</td>
                         <td>@category.ClothingItems.Count</td>
                         <td class="text-end">

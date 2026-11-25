@@ -102,37 +102,31 @@ public class CategoriesController : Controller
         }
 
 
-        // si el category no repite su nombre con otro ya contenido en la base de datos y si da el caso, no es el mismo, lo guarda
-        // si no lo cumple, no lo guarda y salta un mensaje de error
-
-        // Console.WriteLine(context.Categories.Any(c => c.Name.ToLower() == category.Name.ToLower() && c.Id != category.Id));
-
-
-        if (!context.Categories.Any(c => c.Name.ToLower() == category.Name.ToLower() && c.Id != category.Id))
+        // El nombre no puede repetirse con el de otra categoría (la propia, al editar, no cuenta).
+        // Si se repite, se vuelve al formulario con lo escrito y el error junto al campo.
+        var name = category.Name.Trim();
+        if (context.Categories.Any(c => c.Name.ToLower() == name.ToLower() && c.Id != category.Id))
         {
-            if (category.Id == 0)
-            {
-                context.Categories.Add(category);
-            }
-            else
-            {
-                context.Categories.Update(category);
-            }
+            ModelState.AddModelError(nameof(Category.Name), "Ya existe una categoría con ese nombre.");
+            return View("Form", category);
+        }
 
-            context.SaveChanges();
+        category.Name = name;
 
-            TempData["Message"] = "Categoría guardada correctamente.";
-
-            return RedirectToAction("Details", new { id = category.Id });
+        if (category.Id == 0)
+        {
+            context.Categories.Add(category);
         }
         else
         {
-            TempData["Error"] = "Categoría no guardada, nombre duplicado y no el mismo.";
+            context.Categories.Update(category);
         }
 
-        return RedirectToAction("Create");
+        context.SaveChanges();
 
-        
+        TempData["Message"] = "Categoría guardada correctamente.";
+
+        return RedirectToAction("Details", new { id = category.Id });
     }
 
 

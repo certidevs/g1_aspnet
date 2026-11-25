@@ -144,8 +144,8 @@ public class LocationController : Controller
 
 
     // POST /Location/Delete/3
-    // No borra la sede: solo la desactiva (IsActive = false). Se hace por POST porque cambia datos.
-    // No se permite desactivar una sede que tenga prendas o donaciones.
+    // Borra la sede de verdad. Se hace por POST porque cambia datos.
+    // No se permite borrar una sede que tenga prendas o donaciones (la relación es Restrict).
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
     public IActionResult Delete(int id)
@@ -161,19 +161,19 @@ public class LocationController : Controller
         }
 
         // Comprobamos los dependientes ANTES de tocar nada.
-        if (location.ClothingItems.Count <= 0 && location.Donations.Count <= 0)
-        {
-            context.Locations.Remove(location);
-            context.SaveChanges();
-
-            TempData["Message"] = "Localización desactivada correctamente.";
-        }
-        else
+        if (location.ClothingItems.Count > 0 || location.Donations.Count > 0)
         {
             // TempData["Error"] se enseña como aviso rojo. Nunca dejamos que esto acabe en un error 500.
-            TempData["Error"] = "No se puede desactivar la localización: tiene prendas o donaciones registradas.";
+            TempData["Error"] = "No se puede eliminar la localización: tiene prendas o donaciones registradas.";
+            return RedirectToAction("Details", new { id });
         }
 
-        return RedirectToAction("Details", new { id });
+        context.Locations.Remove(location);
+        context.SaveChanges();
+
+        TempData["Message"] = "Localización eliminada correctamente.";
+
+        // La sede ya no existe: no se puede volver a su Details (daría 404).
+        return RedirectToAction("Index");
     }
 }
