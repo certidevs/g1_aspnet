@@ -86,7 +86,7 @@
                         {
                             <tr>
                                 <td>
-                                    <a asp-controller="ClothingItem"
+                                    <a asp-controller="ClothingItems"
                                        asp-action="Details"
                                        asp-route-id="@clothingItem.Id">
                                         @clothingItem.Name
@@ -100,7 +100,9 @@
         }
     </div>
 
-    @* Columna derecha: Lista de donaciones *@
+    @* Columna derecha: Lista de donaciones. Lleva nombres de donantes (datos personales): solo para el Admin. *@
+    @if (User.IsInRole(RoleNames.Admin))
+    {
     <div class="col-md-6">
         <h2 class="h4">Lista de donaciones</h2>
 
@@ -137,6 +139,7 @@
             </div>
         }
     </div>
+    }
 
 </div>
 

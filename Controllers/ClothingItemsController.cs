@@ -88,6 +88,10 @@ public class ClothingItemsController : Controller
     {
         if (!ModelState.IsValid)
         {
+            // Hay que volver a cargar los desplegables, o el formulario reaparece sin opciones.
+            LoadDonations();
+            LoadLocations();
+            LoadCategories();
             return View("Form", clothingItem);
         }
 
@@ -141,6 +145,13 @@ public class ClothingItemsController : Controller
         if (clothingItem == null)
         {
             return NotFound();
+        }
+
+        // Las reservas son historial (la relación es Restrict): se comprueba antes de borrar para no provocar un error 500.
+        if (context.Reservations.Any(r => r.ClothingItemId == id))
+        {
+            TempData["Error"] = "No se puede eliminar la prenda: tiene reservas. Edítala y ponla en estado Retirada.";
+            return RedirectToAction("Details", new { id });
         }
 
         context.ClothingItems.Remove(clothingItem);

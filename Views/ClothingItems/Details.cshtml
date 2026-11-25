@@ -54,17 +54,21 @@
         }
     </dd>
 
-    <dt class="col-sm-3">Donación</dt>
-    <dd class="col-sm-9">
-        @if (Model.Donation != null)
-        {
-            <a asp-controller="Donations" asp-action="Details" asp-route-id="@Model.Donation.Id">Donación de @Model.Donation.DonorName</a>
-        }
-        else
-        {
-            <span class="text-secondary">Sin donación</span>
-        }
-    </dd>
+    @* La donación lleva el nombre del donante (dato personal): solo la ve el Admin. *@
+    @if (User.IsInRole(RoleNames.Admin))
+    {
+        <dt class="col-sm-3">Donación</dt>
+        <dd class="col-sm-9">
+            @if (Model.Donation != null)
+            {
+                <a asp-controller="Donations" asp-action="Details" asp-route-id="@Model.Donation.Id">Donación de @Model.Donation.DonorName</a>
+            }
+            else
+            {
+                <span class="text-secondary">Sin donación</span>
+            }
+        </dd>
+    }
 </dl>
 
 <h2 class="h4 mt-4">Reservas de esta prenda (@Model.Reservations.Count)</h2>

@@ -80,7 +80,7 @@
         <tr>
             <th>
                 <a class="text-reset text-decoration-none" asp-action="Index" asp-route-sortBy="name"
-                   asp-route-descending="@(!(ViewBag.descending ?? false))" asp-route-search="@ViewBag.Search"
+                   asp-route-descending="@(ViewBag.sortBy == "name" && !(ViewBag.descending ?? false))" asp-route-search="@ViewBag.Search"
                    asp-route-dateFrom="@dateFromStr" asp-route-dateTo="@dateToStr"
                    asp-route-location="@ViewBag.location">
                     Nombre del
@@ -94,7 +94,7 @@
 
             <th>
                 <a class="text-reset text-decoration-none" asp-action="Index" asp-route-sortBy="date"
-                   asp-route-descending="@(!(ViewBag.descending ?? false))" asp-route-search="@ViewBag.Search"
+                   asp-route-descending="@(ViewBag.sortBy == "date" && !(ViewBag.descending ?? false))" asp-route-search="@ViewBag.Search"
                    asp-route-dateFrom="@dateFromStr" asp-route-dateTo="@dateToStr"
                    asp-route-location="@ViewBag.location">
                     Fecha de la
@@ -112,7 +112,7 @@
 
             <th>
                 <a class="text-reset text-decoration-none" asp-action="Index" asp-route-sortBy="location"
-                   asp-route-descending="@(!(ViewBag.descending ?? false))" asp-route-search="@ViewBag.Search"
+                   asp-route-descending="@(ViewBag.sortBy == "location" && !(ViewBag.descending ?? false))" asp-route-search="@ViewBag.Search"
                    asp-route-dateFrom="@dateFromStr" asp-route-dateTo="@dateToStr"
                    asp-route-location="@ViewBag.location">
                     Oficina

@@ -63,15 +63,15 @@ namespace G1AspNet.Controllers
                 switch (sortBy)
                 {
                     case "name":
-                        query = descending ? query.OrderBy(d => d.DonorName) : query.OrderByDescending(d => d.DonorName);
+                        query = descending ? query.OrderByDescending(d => d.DonorName) : query.OrderBy(d => d.DonorName);
                         break;
                     case "date":
-                        query = descending ? query.OrderBy(d => d.DonatedAt) : query.OrderByDescending(d => d.DonatedAt);
+                        query = descending ? query.OrderByDescending(d => d.DonatedAt) : query.OrderBy(d => d.DonatedAt);
                         break;
                     case "location":
                         query = descending
-                            ? query.OrderBy(d => d.Location == null ? null : d.Location.Name)
-                            : query.OrderByDescending(d => d.Location == null ? null : d.Location.Name);
+                            ? query.OrderByDescending(d => d.Location == null ? null : d.Location.Name)
+                            : query.OrderBy(d => d.Location == null ? null : d.Location.Name);
                         break;
                     default:
                         query = query.OrderBy(d => d.DonorName);
