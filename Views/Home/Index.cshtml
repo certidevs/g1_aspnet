@@ -1,37 +1,175 @@
+@using G1AspNet.Controllers
+@using G1AspNet.Models
 @{
     ViewData["Title"] = "Inicio";
+    var available = (int)ViewData["AvailableItems"]!;
+    var donations = (int)ViewData["Donations"]!;
+    var reservations = (int)ViewData["Reservations"]!;
+    var activeLocations = (int)ViewData["Locations"]!;
+    var categories = (List<HomeController.CategorySummary>)ViewData["Categories"]!;
+    var locations = (List<Location>)ViewData["ActiveLocations"]!;
 }
 
-<section class="py-4 py-lg-5">
-    <div class="row align-items-center g-4">
-        <div class="col-lg-8">
-            <p class="text-primary text-uppercase fw-semibold small mb-2">Grupo 1</p>
-            <h1 class="display-5 fw-bold">G1 ASP.NET</h1>
-            <p class="lead text-secondary">La infraestructura transversal ya está preparada. El equipo añadirá las entidades, asociaciones, servicios, controladores y vistas del dominio del proyecto.</p>
-            <div class="d-flex flex-wrap gap-2">
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    <a class="btn btn-primary" asp-controller="Profile" asp-action="Index">Ver mi perfil</a>
-                }
-                else
-                {
-                    <a class="btn btn-primary" asp-controller="Account" asp-action="Register">Crear cuenta</a>
-                    <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Login">Iniciar sesión</a>
-                }
+<div class="adecco-home">
+
+    <!-- Hero -->
+    <section class="adecco-hero rounded-4 p-4 p-lg-5 mb-5">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <span class="badge adecco-badge rounded-pill mb-3">
+                    <i class="fa-solid fa-hand-holding-heart me-1"></i> Ropero solidario · Grupo Adecco
+                </span>
+                <h1 class="display-4 fw-bold lh-1 mb-3">Vístete para tu próxima <span class="adecco-highlight">oportunidad</span></h1>
+                <p class="lead mb-4">
+                    En CorporaDress reservamos prendas formales para quien afronta una entrevista de trabajo.
+                    Elige, reserva y recógela en una de nuestras sedes. Sin coste y con dignidad.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <a class="btn btn-primary btn-lg" asp-controller="ClothingItems" asp-action="Index">
+                        <i class="fa-solid fa-shirt me-2"></i>Ver prendas
+                    </a>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a class="btn btn-outline-primary btn-lg" asp-controller="Profile" asp-action="Index">
+                            <i class="fa-regular fa-user me-2"></i>Mi perfil
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline-primary btn-lg" asp-controller="Account" asp-action="Register">
+                            <i class="fa-solid fa-user-plus me-2"></i>Crear cuenta
+                        </a>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-5 text-center">
+                <img class="img-fluid adecco-hero-img" src="~/images/hero-ropero.svg" alt="Perchero con americana, camisas y pantalón listos para una entrevista" />
             </div>
         </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="h5">Incluido desde el primer día</h2>
-                    <ul class="mb-0 ps-3">
-                        <li>Identity, roles y login por cookie</li>
-                        <li>SQLite y Entity Framework Core</li>
-                        <li>Perfil, avatar y cambio de contraseña</li>
-                        <li>Administración de usuarios</li>
-                    </ul>
+    </section>
+
+    <!-- Cifras -->
+    <section class="adecco-stats rounded-4 mb-5" aria-label="Cifras del ropero">
+        <div class="row g-0 text-center">
+            <div class="col-6 col-md-3 py-4">
+                <div class="adecco-stat-icon"><i class="fa-solid fa-shirt"></i></div>
+                <div class="adecco-stat-number">@available</div>
+                <div class="adecco-stat-label">Prendas disponibles</div>
+            </div>
+            <div class="col-6 col-md-3 py-4">
+                <div class="adecco-stat-icon"><i class="fa-solid fa-gift"></i></div>
+                <div class="adecco-stat-number">@donations</div>
+                <div class="adecco-stat-label">Donaciones recibidas</div>
+            </div>
+            <div class="col-6 col-md-3 py-4">
+                <div class="adecco-stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
+                <div class="adecco-stat-number">@reservations</div>
+                <div class="adecco-stat-label">Reservas realizadas</div>
+            </div>
+            <div class="col-6 col-md-3 py-4">
+                <div class="adecco-stat-icon"><i class="fa-solid fa-location-dot"></i></div>
+                <div class="adecco-stat-number">@activeLocations</div>
+                <div class="adecco-stat-label">Sedes activas</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cómo funciona -->
+    <section class="mb-5">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">Así de sencillo</h2>
+            <p class="text-secondary mb-0">Tres pasos para llegar a tu entrevista con la mejor imagen.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card adecco-step h-100">
+                    <div class="card-body p-4">
+                        <span class="adecco-step-number">1</span>
+                        <i class="fa-solid fa-magnifying-glass adecco-step-icon adecco-pastel-blue"></i>
+                        <h3 class="h5">Elige tu look</h3>
+                        <p class="text-secondary mb-0">Filtra por categoría, talla y estado para encontrar la prenda que mejor te encaja.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card adecco-step h-100">
+                    <div class="card-body p-4">
+                        <span class="adecco-step-number">2</span>
+                        <i class="fa-solid fa-calendar-check adecco-step-icon adecco-pastel-yellow"></i>
+                        <h3 class="h5">Reserva la fecha</h3>
+                        <p class="text-secondary mb-0">Indica cuándo la necesitas. La dejamos apartada para ti hasta el día de la entrevista.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card adecco-step h-100">
+                    <div class="card-body p-4">
+                        <span class="adecco-step-number">3</span>
+                        <i class="fa-solid fa-handshake adecco-step-icon adecco-pastel-green"></i>
+                        <h3 class="h5">Recoge y brilla</h3>
+                        <p class="text-secondary mb-0">Pasa por la sede, llévatela y, cuando termines, devuélvela para que ayude a otra persona.</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
+    <!-- Categorías -->
+    @if (categories.Count > 0)
+    {
+        <section class="mb-5">
+            <h2 class="fw-bold mb-3">Qué puedes encontrar</h2>
+            <div class="d-flex flex-wrap gap-2">
+                @foreach (var category in categories)
+                {
+                    <a class="adecco-chip" asp-controller="ClothingItems" asp-action="Index">
+                        <i class="fa-solid fa-tag me-1"></i>@category.Name
+                        <span class="badge rounded-pill ms-1">@category.Available</span>
+                    </a>
+                }
+            </div>
+        </section>
+    }
+
+    <!-- Sedes -->
+    @if (locations.Count > 0)
+    {
+        <section class="mb-5">
+            <div class="d-flex justify-content-between align-items-end mb-3">
+                <h2 class="fw-bold mb-0">Dónde recogerlas</h2>
+                <a asp-controller="Location" asp-action="Index" class="small fw-semibold">Todas las sedes <i class="fa-solid fa-arrow-right ms-1"></i></a>
+            </div>
+            <div class="row g-3">
+                @foreach (var location in locations)
+                {
+                    <div class="col-md-4">
+                        <div class="card h-100 adecco-location">
+                            <div class="card-body">
+                                <h3 class="h5"><i class="fa-solid fa-location-dot me-2 adecco-accent"></i>@location.Name</h3>
+                                <p class="mb-1">@location.Address, @location.City</p>
+                                @if (!string.IsNullOrWhiteSpace(location.OpeningHours))
+                                {
+                                    <p class="mb-1 text-secondary small"><i class="fa-regular fa-clock me-1"></i>@location.OpeningHours</p>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(location.Phone))
+                                {
+                                    <p class="mb-0 text-secondary small"><i class="fa-solid fa-phone me-1"></i>@location.Phone</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+    }
+
+    <!-- Llamada a la acción -->
+    <section class="adecco-cta rounded-4 p-4 p-lg-5 text-center">
+        <i class="fa-solid fa-heart fa-2x mb-3"></i>
+        <h2 class="fw-bold">¿Tienes ropa formal que ya no usas?</h2>
+        <p class="mb-4">Tu donación puede ser la diferencia en la entrevista de alguien. Acércate a cualquiera de nuestras sedes.</p>
+        <a class="btn btn-dark btn-lg" asp-controller="Location" asp-action="Index">
+            <i class="fa-solid fa-box-open me-2"></i>Quiero donar
+        </a>
+    </section>
+</div>
