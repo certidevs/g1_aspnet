@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Data;
 using Microsoft.VisualBasic;
 using G1AspNet.Enums;
+using G1AspNet.Utilities;
 
 
 namespace G1AspNet.Controllers;
@@ -27,13 +28,33 @@ public class ReservationsController : Controller
     public IActionResult Index()
     {
         
-        var reservations = context.Reservations
+
+        
+        if (User.IsInRole(RoleNames.Admin))
+        {
+            var reservations = context.Reservations
             .Include(r => r.ClothingItem)
             .Include(r => r.ApplicationUser)
             .OrderBy(r => r.Id)
             .ToList();
 
-        return View(reservations);
+            
+
+            return View(reservations);
+
+            
+
+
+        }
+        
+
+        var reservationsUser = context.Reservations.
+        Where(r => r.ApplicationUserId == User.GetRequiredUserId())
+        .ToList();
+
+        return View(reservationsUser);
+        
+        
 
 
     }
