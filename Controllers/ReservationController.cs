@@ -198,27 +198,28 @@ public class ReservationsController : Controller
         TempData["Message"] = "Reserva guardada correctamente";
         return RedirectToAction("Details", new { id = reserve.Id });
     }
-
+    [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
     public IActionResult Delete(int id)
     {
 
-        var reservation = context.Reservations.Find(id);
+        var reservation = context.Reservations.Include(r => r.ClothingItem).FirstOrDefault(r => r.Id == id);
         if (reservation == null)
         {
 
             return NotFound();
 
         }
-
+        if (IsActive(reservation) && reservation.ClothingItem != null)
+        {
+            reservation.ClothingItem.Status = ItemStatus.Available;
+        }
         context.Reservations.Remove(reservation);
 
         context.SaveChanges();
 
         TempData["Message"] = "Reserva borrada";
         return RedirectToAction("Index");
-
-
     }
 
 
@@ -281,7 +282,7 @@ public class ReservationsController : Controller
 
         return query;
     }
-    
+
     [HttpPost]
     public IActionResult Cancel(int id)
     {
@@ -318,6 +319,7 @@ public class ReservationsController : Controller
 
         return RedirectToAction("Details", new { id });
     }
+
 
     // TODO (issue #17): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #18)
     // El código ya está escrito aquí abajo, comentado. El modelo que funciona es LocationController.
