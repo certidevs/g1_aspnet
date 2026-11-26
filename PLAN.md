@@ -175,6 +175,7 @@ Lo que funciona ahora mismo.
 
 - Ideas tras terminar el MVP.
 - Revisar la posibilidad de editar reservas.
+- Que las reservas caduquen automaticamente
 
 ## 8. Dudas, ruegos y preguntas
 
