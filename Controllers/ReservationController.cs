@@ -130,7 +130,7 @@ public class ReservationsController : Controller
 
             
 
-            Console.WriteLine("He pasado por aqui");
+            
 
         }
 
