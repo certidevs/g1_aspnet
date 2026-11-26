@@ -202,15 +202,12 @@ public class ReservationsController : Controller
 
         if (expires)
         {
-<<<<<<< HEAD
 
             Available(reserve.ClothingItemId);
-=======
             ClothingItem prenda = context.ClothingItems.
             FirstOrDefault(p => p.Id == reserve.ClothingItemId);
 
             prenda.Status = ItemStatus.Available;
->>>>>>> 1dff4cbd549faf90d12df9547f698587430fa69f
 
         }
 
