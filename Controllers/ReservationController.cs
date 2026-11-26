@@ -26,7 +26,7 @@ public class ReservationsController : Controller
         this.context = context;
 
     }
-
+    [Authorize]
     public IActionResult Index()
     {
 
@@ -48,13 +48,18 @@ public class ReservationsController : Controller
 
 
         }
+       
+            var reservationsUser = context.Reservations.
+            Where(r => r.ApplicationUserId == User.GetRequiredUserId())
+            .ToList();
+
+            return View(reservationsUser);
 
 
-        var reservationsUser = context.Reservations.
-        Where(r => r.ApplicationUserId == User.GetRequiredUserId())
-        .ToList();
+        
 
-        return View(reservationsUser);
+
+        
 
 
 
@@ -198,7 +203,7 @@ public class ReservationsController : Controller
         TempData["Message"] = "Reserva guardada correctamente";
         return RedirectToAction("Details", new { id = reserve.Id });
     }
-    [Authorize(Roles = RoleNames.Admin)]
+    
     [HttpPost]
     public IActionResult Delete(int id)
     {
