@@ -6,7 +6,19 @@
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
     <h1 class="h2 mb-0">Reserva @Model.Id</h1>
     <div class="d-flex align-items-center gap-2">
+
         <span class="badge fs-6 text-bg-secondary">@Html.DisplayFor(m => m.Status)</span>
+
+        @* Boton para marcar la reserva como recogida y marcar como enviada las prendas relacionadas *@
+        @if (User.IsInRole(RoleNames.Admin))
+        {
+            <form asp-action="SetPickedUp" asp-route-id="@Model.Id" method="post" class="d-inline">
+                <button type="submit" class="btn btn-outline-secondary">
+                    Marcar como recogida
+                </button>
+            </form>
+        }
+
         <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id">Editar</a> 
         
         <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline"

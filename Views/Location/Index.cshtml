@@ -1,4 +1,5 @@
 ﻿@model List<Location>
+    
 @{
     ViewData [ "Title"] = "Localizaciones";
 }
@@ -18,15 +19,27 @@
 
 <form method="get" class="card card-body mb-4">
     <div class="row g-2 align-items-end">
+
         <div class="col-md">
-            <label for="search" class="form-label">Nombre</label>
-            <input id="search" name="search" class="form-control" placeholder="Nombre de la sede" />
+            <label for="search" class="form-label">
+                Nombre
+            </label>
+            <input id="search" name="search" value="@ViewBag.Search" class="form-control" placeholder="Nombre de la sede" />
         </div>
+
         <div class="col-md">
             <label for="city" class="form-label">Ciudad</label>
-            <input id="city" name="city" class="form-control" placeholder="Ciudad" />
+            <input id="city" name="city" value="@ViewBag.city" class="form-control" placeholder="Ciudad" />
         </div>
-        <div class="col-md-auto"><button class="btn btn-primary" type="submit">Buscar</button></div>
+        
+        <div class="col-lg-2 col-12 d-flex gap-2">
+            <button class="btn btn-primary" type="submit">
+                Buscar
+            </button>
+            <a class="btn btn-outline-secondary w-100" asp-action="Index">
+                Limpiar
+            </a>
+        </div>
     </div>
 </form>
 
@@ -45,7 +58,7 @@ else
                 @foreach (var location in Model)
                 {
                     <tr>
-                        <td class="fw-semibold">@location.Name</td>
+                        <td class="fw-semibold"><a asp-action="Details" asp-route-id="@location.Id">@location.Name</a></td>
                         <td>@location.City</td>
                         <td>@location.Address</td>
                         <td>@location.Phone</td>

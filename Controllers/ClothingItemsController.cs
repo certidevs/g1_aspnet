@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace G1AspNet.Controllers;
 
@@ -84,7 +83,7 @@ public class ClothingItemsController : Controller
         return View(clothingItems);
     }
 
-    public IActionResult Details(int id, bool? returnToDonation = false)
+    public IActionResult Details(int id, int? donationId, bool returnToDonation = false)
     {
         var clothingItem = context.ClothingItems
             .Include(i => i.Category)
@@ -92,7 +91,7 @@ public class ClothingItemsController : Controller
             .Include(i => i.Donation)
             .Include(i => i.Reservations)
             .FirstOrDefault(r => r.Id == id);
-        
+
         if (clothingItem == null)
         {
             return NotFound();
@@ -100,14 +99,17 @@ public class ClothingItemsController : Controller
 
         ViewBag.ReturnToDonation = returnToDonation;
 
-        return View(clothingItem);
+            return View(clothingItem);
+        
+
+
     }
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpGet]
-    public IActionResult Create(int? donationId, bool? returnToDonation = false)
+    public IActionResult Create(int? donationId, bool returnToDonation = false)
     {
-        var clothingItem = new ClothingItem {};
+        var clothingItem = new ClothingItem { };
         if (donationId != null)
         {
             clothingItem.DonationId = donationId;
@@ -123,10 +125,14 @@ public class ClothingItemsController : Controller
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
-    public IActionResult Save(ClothingItem clothingItem, bool? returnToDonation = false)
+    public IActionResult Save(ClothingItem clothingItem, int? donationId, bool returnToDonation = false)
     {
         if (!ModelState.IsValid)
         {
+            // Hay que volver a cargar los desplegables, o el formulario reaparece sin opciones.
+            LoadDonations();
+            LoadLocations();
+            LoadCategories();
             return View("Form", clothingItem);
         }
 
@@ -138,20 +144,20 @@ public class ClothingItemsController : Controller
         {
             context.ClothingItems.Update(clothingItem);
         }
-        
+
         context.SaveChanges();
 
         ViewBag.ReturnToDonation = returnToDonation;
         TempData["Message"] = "Prenda guardada correctamente.";
-        return RedirectToAction("Details", new { id = clothingItem.Id});
+        return RedirectToAction("Details", new { id = clothingItem.Id });
     }
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpGet]
-    public IActionResult Edit(int id, bool? returnToDonation = false)
+    public IActionResult Edit(int id, int? donationId, bool returnToDonation = false)
     {
         var clothingItem = context.ClothingItems.Find(id);
-        if(clothingItem == null)
+        if (clothingItem == null)
         {
             return NotFound();
         }
@@ -161,17 +167,24 @@ public class ClothingItemsController : Controller
         LoadCategories();
         ViewBag.ReturnToDonation = returnToDonation;
 
-        return View("Form", clothingItem);
+            return View("Form", clothingItem);
     }
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
-    public IActionResult Delete(int id, bool? returnToDonation = false)
+    public IActionResult Delete(int id, int? donationId, bool returnToDonation = false)
     {
         var clothingItem = context.ClothingItems.Find(id);
-        if(clothingItem == null)
+        if (clothingItem == null)
         {
             return NotFound();
+        }
+
+        // Las reservas son historial (la relación es Restrict): se comprueba antes de borrar para no provocar un error 500.
+        if (context.Reservations.Any(r => r.ClothingItemId == id))
+        {
+            TempData["Error"] = "No se puede eliminar la prenda: tiene reservas. Edítala y ponla en estado Retirada.";
+            return RedirectToAction("Details", new { id });
         }
 
         context.ClothingItems.Remove(clothingItem);
@@ -179,7 +192,9 @@ public class ClothingItemsController : Controller
 
         ViewBag.ReturnToDonation = returnToDonation;
         TempData["Message"] = "Prenda borrada.";
-        return RedirectToAction("Index");
+            return RedirectToAction("Index");
+        
+
     }
 
     private void LoadDonations()
@@ -194,8 +209,8 @@ public class ClothingItemsController : Controller
 
         var placeholderOption = new SelectListItem
         {
-           Value = "",
-           Text = "Selecciona la donación de origen",
+            Value = "",
+            Text = "Selecciona la donación de origen",
         };
 
         ViewBag.Donations = new SelectList(donationOptions, "Id", "Name")
@@ -211,8 +226,8 @@ public class ClothingItemsController : Controller
 
         var placeholderOption = new SelectListItem
         {
-           Value = "",
-           Text = "Selecciona la sede",
+            Value = "",
+            Text = "Selecciona la sede",
         };
 
         ViewBag.Locations = new SelectList(locations, "Id", "Name")
@@ -224,14 +239,14 @@ public class ClothingItemsController : Controller
         var categories = context.Categories.OrderBy(c => c.Name).ToList();
         var placeholderOption = new SelectListItem
         {
-           Value = "",
-           Text = "Selecciona la categoría",
+            Value = "",
+            Text = "Selecciona la categoría",
         };
-    
+
         ViewBag.Categories = new SelectList(categories, "Id", "Name")
         .Prepend(placeholderOption);
     }
-    
+
     // TODO (issue #15): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #16)
     // El código ya está escrito aquí abajo, comentado. El modelo que funciona es LocationController.
 

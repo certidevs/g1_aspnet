@@ -1,5 +1,82 @@
-/* Bootstrap lleva el estilo de la plantilla. Solo se añade el avatar, que no existe
-   como componente nativo y será común a todos los proyectos de grupo. */
+/* ==========================================================================
+   CorporaDress · Manual de marca de Fundación Adecco (v1.0, 2017)
+
+   Colores primarios: turquesa #54C3BD, negro y blanco. Se permiten con distintas
+   transparencias.
+   Colores secundarios: el amarillo (intenso y pastel) aporta calidez; el resto, tonos pastel (rojo, verde, amarillo, violeta, azul, naranja)
+   para señalar y diferenciar en gráficos y tablas. El manual no da el código
+   exacto, así que son aproximaciones pastel.
+   Tipografías: la marca usa Lust, Archer y Neutraface (de pago). Para documentos
+   que usan terceros el propio manual fija Georgia en titulares y Arial en cuerpo
+   de texto, que son las que se usan aquí.
+   Bootstrap lleva el estilo base; aquí solo se sobrescriben sus variables.
+   ========================================================================== */
+:root {
+  /* Primarios */
+  --adecco-teal: #54C3BD;
+  --adecco-black: #000000;
+  --adecco-white: #FFFFFF;
+  /* Turquesa con transparencia sobre blanco */
+  --adecco-teal-soft: #EEF9F8;
+  --adecco-teal-line: #BFE8E5;
+  /* Turquesa oscurecido: solo para texto pequeño sobre blanco (el #54C3BD no alcanza contraste) */
+  --adecco-teal-text: #17847E;
+
+  /* Secundarios (pasteles) */
+  --adecco-red: #F6B5B0;
+  --adecco-green: #BFE3B4;
+  --adecco-yellow: #FBE49A;
+  /* Amarillo intenso: acento cálido que equilibra el turquesa frío */
+  --adecco-yellow-strong: #FFD43B;
+  --adecco-violet: #D4C5F0;
+  --adecco-blue: #B6D7F2;
+  --adecco-orange: #F9CFA0;
+
+  /* Tipografías */
+  --adecco-font-title: Georgia, "Times New Roman", serif;
+  --adecco-font-body: Arial, Helvetica, sans-serif;
+
+  --bs-font-sans-serif: var(--adecco-font-body);
+  --bs-body-font-family: var(--adecco-font-body);
+
+  --bs-primary: var(--adecco-teal);
+  --bs-primary-rgb: 84, 195, 189;
+  --bs-primary-text-emphasis: #0F5753;
+  --bs-primary-bg-subtle: var(--adecco-teal-soft);
+  --bs-primary-border-subtle: var(--adecco-teal-line);
+  --bs-link-color: #000000;
+  --bs-link-color-rgb: 0, 0, 0;
+  --bs-link-hover-color: var(--adecco-teal-text);
+  --bs-link-hover-color-rgb: 23, 132, 126;
+  --bs-focus-ring-color: rgba(84, 195, 189, .4);
+}
+
+[data-bs-theme="dark"] {
+  --bs-primary-text-emphasis: #8EDAD6;
+  --bs-primary-bg-subtle: #0B1F1E;
+  --bs-primary-border-subtle: #1E5551;
+  --bs-link-color: var(--adecco-teal);
+  --bs-link-color-rgb: 84, 195, 189;
+  --bs-link-hover-color: #A9E3DF;
+  --bs-link-hover-color-rgb: 169, 227, 223;
+  --adecco-teal-soft: #0B1F1E;
+  --adecco-teal-text: #54C3BD;
+}
+
+/* Titulares: Georgia (sustituye a Lust y Archer). Cuerpo: Arial (sustituye a Neutraface). */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6,
+.display-1, .display-2, .display-3, .display-4, .display-5, .display-6,
+.navbar-brand {
+  font-family: var(--adecco-font-title);
+}
+
+a {
+  text-decoration-color: var(--adecco-teal);
+  text-decoration-thickness: 2px;
+  text-underline-offset: .2em;
+}
+
 .avatar {
   width: 2rem;
   height: 2rem;
@@ -12,7 +89,240 @@
   align-items: center;
   justify-content: center;
   background-color: var(--bs-primary);
-  color: var(--bs-white);
+  color: var(--adecco-black);
   font-size: .8rem;
+  font-weight: 700;
+}
+
+/* Botones: turquesa con texto negro */
+.btn-primary {
+  --bs-btn-color: #000;
+  --bs-btn-bg: #54C3BD;
+  --bs-btn-border-color: #54C3BD;
+  --bs-btn-hover-color: #000;
+  --bs-btn-hover-bg: #43AAA4;
+  --bs-btn-hover-border-color: #43AAA4;
+  --bs-btn-active-color: #000;
+  --bs-btn-active-bg: #39958F;
+  --bs-btn-active-border-color: #39958F;
+  --bs-btn-disabled-color: #000;
+  --bs-btn-disabled-bg: #54C3BD;
+  --bs-btn-disabled-border-color: #54C3BD;
+  font-weight: 700;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: #000;
+  --bs-btn-border-color: #000;
+  --bs-btn-hover-color: #000;
+  --bs-btn-hover-bg: #54C3BD;
+  --bs-btn-hover-border-color: #54C3BD;
+  --bs-btn-active-color: #000;
+  --bs-btn-active-bg: #43AAA4;
+  --bs-btn-active-border-color: #43AAA4;
+  font-weight: 700;
+}
+
+[data-bs-theme="dark"] .btn-outline-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-border-color: #fff;
+}
+
+.bg-primary {
+  background-color: var(--adecco-teal) !important;
+  color: #000 !important;
+}
+
+.text-primary {
+  color: var(--adecco-teal-text) !important;
+}
+
+/* Barra superior: blanco/negro con filo turquesa */
+.navbar {
+  border-bottom: 4px solid var(--adecco-teal);
+}
+
+.navbar-brand {
+  color: var(--bs-emphasis-color);
+  font-weight: 700;
+}
+
+.navbar .nav-link.active {
+  font-weight: 700;
+  box-shadow: inset 0 -3px 0 var(--adecco-teal);
+}
+
+/* ==========================================================================
+   Página de inicio
+   ========================================================================== */
+.adecco-hero {
+  background:
+    radial-gradient(circle at 8% 100%, rgba(255, 212, 59, .30), transparent 42%),
+    radial-gradient(circle at 92% 8%, rgba(84, 195, 189, .30), transparent 45%),
+    linear-gradient(135deg, var(--adecco-teal-soft), var(--bs-body-bg));
+  border: 1px solid var(--adecco-teal-line);
+}
+
+[data-bs-theme="dark"] .adecco-hero {
+  border-color: var(--bs-primary-border-subtle);
+}
+
+.adecco-badge {
+  background-color: var(--adecco-yellow-strong);
+  color: #000;
+  font-family: var(--adecco-font-body);
+  font-weight: 700;
+  padding: .55em .9em;
+}
+
+/* Palabra destacada del titular: turquesa oscuro en claro, turquesa de marca en oscuro (contraste legible) */
+.adecco-highlight {
+  color: var(--adecco-teal-text);
+}
+
+.adecco-hero-img {
+  max-height: 340px;
+  filter: drop-shadow(0 .75rem 1.25rem rgba(0, 0, 0, .15));
+}
+
+/* Franja de cifras: turquesa con texto negro */
+.adecco-stats {
+  background-color: var(--adecco-teal);
+  color: #000;
+}
+
+.adecco-stat-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: .35rem;
+  border-radius: 50%;
+  background-color: var(--adecco-yellow-strong);
+  font-size: 1.2rem;
+}
+
+.adecco-stat-number {
+  font-family: var(--adecco-font-title);
+  font-size: 2.75rem;
+  font-variant-numeric: lining-nums;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.adecco-stat-label {
+  font-weight: 700;
+  font-size: .9rem;
+}
+
+/* Pasos */
+.adecco-step {
+  position: relative;
+  border: 0;
+  border-top: 4px solid var(--adecco-teal);
+  box-shadow: 0 .5rem 1.25rem rgba(0, 0, 0, .08);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.adecco-step:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 .85rem 1.75rem rgba(0, 0, 0, .14);
+}
+
+.adecco-step-number {
+  position: absolute;
+  top: .75rem;
+  right: 1.25rem;
+  font-family: var(--adecco-font-title);
+  font-size: 3.25rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--adecco-yellow-strong);
+}
+
+.adecco-step-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  color: #000;
+  font-size: 1.25rem;
+}
+
+.col-md-4:nth-child(2) > .adecco-step {
+  border-top-color: var(--adecco-yellow-strong);
+}
+
+.adecco-pastel-blue   { background-color: var(--adecco-blue); }
+.adecco-pastel-yellow { background-color: var(--adecco-yellow); }
+.adecco-pastel-green  { background-color: var(--adecco-green); }
+
+/* Etiquetas de categoría: un pastel secundario por etiqueta, en rotación */
+.adecco-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: .5rem 1rem;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-color: var(--adecco-blue);
+  color: #000;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform .15s ease, border-color .15s ease;
+}
+
+.adecco-chip:nth-child(6n + 1) { background-color: var(--adecco-yellow-strong); }
+.adecco-chip:nth-child(6n + 2) { background-color: var(--adecco-green); }
+.adecco-chip:nth-child(6n + 3) { background-color: var(--adecco-orange); }
+.adecco-chip:nth-child(6n + 4) { background-color: var(--adecco-blue); }
+.adecco-chip:nth-child(6n + 5) { background-color: var(--adecco-red); }
+.adecco-chip:nth-child(6n + 6) { background-color: var(--adecco-violet); }
+
+.adecco-chip .badge {
+  background-color: #000;
+  color: #fff;
+}
+
+.adecco-chip:hover {
+  color: #000;
+  border-color: #000;
+  transform: translateY(-2px);
+}
+
+/* Sedes */
+.adecco-location {
+  border-left: 4px solid var(--adecco-teal);
+}
+
+.adecco-location:hover {
+  border-left-color: var(--adecco-yellow-strong);
+}
+
+.adecco-accent {
+  color: var(--adecco-teal);
+}
+
+/* Llamada a la acción: negro de marca */
+.adecco-cta {
+  background-color: #000;
+  color: #fff;
+  border-bottom: 6px solid var(--adecco-teal);
+}
+
+.adecco-cta .fa-heart {
+  color: var(--adecco-yellow-strong);
+}
+
+.adecco-cta .btn-dark {
+  --bs-btn-bg: var(--adecco-yellow-strong);
+  --bs-btn-border-color: var(--adecco-yellow-strong);
+  --bs-btn-color: #000;
+  --bs-btn-hover-bg: #fff;
+  --bs-btn-hover-border-color: #fff;
+  --bs-btn-hover-color: #000;
   font-weight: 700;
 }

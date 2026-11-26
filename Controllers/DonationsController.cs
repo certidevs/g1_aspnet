@@ -25,7 +25,8 @@ namespace G1AspNet.Controllers
         }
         // GET: DonationController
         [Authorize(Roles = RoleNames.Admin)]
-        public IActionResult Index(string? search, DateTime? date, int? location ,string? shortBy, bool descending)
+        public IActionResult Index(string? search, DateTime? dateFrom,
+    DateTime? dateTo, int? location, string? sortBy, bool descending)
         {
             var query = context.Donations.AsQueryable();
 
@@ -33,34 +34,44 @@ namespace G1AspNet.Controllers
             {
                 query = query.Where(r => r.DonorName.ToLower().Contains(search.ToLower().Trim()));
             }
-            if (date is not null)
+            if (dateFrom is not null)
             {
-                query = query.Where(r => r.DonatedAt.Date == date.Value.Date );
+                query = query.Where(r => r.DonatedAt >= dateFrom.Value.Date);
+            }
+
+            if (dateTo is not null)
+            {
+                var endDate = dateTo.Value.Date.AddDays(1);
+                query = query.Where(r => r.DonatedAt < endDate);
             }
             if (location is not null)
             {
-                query  = query.Where(r => r.LocationId == location);
+                query = query.Where(r => r.LocationId == location);
             }
-            ViewBag.date = date;
-            ViewBag.shortBy = shortBy;
+            ViewBag.dateFrom = dateFrom;
+            ViewBag.dateTo = dateTo;
+            ViewBag.sortBy = sortBy;
             ViewBag.Search = search;
             ViewBag.location = location;
+            ViewBag.descending = descending;
             LoadLists(location);
 
             query = query.Include(c => c.ClothingItems).Include(l => l.Location);
 
-            if (!string.IsNullOrEmpty(shortBy))
+            if (!string.IsNullOrEmpty(sortBy))
             {
-                switch (shortBy)
+                switch (sortBy)
                 {
                     case "name":
-                        query = descending ? query.OrderBy(d => d.DonorName) : query.OrderByDescending(d => d.DonorName);
+                        query = descending ? query.OrderByDescending(d => d.DonorName) : query.OrderBy(d => d.DonorName);
                         break;
                     case "date":
-                        query = descending ? query.OrderBy(d => d.DonatedAt) : query.OrderByDescending(d => d.DonatedAt);
+                        query = descending ? query.OrderByDescending(d => d.DonatedAt) : query.OrderBy(d => d.DonatedAt);
                         break;
                     case "location":
-                        query = descending ? query.OrderBy(d => d.Location.Name) : query.OrderByDescending(d => d.Location.Name);
+                        query = descending
+                            ? query.OrderByDescending(d => d.Location == null ? null : d.Location.Name)
+                            : query.OrderBy(d => d.Location == null ? null : d.Location.Name);
                         break;
                     default:
                         query = query.OrderBy(d => d.DonorName);
