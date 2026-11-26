@@ -48,22 +48,14 @@ public class ReservationsController : Controller
             return View(reservations);
 
         }
-<<<<<<< HEAD
        
             var reservationsUser = context.Reservations.
             Where(r => r.ApplicationUserId == User.GetRequiredUserId())
             .ToList();
 
-            return View(reservationsUser);
+            return View(reservationsUser);        
 
-=======
-
-        var reservationsUser = context.Reservations.
-        Where(r => r.ApplicationUserId == User.GetRequiredUserId())
-        .ToList();
-
-        return View(reservationsUser);
->>>>>>> 1dff4cbd549faf90d12df9547f698587430fa69f
+        
     }
 
     public IActionResult Details(int id)
@@ -203,12 +195,8 @@ public class ReservationsController : Controller
         if (expires)
         {
 
-            Available(reserve.ClothingItemId);
-            ClothingItem prenda = context.ClothingItems.
-            FirstOrDefault(p => p.Id == reserve.ClothingItemId);
-
-            prenda.Status = ItemStatus.Available;
-
+            Available(reserve.ClothingItemId);          
+          
         }
 
         bool reservaActiva =
