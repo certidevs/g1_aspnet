@@ -34,7 +34,7 @@ public class LocationController : Controller
 
         if (!string.IsNullOrEmpty(search))
         {
-            query = query.Where(r =>  r.Name.ToLower().Contains(search.ToLower()));
+            query = query.Where(r =>  r.Name.ToLower().Contains(search.ToLower().Trim()));
         }
 
 
