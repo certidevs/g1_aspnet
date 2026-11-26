@@ -67,10 +67,15 @@ else
                         <td>@category.Description</td>
                         <td>@category.ClothingItems.Count</td>
                         <td class="text-end">
-                            <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@category.Id">Ver</a>
+                            @*<a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@category.Id">Ver</a>*@
                             @if (User.IsInRole(RoleNames.Admin))
                             {
                                 <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@category.Id">Editar</a>
+
+                                <form asp-action="Delete" asp-route-id="@category.Id" method="post" class="d-inline"
+                                    onsubmit="return confirm('¿Seguro que quieres eliminar esta prenda?');">
+                                    <button class="btn btn-outline-danger" type="submit">Eliminar</button>
+                                </form>
                             }
                         </td>
                     </tr>

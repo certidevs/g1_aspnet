@@ -12,10 +12,12 @@ namespace G1AspNet.Controllers;
 public class ClothingItemsController : Controller
 {
     private readonly ApplicationDbContext context;
+    private readonly IWebHostEnvironment environment;
 
-    public ClothingItemsController(ApplicationDbContext context)
+    public ClothingItemsController(ApplicationDbContext context, IWebHostEnvironment environment)
     {
         this.context = context;
+        this.environment = environment;
     }
 
     public IActionResult Index(string? search, ClothingColor? color, ClothingMaterial? Material, SizeType? SizeType, string? Size, ItemCondition? Condition, ItemStatus? Status)
@@ -62,6 +64,8 @@ public class ClothingItemsController : Controller
 
     }
 
+
+
     [Authorize(Roles = RoleNames.Admin)]
     [HttpGet]
     public IActionResult Create(int? donationId)
@@ -76,15 +80,15 @@ public class ClothingItemsController : Controller
         LoadLocations();
         LoadCategories();
 
-            return View("Form", clothingItem);
-        
-
-
+        return View("Form", clothingItem);
     }
+
+
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
-    public IActionResult Save(ClothingItem clothingItem, int? donationId)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Save(ClothingItem clothingItem, int? donationId)
     {
         if (!ModelState.IsValid)
         {
@@ -94,6 +98,50 @@ public class ClothingItemsController : Controller
             LoadCategories();
             return View("Form", clothingItem);
         }
+
+        // detectar si ya habia una imagen antes
+        ClothingItem? actual = await context.ClothingItems.AsNoTracking().FirstOrDefaultAsync(x => x.Id == clothingItem.Id);
+        if (actual != null)
+        {
+            if (actual.ImageFileName != clothingItem.ImageFileName)
+            {
+                DeleteImage(actual.ImageFileName);
+            }
+        }
+
+        
+        // guardado de imagenes
+        if(clothingItem.ImageFile != null && clothingItem.ImageFile.Length > 0)
+        {
+            // saca la ubicación de las imagenes
+            string carpeta = Path.Combine(
+                environment.WebRootPath,
+                "images/clothingItems"
+            );
+
+            // crea las carpetas si no existen
+            Directory.CreateDirectory(carpeta);
+
+            // genera un nombre único para el archivo
+            string extension = Path.GetExtension(clothingItem.ImageFile.FileName);
+            string nombreArchivo = $"{Guid.NewGuid()}{extension}";
+
+            string rutaCompleta = Path.Combine(
+                carpeta,
+                nombreArchivo
+            );
+
+            // Guarda el archivo fisicamente
+            using (var stream = new FileStream(rutaCompleta, FileMode.Create))
+            {
+                await clothingItem.ImageFile.CopyToAsync(stream);
+            }
+
+            // guarda la ruta en la base de datos
+            clothingItem.ImageFileName = $"/images/clothingItems/{nombreArchivo}";
+        }
+
+
 
         if (clothingItem.Id == 0)
         {
@@ -106,17 +154,22 @@ public class ClothingItemsController : Controller
 
         context.SaveChanges();
 
+
         TempData["Message"] = "Prenda guardada correctamente.";
- /*        if (donationId is not null)
+        
+        /*
+        if (donationId is not null)
         {
             return RedirectToAction("Details", "Donations", new { id = donationId });
         }
         else
-        { */
-            return RedirectToAction("Details", new { id = clothingItem.Id });
+        {
+        */
         
-
+        return RedirectToAction("Details", new { id = clothingItem.Id });
     }
+
+
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpGet]
@@ -137,6 +190,8 @@ public class ClothingItemsController : Controller
 
     }
 
+
+
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
     public IActionResult Delete(int id, int? donationId)
@@ -154,14 +209,46 @@ public class ClothingItemsController : Controller
             return RedirectToAction("Details", new { id });
         }
 
+        // eliminación de la imagen si contiene una relacionada
+        if (clothingItem.ImageFileName != null)
+        {
+            DeleteImage(clothingItem.ImageFileName);
+        }
+
         context.ClothingItems.Remove(clothingItem);
         context.SaveChanges();
 
         TempData["Message"] = "Prenda borrada.";
-            return RedirectToAction("Index");
         
-
+        return RedirectToAction("Index");
     }
+
+
+    [Authorize(Roles = RoleNames.Admin)]
+    [HttpPost]
+    private void DeleteImage(string? imageFileName)
+    {
+        if (string.IsNullOrEmpty(imageFileName))
+            return;
+
+        // Obtener la ruta física de wwwroot
+        string webRoot = environment.WebRootPath;
+
+        // Convertir la ruta relativa en ruta física
+        string relativePath = imageFileName.TrimStart('/')
+            .Replace('/', Path.DirectorySeparatorChar);
+
+        string fullPath = Path.Combine(webRoot, relativePath);
+
+        // Comprobar que el archivo existe
+        if (System.IO.File.Exists(fullPath))
+        {
+            System.IO.File.Delete(fullPath);
+        }
+    }
+
+
+
 
     private void LoadDonations()
     {
@@ -183,6 +270,8 @@ public class ClothingItemsController : Controller
         .Prepend(placeholderOption);
     }
 
+
+
     private void LoadLocations()
     {
         var locations = context.Locations
@@ -199,6 +288,8 @@ public class ClothingItemsController : Controller
         ViewBag.Locations = new SelectList(locations, "Id", "Name")
         .Prepend(placeholderOption);
     }
+
+
 
     private void LoadCategories()
     {
