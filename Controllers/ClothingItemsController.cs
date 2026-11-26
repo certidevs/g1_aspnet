@@ -26,13 +26,14 @@ public class ClothingItemsController : Controller
         string? Size, 
         ItemCondition? Condition, 
         ItemStatus? Status,
-        string? sortBy = "Name",
-        bool? sortDescending = false)
+        string? sortBy = "name",
+        bool sortDescending = false)
     {
         ViewBag.Search = search;
 
-        string[] validSortBy = {"Name", "Category", "Size", "Color", "State", "Location"};
-        if (!validSortBy.Contains(sortBy))
+        string[] validSortBy = {"name", "category", "size", "color", "state", "location"};
+        sortBy = sortBy?.ToLower();
+        if (sortBy is null | !validSortBy.Contains(sortBy))
         {
             sortBy = validSortBy[0];
         }
@@ -55,7 +56,28 @@ public class ClothingItemsController : Controller
             .Include(i => i.Location)
             .Include(i => i.Donation);
 
-        // TODO: swicth de sortBy, teniendo en cuenta descending
+        
+        query = sortBy switch
+        {
+            "category" => sortDescending
+                ? query.OrderByDescending(i => i.Category!.Name)
+                : query.OrderBy(i => i.Category!.Name),
+            "size"=> sortDescending
+                ? query.OrderByDescending(i => i.Size)
+                : query.OrderBy(i => i.Size),
+            "color"=> sortDescending
+            ?query.OrderByDescending(i => i.Color!.ToString())
+                : query.OrderBy(i => i.Color!.ToString()),
+            "state"=> sortDescending
+                ? query.OrderByDescending(i => i.Status!.ToString())
+                : query.OrderBy(i => i.Status!.ToString()),
+            "location"=> sortDescending
+                ?query.OrderByDescending(i => i.Location!.Name)
+                : query.OrderBy(i => i.Location!.Name),
+            _ => sortDescending
+                ? query.OrderByDescending(i => i.Name)
+                : query.OrderBy(i => i.Name)
+        };
 
         var clothingItems = query.ToList();
 
