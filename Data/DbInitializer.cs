@@ -200,127 +200,150 @@ public static class DbInitializer
 
         if (!await context.ClothingItems.AnyAsync())
         {
-            var categories = await context.Categories.ToListAsync();
-            var locations = await context.Locations.ToListAsync();
-            var donations = await context.Donations.ToListAsync();
+            var madrid = await context.Locations.SingleAsync(l => l.Name == "Oficina Madrid");
+            var barcelona = await context.Locations.SingleAsync(l => l.Name == "Oficina Barcelona");
+            var valencia = await context.Locations.SingleAsync(l => l.Name == "Oficina Valencia");
 
-            string[] itemNames =
-            {
-                "Camisa blanca", "Camisa azul", "Pantalón negro",
-                "Pantalón de vestir", "Americana gris", "Americana azul",
-                "Camiseta blanca", "Camiseta negra", "Polo azul",
-                "Zapatos negros", "Zapatos marrones", "Camisa de rayas",
-                "Pantalón beige", "Americana negra", "Polo blanco",
-                "Camiseta azul", "Camisa formal", "Pantalón gris",
-                "Zapatos formales", "Chaqueta elegante"
-            };
+            var camisas = await context.Categories.SingleAsync(c => c.Name == "Camisas");
+            var pantalones = await context.Categories.SingleAsync(c => c.Name == "Pantalones");
+            var americanas = await context.Categories.SingleAsync(c => c.Name == "Americanas");
+            var calzado = await context.Categories.SingleAsync(c => c.Name == "Calzado");
 
-            string[] descriptions =
-            {
-                "Prenda ideal para una entrevista de trabajo.",
-                "Prenda en buen estado, adecuada para oficina.",
-                "Ropa formal para ocasiones profesionales.",
-                "Prenda cómoda y versátil.",
-                "Prenda revisada y lista para su uso."
-            };
+            var donacionMaria = await context.Donations.SingleAsync(d => d.DonorName == "Maria del Olmo");
+            var donacionAlan = await context.Donations.SingleAsync(d => d.DonorName == "Alan Sastre");
 
-            string[] sizes =
-            {
-                "XS", "S", "M", "L", "XL",
-                "38", "40", "42", "44", "46", "48"
-            };
-
-            var colors = Enum.GetValues<ClothingColor>();
-            var materials = Enum.GetValues<ClothingMaterial>();
-            var sizeTypes = Enum.GetValues<SizeType>();
-            var conditions = Enum.GetValues<ItemCondition>();
-            var statuses = Enum.GetValues<ItemStatus>();
-
-            for (int i = 0; i < 35; i++)
-            {
-                // Una de cada cinco prendas no viene de ninguna donación (DonationId = NULL),
-                // por ejemplo ropa que compra la propia asociación.
-                Donation? donation = i % 5 == 4 ? null : donations[random.Next(donations.Count)];
-
-                context.ClothingItems.Add(new ClothingItem
+            context.ClothingItems.AddRange(
+                new ClothingItem
                 {
-                    Name = itemNames[random.Next(itemNames.Length)],
-                    Description = descriptions[random.Next(descriptions.Length)],
-
-                    Color = colors[random.Next(colors.Length)],
-                    Material = materials[random.Next(materials.Length)],
-                    SizeType = sizeTypes[random.Next(sizeTypes.Length)],
-                    Size = sizes[random.Next(sizes.Length)],
-
-                    Condition = conditions[random.Next(conditions.Length)],
-                    Status = statuses[random.Next(statuses.Length)],
-
-                    CategoryId = categories[random.Next(categories.Count)].Id,
-
-                    // La prenda se guarda en la ubicación donde se recibió su donación;
-                    // si no tiene donación, en una ubicación cualquiera.
-                    LocationId = donation?.LocationId ?? locations[random.Next(locations.Count)].Id,
-                    DonationId = donation?.Id
-                });
-            }
+                    Name = "Camisa blanca",
+                    Description = "Camisa formal de manga larga.",
+                    Color = ClothingColor.White,
+                    Material = ClothingMaterial.Cotton,
+                    SizeType = SizeType.Letter,
+                    Size = "M",
+                    Condition = ItemCondition.LikeNew,
+                    Status = ItemStatus.Available,
+                    Category = camisas,
+                    Location = barcelona,
+                    Donation = donacionMaria
+                },
+                new ClothingItem
+                {
+                    Name = "Camisa azul",
+                    Description = "Camisa de vestir azul claro.",
+                    Color = ClothingColor.Blue,
+                    Material = ClothingMaterial.Cotton,
+                    SizeType = SizeType.Letter,
+                    Size = "L",
+                    Condition = ItemCondition.Good,
+                    Status = ItemStatus.Available,
+                    Category = camisas,
+                    Location = valencia,
+                    Donation = donacionAlan
+                },
+                new ClothingItem
+                {
+                    Name = "Pantalón negro",
+                    Description = "Pantalón de vestir clásico.",
+                    Color = ClothingColor.Black,
+                    Material = ClothingMaterial.Polyester,
+                    SizeType = SizeType.Numeric,
+                    Size = "42",
+                    Condition = ItemCondition.LikeNew,
+                    Status = ItemStatus.Available,
+                    Category = pantalones,
+                    Location = valencia,
+                    Donation = donacionAlan
+                },
+                new ClothingItem
+                {
+                    Name = "Americana gris",
+                    Description = "Americana de traje en buen estado.",
+                    Color = ClothingColor.Grey,
+                    Material = ClothingMaterial.Wool,
+                    SizeType = SizeType.Letter,
+                    Size = "M",
+                    Condition = ItemCondition.LikeNew,
+                    Status = ItemStatus.Available,
+                    Category = americanas,
+                    Location = madrid,
+                    Donation = donacionMaria
+                },
+                new ClothingItem
+                {
+                    Name = "Zapatos negros",
+                    Description = "Zapatos formales de piel.",
+                    Color = ClothingColor.Black,
+                    Material = ClothingMaterial.Leather,
+                    SizeType = SizeType.Shoe,
+                    Size = "42",
+                    Condition = ItemCondition.Good,
+                    Status = ItemStatus.Available,
+                    Category = calzado,
+                    Location = madrid,
+                    Donation = null
+                }
+            );
 
             await context.SaveChangesAsync();
         }
-
         // -----------------------------------------
         // 5. RESERVAS
         // -----------------------------------------
+
+
 
         if (!await context.Reservations.AnyAsync())
         {
             var demoUser = await userManager.FindByNameAsync("user");
 
-            var clothingItems = await context.ClothingItems.ToListAsync();
-
-            if (demoUser != null && clothingItems.Count > 0)
+            if (demoUser != null)
             {
-                var selectedItems = clothingItems
-                    .OrderBy(x => random.Next())
-                    .Take(Math.Min(8, clothingItems.Count))
-                    .ToList();
+                var camisaBlanca = await context.ClothingItems
+                    .SingleAsync(i => i.Name == "Camisa blanca");
 
-                // Se reparten los estados de reserva para que haya ejemplos de todos.
-                var reservationStatuses = Enum.GetValues<ReservationStatus>();
-                var reservationNumber = 0;
+                var pantalonNegro = await context.ClothingItems
+                    .SingleAsync(i => i.Name == "Pantalón negro");
 
-                foreach (var item in selectedItems)
-                {
-                    var status = reservationStatuses[reservationNumber % reservationStatuses.Length];
-                    reservationNumber++;
+                var americanaGris = await context.ClothingItems
+                    .SingleAsync(i => i.Name == "Americana gris");
 
-                    // El estado de la prenda sigue al de su reserva.
-                    item.Status = status switch
-                    {
-                        ReservationStatus.Pending or ReservationStatus.Confirmed => ItemStatus.Reserved,
-                        ReservationStatus.PickedUp => ItemStatus.Delivered,
-                        _ => ItemStatus.Available
-                    };
+                camisaBlanca.Status = ItemStatus.Reserved;
+                pantalonNegro.Status = ItemStatus.Reserved;
+                americanaGris.Status = ItemStatus.Delivered;
 
-                    // Las reservas vivas (pendientes o confirmadas) son recientes para que no hayan caducado ya.
-                    var daysAgo = status is ReservationStatus.Pending or ReservationStatus.Confirmed
-                        ? random.Next(1, 5)
-                        : random.Next(1, 60);
-                    var createdAt = DateTime.UtcNow.AddDays(-daysAgo);
-                    var pickupDate = createdAt.AddDays(random.Next(1, 8));
-
-                    context.Reservations.Add(new Reservation
+                context.Reservations.AddRange(
+                    new Reservation
                     {
                         ApplicationUserId = demoUser.Id,
-                        ClothingItemId = item.Id,
-
-                        Status = status,
-                        CreatedAt = createdAt,
-                        PickupDate = pickupDate,
-                        ExpiresAt = pickupDate.AddDays(7),
-
-                        Notes = "Reserva de demostración"
-                    });
-                }
+                        ClothingItem = camisaBlanca,
+                        Status = ReservationStatus.Pending,
+                        CreatedAt = new DateTime(2026, 11, 24),
+                        PickupDate = new DateTime(2026, 11, 28),
+                        ExpiresAt = new DateTime(2026, 12, 5),
+                        Notes = "Reserva para una entrevista de trabajo."
+                    },
+                    new Reservation
+                    {
+                        ApplicationUserId = demoUser.Id,
+                        ClothingItem = pantalonNegro,
+                        Status = ReservationStatus.Confirmed,
+                        CreatedAt = new DateTime(2026, 11, 20),
+                        PickupDate = new DateTime(2026, 11, 29),
+                        ExpiresAt = new DateTime(2026, 12, 6),
+                        Notes = "Conjunto para una entrevista presencial."
+                    },
+                    new Reservation
+                    {
+                        ApplicationUserId = demoUser.Id,
+                        ClothingItem = americanaGris,
+                        Status = ReservationStatus.PickedUp,
+                        CreatedAt = new DateTime(2026, 10, 10),
+                        PickupDate = new DateTime(2026, 10, 15),
+                        ExpiresAt = new DateTime(2026, 10, 22),
+                        Notes = "Prenda recogida en la oficina."
+                    }
+                );
 
                 await context.SaveChangesAsync();
             }
