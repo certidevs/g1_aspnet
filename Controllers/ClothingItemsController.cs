@@ -93,7 +93,7 @@ public class ClothingItemsController : Controller
         LoadCategories();
 
         return View("Form", clothingItem);
-
+    }
 
 
     [Authorize(Roles = RoleNames.Admin)]
@@ -195,8 +195,6 @@ public class ClothingItemsController : Controller
         LoadCategories();
 
         return View("Form", clothingItem);
-
-
     }
 
 
@@ -236,12 +234,6 @@ public class ClothingItemsController : Controller
         {
             return RedirectToAction("Index");
         }
-
-
-
-    }
-        
-        return RedirectToAction("Index");
     }
 
 
