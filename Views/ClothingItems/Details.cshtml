@@ -122,6 +122,14 @@
                     </table>
                 </div>
             }
+
+
+<label>@Model.ImageFileName</label>
+<img src="@Model.ImageFileName"
+             alt="@Model.Name"
+             style="width:200px;" />
+<br>
+<br>
             @if (@ViewBag.donationId is not null)
             {
                 <a class="btn btn-outline-secondary" asp-controller="Donations" asp-action="Details" asp-route-id="@ViewBag.donationId">Volver a la donacion</a>

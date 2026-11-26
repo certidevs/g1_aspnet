@@ -64,10 +64,15 @@ else
                         <td>@location.Phone</td>
                         <td><span class="badge @(location.IsActive ? "text-bg-success" : "text-bg-secondary")">@(location.IsActive ? "Activa" : "Inactiva")</span></td>
                         <td class="text-end">
-                            <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@location.Id">Ver</a>
+                            @*<a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@location.Id">Ver</a>*@
                             @if (User.IsInRole(RoleNames.Admin))
                             {
                                 <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@location.Id">Editar</a>
+
+                                <form asp-action="Delete" asp-route-id="@location.Id" method="post" class="d-inline"
+                                    onsubmit="return confirm('¿Seguro que quieres eliminar esta prenda?');">
+                                    <button class="btn btn-outline-danger" type="submit">Eliminar</button>
+                                </form>
                             }
                         </td>
                     </tr>
