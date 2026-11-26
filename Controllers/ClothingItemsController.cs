@@ -87,6 +87,7 @@ public class ClothingItemsController : Controller
         LoadDonations();
         LoadLocations();
         LoadCategories();
+        
 
         return View("Form", clothingItem);
 
