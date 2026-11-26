@@ -18,31 +18,40 @@ public class ClothingItemsController : Controller
         this.context = context;
     }
 
-    public IActionResult Index(string? search,
-        ClothingColor? color, 
-        ClothingMaterial? Material, 
-        SizeType? SizeType, 
-        string? Size, 
-        ItemCondition? Condition, 
-        ItemStatus? Status,
-        string? sortBy = "name",
-        bool sortDescending = false)
+    public IActionResult Index(ClothingColor? color, 
+        ClothingMaterial? material, 
+        ItemCondition? condition, 
+        ItemStatus? status,
+        string size = "",
+        int locationId = 0,
+        int categoryId = 0,
+        string search = "",
+        string sortBy = "name",
+        bool sortDescending = false,
+        string returnTo = "",
+        int returnToId = 0)
     {
+
+        // Limpiar
+
+        // Conservar la búsqueda tal como la introduce el usuario en el Viewbag antes de limpiarla
         ViewBag.Search = search;
+        search = search.Trim();
 
         string[] validSortBy = {"name", "category", "size", "color", "state", "location"};
-        sortBy = sortBy?.ToLower();
-        if (sortBy is null | !validSortBy.Contains(sortBy))
-        {
-            sortBy = validSortBy[0];
-        }
+        sortBy = !validSortBy.Contains(sortBy.ToLower()) ? validSortBy[0] : sortBy.ToLower();
+        
+        ViewBag.SortBy = sortBy;
+        ViewBag.SortDescending = sortDescending;
 
-        ViewBag.sortBy = sortBy;
-        ViewBag.sortDescending = sortDescending;
+        string[] validReturnTo ={"index", "donation", "category"};
+        returnTo = !validReturnTo.Contains(returnTo.ToLower()) ? validReturnTo[0] : returnTo.ToLower();
 
-        // TODO: ¿Filtrar por periodo en el que está libre
-        // TODO: ¿Valores por defecto de Condition y Status?
-        // TODO: ¿Filtrar por Location debe llegar parametro LocationId (o es un objeto tipo location)?
+        ViewBag.ReturnTo = returnTo;
+        ViewBag.ReturnToId = returnToId;
+
+        // Filtrar
+
         var query = context.ClothingItems.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(search))
@@ -50,12 +59,49 @@ public class ClothingItemsController : Controller
             query = query.Where(i => i.Name.ToLower().Contains(search.Trim().ToLower()));
         }
 
+        if (categoryId > 0)
+        {
+            query = query.Where(i => i.CategoryId == categoryId);
+            ViewBag.CategoryId = categoryId;
+        }
+
+        if (color is not null)
+        {
+            query = query.Where(i => i.Color == color);
+        }
+
+        if (material is not null)
+        {
+            query = query.Where(i => i.Material == material);
+        }
+
+        if (!string.IsNullOrWhiteSpace(size))
+        {
+            query = query.Where(i => i.Size == size);
+        }
+
+        if (condition is not null)
+        {
+            query = query.Where(i => i.Condition == condition);
+        }
+
+        if (status is not null)
+        {
+            query = query.Where(i => i.Status == status);
+        }
+
+        if (locationId > 0)
+        {
+            query = query.Where(i => i.LocationId == locationId);
+        }
+
+        // Ordenar
+
         query = query
             .Include(i => i.Category)
             .Include(i => i.Location)
             .Include(i => i.Donation);
 
-        
         query = sortBy switch
         {
             "category" => sortDescending
@@ -80,6 +126,16 @@ public class ClothingItemsController : Controller
 
         var clothingItems = query.ToList();
 
+        // Options para el formulario de filtrado
+        LoadCategories("Todas", categoryId.ToString());
+        LoadLocations("Todas", locationId.ToString());
+
+        // TODO: crear LoadSizes con las tallas de la query
+
+        // TODO: Borrar tests metidos en ViewBag
+        ViewBag.color = color;
+        ViewBag.status = status;
+
         return View(clothingItems);
     }
 
@@ -98,11 +154,7 @@ public class ClothingItemsController : Controller
         }
 
         ViewBag.ReturnToDonation = returnToDonation;
-
-            return View(clothingItem);
-        
-
-
+        return View(clothingItem);
     }
 
     [Authorize(Roles = RoleNames.Admin)]
@@ -115,9 +167,9 @@ public class ClothingItemsController : Controller
             clothingItem.DonationId = donationId;
         }
 
-        LoadDonations();
-        LoadLocations();
-        LoadCategories();
+        LoadDonations("Selecciona la donacion");
+        LoadLocations("Selecciona la sede");
+        LoadCategories("Selecciona la categoria");
         ViewBag.ReturnToDonation = returnToDonation;
 
         return View("Form", clothingItem);
@@ -130,9 +182,9 @@ public class ClothingItemsController : Controller
         if (!ModelState.IsValid)
         {
             // Hay que volver a cargar los desplegables, o el formulario reaparece sin opciones.
-            LoadDonations();
-            LoadLocations();
-            LoadCategories();
+            LoadDonations("Selecciona la donacion");
+            LoadLocations("Selecciona la sede");
+            LoadCategories("Selecciona la categoria");
             return View("Form", clothingItem);
         }
 
@@ -162,9 +214,9 @@ public class ClothingItemsController : Controller
             return NotFound();
         }
 
-        LoadDonations();
-        LoadLocations();
-        LoadCategories();
+        LoadDonations("Selecciona la donacion");
+        LoadLocations("Selecciona la sede");
+        LoadCategories("Selecciona la categoria");
         ViewBag.ReturnToDonation = returnToDonation;
 
             return View("Form", clothingItem);
@@ -197,54 +249,60 @@ public class ClothingItemsController : Controller
 
     }
 
-    private void LoadDonations()
+    private void LoadCategories(string placeHolder = "", string selectedItemId = "")
     {
-        var donations = context.Donations.OrderByDescending(d => d.DonatedAt).ToList();
-
-        var donationOptions = donations.Select(d => new
-        {
-            Id = d.Id,
-            Name = $"{d.DonorName} ({d.DonatedAt.ToString("dd-MM-yyyy")})"
-        });
+        var categories = context.Categories
+            .OrderBy(c => c.Name)
+            .ToList();
 
         var placeholderOption = new SelectListItem
         {
             Value = "",
-            Text = "Selecciona la donación de origen",
+            Text = placeHolder,
         };
-
-        ViewBag.Donations = new SelectList(donationOptions, "Id", "Name")
-        .Prepend(placeholderOption);
+        
+        ViewBag.Categories = new SelectList(categories, "Id", "Name", selectedItemId)
+            .Prepend(placeholderOption);
     }
 
-    private void LoadLocations()
+    private void LoadDonations(string placeHolder = "", string selectedItemId = "")
+    {
+        var donations = context.Donations
+            .Include(d => d.Location)
+            .OrderByDescending(d => d.DonatedAt)
+            .ThenBy(d => d.Location!.Name)
+            .Select(d => new
+                {
+                    Id = d.Id,
+                    Name = $"{d.DonorName} ({d.Location!.Name} {d.DonatedAt.ToString("dd-MM-yyyy")})"
+                })
+            .ToList();
+
+        var placeholderOption = new SelectListItem
+        {
+            Value = "",
+            Text = placeHolder,
+        };
+
+        ViewBag.Donations = new SelectList(donations, "Id", "Name", selectedItemId)
+            .Prepend(placeholderOption);
+    }
+
+    private void LoadLocations(string placeHolder = "", string selectedItemId = "")
     {
         var locations = context.Locations
-        .Where(l => l.IsActive)
-        .OrderBy(l => l.Name)
-        .ToList();
+            .Where(l => l.IsActive)
+            .OrderBy(l => l.Name)
+            .ToList();
 
         var placeholderOption = new SelectListItem
         {
             Value = "",
-            Text = "Selecciona la sede",
+            Text = placeHolder,
         };
 
-        ViewBag.Locations = new SelectList(locations, "Id", "Name")
-        .Prepend(placeholderOption);
-    }
-
-    private void LoadCategories()
-    {
-        var categories = context.Categories.OrderBy(c => c.Name).ToList();
-        var placeholderOption = new SelectListItem
-        {
-            Value = "",
-            Text = "Selecciona la categoría",
-        };
-
-        ViewBag.Categories = new SelectList(categories, "Id", "Name")
-        .Prepend(placeholderOption);
+        ViewBag.Locations = new SelectList(locations, "Id", "Name", selectedItemId)
+            .Prepend(placeholderOption);
     }
 
     // TODO (issue #15): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #16)
