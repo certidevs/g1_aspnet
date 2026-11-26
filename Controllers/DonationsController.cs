@@ -10,7 +10,6 @@ namespace G1AspNet.Controllers
     [Authorize]
     public class DonationsController : Controller
     {
-        private const string StaffRoles = RoleNames.Admin + "," + RoleNames.User;
         private readonly ApplicationDbContext context;
 
         // Rellena el desplegable de sedes del formulario (la vista lo lee de ViewBag.Locations).
@@ -134,7 +133,7 @@ namespace G1AspNet.Controllers
 
             if (!ModelState.IsValid)
             {
-                LoadLists();
+                LoadLists(donation.LocationId);
                 return View("Form", donation);
             }
 

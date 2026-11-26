@@ -26,11 +26,16 @@ public class ReservationsController : Controller
         this.context = context;
 
     }
+    // Estados que ocupan una prenda
+    private static readonly ReservationStatus[] ActiveStatuses =
+    {
+    ReservationStatus.Pending,
+    ReservationStatus.Confirmed
+    };
+
     [Authorize]
     public IActionResult Index()
     {
-
-
 
         if (User.IsInRole(RoleNames.Admin))
         {
@@ -40,14 +45,10 @@ public class ReservationsController : Controller
             .OrderBy(r => r.Id)
             .ToList();
 
-
-
             return View(reservations);
 
-
-
-
         }
+<<<<<<< HEAD
        
             var reservationsUser = context.Reservations.
             Where(r => r.ApplicationUserId == User.GetRequiredUserId())
@@ -55,12 +56,18 @@ public class ReservationsController : Controller
 
             return View(reservationsUser);
 
+=======
+
+        var reservationsUser = context.Reservations.
+        Where(r => r.ApplicationUserId == User.GetRequiredUserId())
+        .ToList();
+
+        return View(reservationsUser);
+>>>>>>> 1dff4cbd549faf90d12df9547f698587430fa69f
     }
 
     public IActionResult Details(int id)
     {
-
-
         var reservation = context.Reservations
         .Include(r => r.ClothingItem)
         .Include(r => r.ApplicationUser)
@@ -68,9 +75,7 @@ public class ReservationsController : Controller
 
         if (reservation == null)
         {
-
             return NotFound();
-
         }
 
         return View(reservation);
@@ -197,21 +202,21 @@ public class ReservationsController : Controller
 
         if (expires)
         {
+<<<<<<< HEAD
 
             Available(reserve.ClothingItemId);
+=======
+            ClothingItem prenda = context.ClothingItems.
+            FirstOrDefault(p => p.Id == reserve.ClothingItemId);
 
+            prenda.Status = ItemStatus.Available;
+>>>>>>> 1dff4cbd549faf90d12df9547f698587430fa69f
 
         }
-
-
-
-
 
         bool reservaActiva =
         reserve.Status == Enums.ReservationStatus.Confirmed ||
         reserve.Status == Enums.ReservationStatus.Pending;
-
-
 
         if (reservaActiva)
         {
@@ -246,12 +251,14 @@ public class ReservationsController : Controller
         TempData["Message"] = "Reserva guardada correctamente";
         return RedirectToAction("Details", new { id = reserve.Id });
     }
-    
+
     [HttpPost]
     public IActionResult Delete(int id)
     {
 
-        var reservation = context.Reservations.Include(r => r.ClothingItem).FirstOrDefault(r => r.Id == id);
+        var reservation = VisibleReservations()
+            .Include(r => r.ClothingItem)
+            .FirstOrDefault(r => r.Id == id);
         if (reservation == null)
         {
 
@@ -305,12 +312,6 @@ public class ReservationsController : Controller
         return RedirectToAction("Details", new { id });
 
     }
-    // Estados que ocupan una prenda
-    private static readonly ReservationStatus[] ActiveStatuses =
-    {
-    ReservationStatus.Pending,
-    ReservationStatus.Confirmed
-};
 
     // Comprueba si la reserva sigue activa
     private static bool IsActive(Reservation reservation)

@@ -631,7 +631,7 @@ public static class DbInitializer
             var demoUser4 = await userManager.FindByNameAsync("user4");
 
             var camisaBlanca = await context.ClothingItems
-    .SingleAsync(i => i.Name == "Camisa blanca");
+            .SingleAsync(i => i.Name == "Camisa blanca");
 
             var pantalonNegro = await context.ClothingItems
                 .SingleAsync(i => i.Name == "Pantalón negro");

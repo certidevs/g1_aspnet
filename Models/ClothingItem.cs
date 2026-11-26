@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using G1AspNet.Enums;
 
 namespace G1AspNet.Models;
@@ -26,7 +27,7 @@ public class ClothingItem
     public ItemStatus Status { get; set; }
 
     [StringLength(260, ErrorMessage = "El nombre del fichero no puede superar los 260 caracteres.")]
-    public string? ImageFileName { get; set; }
+    public string? ImageFileName { get; set; } // guarda la direccion de la imagen
 
     // N ClothingItem → 1 Category (obligatoria)
     public int CategoryId { get; set; }
@@ -42,4 +43,8 @@ public class ClothingItem
 
     // 1 ClothingItem → N Reservation
     public List<Reservation> Reservations { get; set; } = new();
+
+    // para recibir el archivo de imagen enviado desde el formulario
+    [NotMapped]
+    public IFormFile? ImageFile { get; set; }
 }

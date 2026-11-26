@@ -4,7 +4,7 @@
 
 Desde el **Grupo Adecco**, contamos con un amplio ropero solidario a disposición de quienes puedan necesitarlo. CorporaDress facilita la gestión de este servicio, centralizando toda la logística necesaria: desde el registro y la clasificación de las prendas disponibles hasta el seguimiento actualizado de las donaciones, el inventario y las reservas.
 
-Nuestro objetivo es ofrecer una aplicación **útil, intuitiva y accesible**, que permita tanto a los administradores como a los usuarios.
+Nuestro objetivo es ofrecer una aplicación **útil, intuitiva y accesible**.
 
 En definitiva, CorporaDress busca convertir la gestión de un recurso solidario en un proceso sencillo, organizado y accesible para todos.
 # Funcionalidades principales
@@ -25,11 +25,12 @@ En definitiva, CorporaDress busca convertir la gestión de un recurso solidario 
 | Jordi      | `Category`, `ClothingItem`     | `ClothingItemsController`                          | `Views/ClothingItems`                  |
 | Cesar      | `Location`                     | `CategoriesController`, `LocationController`       | `Views/Categories`, `Views/Location`   |
 | Joel       | `Reservation`                  | `ReservationsController`                           | `Views/Reservations`                   |
-| Toni       | `Donation`                     | `DonationController`                               | `Views/Donation`                       |
+| Toni       | `Donation`                     | `DonationsController`                               | `Views/Donations`                     |
 
 # Diagrama de entidades
 
 ```mermaid
+
 erDiagram
     APPLICATION_USER ||--o{ RESERVATION : realiza
     CLOTHING_ITEM ||--o{ RESERVATION : recibe
@@ -41,6 +42,9 @@ erDiagram
     APPLICATION_USER {
         string Id PK
         string DisplayName
+        string AvatarFileName
+        datetime CreatedAt
+        boolean IsActive
     }
 
     CATEGORY {
@@ -53,18 +57,33 @@ erDiagram
         int Id PK
         string Name
         string Address
+        string City
+        string PostalCode
+        string Phone
+        string OpeningHours
+        boolean IsActive
     }
 
     DONATION {
         int Id PK
         string DonorName
         string DonorEmail
+        datetime DonatedAt
+        string Notes
         int LocationId FK
     }
 
     CLOTHING_ITEM {
         int Id PK
         string Name
+        string Description
+        string Color
+        string Material
+        string SizeType
+        string Size
+        string Condition
+        string Status
+        string ImageFileName
         int CategoryId FK
         int LocationId FK
         int DonationId FK
@@ -73,9 +92,14 @@ erDiagram
     RESERVATION {
         int Id PK
         string Status
+        datetime CreatedAt
+        datetime PickupDate
+        datetime ExpiresAt
+        string Notes
         string ApplicationUserId FK
         int ClothingItemId FK
     }
+
 ```
 # Imágenes de la aplicación
 
