@@ -20,7 +20,7 @@ public class ClothingItemsController : Controller
         this.environment = environment;
     }
 
-    public IActionResult Index(string? search, ClothingColor? color, ClothingMaterial? Material, SizeType? SizeType, string? Size, ItemCondition? Condition, ItemStatus? Status)
+    public IActionResult Index(string? search, ClothingColor? color, ClothingMaterial? Material, SizeType? SizeType, string? Size, ItemCondition? Condition, ItemStatus? Status, int? donationId)
     {
 
         // TODO: ¿Filtrar por periodo en el que está libre
@@ -34,6 +34,7 @@ public class ClothingItemsController : Controller
         }
 
         ViewBag.Search = search;
+        ViewBag.donationId = donationId;
 
         var clothingItems = query.OrderBy(i => i.Name)
             .Include(i => i.Category)
@@ -41,8 +42,18 @@ public class ClothingItemsController : Controller
             .Include(i => i.Donation)
             .ToList();
 
-        return View(clothingItems);
+        if (donationId is not null)
+        {
+            return RedirectToAction("Details", "Donations", new { id = donationId });
+        }
+        else
+        {
+            return View(clothingItems);
+
+        }
     }
+
+    
 
     public IActionResult Details(int id, int? donationId)
     {
@@ -57,9 +68,10 @@ public class ClothingItemsController : Controller
         {
             return NotFound();
         }
+        ViewBag.DonationId = donationId;
 
-            return View(clothingItem);
-        
+        return View(clothingItem);
+
 
 
     }
@@ -81,7 +93,6 @@ public class ClothingItemsController : Controller
         LoadCategories();
 
         return View("Form", clothingItem);
-    }
 
 
 
@@ -156,24 +167,22 @@ public class ClothingItemsController : Controller
 
 
         TempData["Message"] = "Prenda guardada correctamente.";
-        
-        /*
         if (donationId is not null)
         {
             return RedirectToAction("Details", "Donations", new { id = donationId });
         }
         else
         {
-        */
-        
-        return RedirectToAction("Details", new { id = clothingItem.Id });
+            return RedirectToAction("Details", new { id = clothingItem.Id });
+
+        }
     }
 
 
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpGet]
-    public IActionResult Edit(int id, int? donationId)
+    public IActionResult Edit(int id)
     {
         var clothingItem = context.ClothingItems.Find(id);
         if (clothingItem == null)
@@ -185,8 +194,8 @@ public class ClothingItemsController : Controller
         LoadLocations();
         LoadCategories();
 
-            return View("Form", clothingItem);
-        
+        return View("Form", clothingItem);
+
 
     }
 
@@ -219,6 +228,18 @@ public class ClothingItemsController : Controller
         context.SaveChanges();
 
         TempData["Message"] = "Prenda borrada.";
+        if (donationId is not null)
+        {
+            return RedirectToAction("Details", "Donations", new { id = donationId });
+        }
+        else
+        {
+            return RedirectToAction("Index");
+        }
+
+
+
+    }
         
         return RedirectToAction("Index");
     }

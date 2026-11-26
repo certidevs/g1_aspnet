@@ -159,5 +159,8 @@ Abre `http://localhost:5107`. El primer arranque crea `App_Data/g1.db`, crea las
 
 - `admin` / `Admin123!`
 - `user` / `User123!`
+- `user2` / `User123!`
+- `user3` / `User123!`
+- `user4` / `User123!`
 
 # Que hemos aprendido
