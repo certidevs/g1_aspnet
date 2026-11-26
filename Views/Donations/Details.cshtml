@@ -57,7 +57,7 @@ else
             {
                 <tr>
                     <td><a asp-controller="ClothingItems" asp-action="Details"
-                               asp-route-id="@clothingItem.Id">@clothingItem.Name</a></td>
+                               asp-route-id="@clothingItem.Id" asp-route-donationId="@Model.Id">@clothingItem.Name</a></td>
                     </tr>
                 }
             </tbody>
