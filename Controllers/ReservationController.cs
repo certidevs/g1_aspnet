@@ -27,6 +27,8 @@ public class ReservationsController : Controller
 
     }
 
+    
+    [Authorize]
     public IActionResult Index()
     {
 
