@@ -13,7 +13,7 @@
 <form asp-action="Save" method="post" class="col-lg-8" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
     <input type="hidden" asp-for="Id" />
-    <input type="hidden" id="returnToDonation" name="returnToDonation" value="@ViewBag.returnToDonation" />
+    <input type="hidden" id="returnToDonation" name="returnToDonation" value="@ViewBag.ReturnToDonation" />
 
     <div class="mb-3">
         <label class="form-label" asp-for="Name">Nombre</label>
