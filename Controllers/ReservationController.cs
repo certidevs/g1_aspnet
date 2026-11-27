@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Identity;
 
 
 namespace G1AspNet.Controllers;
-
+[Authorize]
 public class ReservationsController : Controller
 {
 
@@ -37,7 +37,7 @@ public class ReservationsController : Controller
     ReservationStatus.Confirmed
     };
 
-    [Authorize]
+    
     public IActionResult Index()
     {
 
