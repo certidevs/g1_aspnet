@@ -35,7 +35,7 @@ public class ClothingItemsController : Controller
         int returnToId = 0)
     {
 
-        // Limpiar
+// Limpiar
 
         // Conservar la búsqueda tal como la introduce el usuario en el Viewbag antes de limpiarla
         ViewBag.Search = search;
@@ -62,13 +62,78 @@ public class ClothingItemsController : Controller
             query = query.Where(i => i.Name.ToLower().Contains(search.Trim().ToLower()));
         }
 
-        ViewBag.Search = search;
+        if (categoryId > 0)
+        {
+            query = query.Where(i => i.CategoryId == categoryId);
+            ViewBag.CategoryId = categoryId;
+        }
 
-        var clothingItems = query.OrderBy(i => i.Name)
+        if (color is not null)
+        {
+            query = query.Where(i => i.Color == color);
+        }
+
+        if (material is not null)
+        {
+            query = query.Where(i => i.Material == material);
+        }
+
+        if (!string.IsNullOrWhiteSpace(size))
+        {
+            query = query.Where(i => i.Size == size);
+        }
+
+        if (condition is not null)
+        {
+            query = query.Where(i => i.Condition == condition);
+        }
+
+        if (status is not null)
+        {
+            query = query.Where(i => i.Status == status);
+        }
+
+        if (locationId > 0)
+        {
+            query = query.Where(i => i.LocationId == locationId);
+        }
+
+        // Ordenar
+
+        query = query
             .Include(i => i.Category)
             .Include(i => i.Location)
-            .Include(i => i.Donation)
-            .ToList();
+            .Include(i => i.Donation);
+
+        query = sortBy switch
+        {
+            "category" => sortDescending
+                ? query.OrderByDescending(i => i.Category!.Name)
+                : query.OrderBy(i => i.Category!.Name),
+            "size"=> sortDescending
+                ? query.OrderByDescending(i => i.Size)
+                : query.OrderBy(i => i.Size),
+            "color"=> sortDescending
+            ?query.OrderByDescending(i => i.Color!.ToString())
+                : query.OrderBy(i => i.Color!.ToString()),
+            "state"=> sortDescending
+                ? query.OrderByDescending(i => i.Status!.ToString())
+                : query.OrderBy(i => i.Status!.ToString()),
+            "location"=> sortDescending
+                ?query.OrderByDescending(i => i.Location!.Name)
+                : query.OrderBy(i => i.Location!.Name),
+            _ => sortDescending
+                ? query.OrderByDescending(i => i.Name)
+                : query.OrderBy(i => i.Name)
+        };
+
+        var clothingItems = query.ToList();
+
+        // Options para el formulario de filtrado
+        LoadCategories("Todas", categoryId.ToString());
+        LoadLocations("Todas", locationId.ToString());
+
+        // TODO: crear LoadSizes con las tallas de la query
 
         return View(clothingItems);
 
