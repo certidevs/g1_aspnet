@@ -1,4 +1,3 @@
-@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @model List<Donation>
 
 @{
@@ -80,8 +79,8 @@
         <tr>
             <th>
                 <a class="text-reset text-decoration-none" asp-action="Index" asp-route-sortBy="name"
-                   asp-route-descending="@(ViewBag.sortBy == "name" && !(ViewBag.descending ?? false))" asp-route-search="@ViewBag.Search"
-                   asp-route-dateFrom="@dateFromStr" asp-route-dateTo="@dateToStr"
+                   asp-route-descending="@(ViewBag.sortBy == "name" && !(ViewBag.descending ?? false))"
+                   asp-route-search="@ViewBag.Search" asp-route-dateFrom="@dateFromStr" asp-route-dateTo="@dateToStr"
                    asp-route-location="@ViewBag.location">
                     Nombre del
                     benefactor
@@ -94,8 +93,8 @@
 
             <th>
                 <a class="text-reset text-decoration-none" asp-action="Index" asp-route-sortBy="date"
-                   asp-route-descending="@(ViewBag.sortBy == "date" && !(ViewBag.descending ?? false))" asp-route-search="@ViewBag.Search"
-                   asp-route-dateFrom="@dateFromStr" asp-route-dateTo="@dateToStr"
+                   asp-route-descending="@(ViewBag.sortBy == "date" && !(ViewBag.descending ?? false))"
+                   asp-route-search="@ViewBag.Search" asp-route-dateFrom="@dateFromStr" asp-route-dateTo="@dateToStr"
                    asp-route-location="@ViewBag.location">
                     Fecha de la
                     donacion
@@ -112,8 +111,8 @@
 
             <th>
                 <a class="text-reset text-decoration-none" asp-action="Index" asp-route-sortBy="location"
-                   asp-route-descending="@(ViewBag.sortBy == "location" && !(ViewBag.descending ?? false))" asp-route-search="@ViewBag.Search"
-                   asp-route-dateFrom="@dateFromStr" asp-route-dateTo="@dateToStr"
+                   asp-route-descending="@(ViewBag.sortBy == "location" && !(ViewBag.descending ?? false))"
+                   asp-route-search="@ViewBag.Search" asp-route-dateFrom="@dateFromStr" asp-route-dateTo="@dateToStr"
                    asp-route-location="@ViewBag.location">
                     Oficina
                 </a>
@@ -151,13 +150,15 @@
                 </td>
 
                 <td class="text-end text-nowrap">
-                    <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@donation.Id">
-                        Ver
-                    </a>
 
                     <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@donation.Id">
                         Editar
                     </a>
+
+                    <form asp-action="Delete" asp-route-id="@donation.Id" method="post" class="d-inline"
+                          onsubmit="return confirm('¿Seguro que quieres eliminar esta donación? Sus prendas no se borran.');">
+                        <button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button>
+                    </form>
                 </td>
             </tr>
         }

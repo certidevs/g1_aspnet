@@ -9,6 +9,15 @@
         <p class="text-secondary mb-0">Prendas reservadas para entrevistas de trabajo.</p>
     </div>
     <a class="btn btn-primary" asp-action="Create">Nueva reserva</a> 
+    
+    @if (User.IsInRole(RoleNames.Admin))
+                                    {
+    <form asp-action="Expire" method="post" class="d-inline">
+        <button class="btn btn-sm btn-outline-danger" type="submit">Expirar </button>
+    </form>
+    }
+
+    
 </div>
 
 @if (Model.Count == 0)
@@ -33,7 +42,10 @@ else
                         <td>@reservation.ExpiresAt.ToString("dd/MM/yyyy")</td>
                         <td class="text-end">
                             <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@reservation.Id">Ver</a>
-                            <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@reservation.Id">Editar</a> 
+                            <form asp-action="Delete" asp-route-id="@reservation.Id" method="post" class="d-inline"
+                            onsubmit="return confirm('¿Seguro que quieres eliminar esta reserva?');">
+                            <button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button>
+                        </form> 
                         </td>
                     </tr>
                 }

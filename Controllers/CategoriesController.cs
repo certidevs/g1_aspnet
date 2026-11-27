@@ -23,7 +23,7 @@ public class CategoriesController : Controller
 
         if (!string.IsNullOrEmpty(search))
         {
-            query = query.Where(r =>  r.Name.ToLower().Contains(search.ToLower()));
+            query = query.Where(r =>  r.Name.ToLower().Contains(search.ToLower().Trim()));
         }
 
         if (cantPrendas != null)

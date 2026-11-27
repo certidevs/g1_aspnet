@@ -26,13 +26,16 @@ public class ReservationsController : Controller
         this.context = context;
 
     }
+    // Estados que ocupan una prenda
+    private static readonly ReservationStatus[] ActiveStatuses =
+    {
+    ReservationStatus.Pending,
+    ReservationStatus.Confirmed
+    };
 
-    
     [Authorize]
     public IActionResult Index()
     {
-
-
 
         if (User.IsInRole(RoleNames.Admin))
         {
@@ -42,31 +45,21 @@ public class ReservationsController : Controller
             .OrderBy(r => r.Id)
             .ToList();
 
-
-
             return View(reservations);
 
-
-
-
         }
+       
+            var reservationsUser = context.Reservations.
+            Where(r => r.ApplicationUserId == User.GetRequiredUserId())
+            .ToList();
 
+            return View(reservationsUser);        
 
-        var reservationsUser = context.Reservations.
-        Where(r => r.ApplicationUserId == User.GetRequiredUserId())
-        .ToList();
-
-        return View(reservationsUser);
-
-
-
-
+        
     }
 
     public IActionResult Details(int id)
     {
-
-
         var reservation = context.Reservations
         .Include(r => r.ClothingItem)
         .Include(r => r.ApplicationUser)
@@ -74,9 +67,7 @@ public class ReservationsController : Controller
 
         if (reservation == null)
         {
-
             return NotFound();
-
         }
 
         return View(reservation);
@@ -91,6 +82,61 @@ public class ReservationsController : Controller
         ViewBag.Users = new SelectList(context.Users.OrderBy(u => u.UserName), "Id", "UserName");
 
         ViewBag.ClothingItems = new SelectList(context.ClothingItems.OrderBy(c => c.Name), "Id", "Name");
+
+    }
+
+    private void Available (int id)
+    {
+        
+
+            ClothingItem prenda = context.ClothingItems.
+            FirstOrDefault(p => p.Id == id);
+
+            prenda.Status = ItemStatus.Available;
+
+
+    }
+
+    [HttpPost]
+    [Authorize(Roles = RoleNames.Admin)]
+    public IActionResult Expire()
+    {
+        
+        var reserves = context.Reservations.
+        Where(r => r.ExpiresAt <= DateTime.Today && r.Status != ReservationStatus.Expired).
+        ToList();
+
+        int vencidas = reserves.Count;
+
+        if  (vencidas == 0)
+        {
+            
+            TempData["Message"] = "No hubo reservas vencidas";
+
+            return RedirectToAction("Index");
+
+        }  
+
+        foreach (Reservation res in reserves)
+        {
+            
+            res.Status = ReservationStatus.Expired;        
+            
+
+            Available(res.ClothingItemId);
+
+            
+
+            
+
+        }
+
+        context.SaveChanges();
+
+        TempData["Message"] = "Expiraron " + vencidas + " reservas";
+
+
+        return RedirectToAction("Index");
 
     }
 
@@ -149,23 +195,13 @@ public class ReservationsController : Controller
         if (expires)
         {
 
-            ClothingItem prenda = context.ClothingItems.
-            FirstOrDefault(p => p.Id == reserve.ClothingItemId);
-
-            prenda.Status = ItemStatus.Available;
-
-
+            Available(reserve.ClothingItemId);          
+          
         }
-
-
-
-
 
         bool reservaActiva =
         reserve.Status == Enums.ReservationStatus.Confirmed ||
         reserve.Status == Enums.ReservationStatus.Pending;
-
-
 
         if (reservaActiva)
         {
@@ -205,22 +241,25 @@ public class ReservationsController : Controller
     public IActionResult Delete(int id)
     {
 
-        var reservation = context.Reservations.Find(id);
+        var reservation = VisibleReservations()
+            .Include(r => r.ClothingItem)
+            .FirstOrDefault(r => r.Id == id);
         if (reservation == null)
         {
 
             return NotFound();
 
         }
-
+        if (IsActive(reservation) && reservation.ClothingItem != null)
+        {
+            reservation.ClothingItem.Status = ItemStatus.Available;
+        }
         context.Reservations.Remove(reservation);
 
         context.SaveChanges();
 
         TempData["Message"] = "Reserva borrada";
         return RedirectToAction("Index");
-
-
     }
 
 
@@ -258,12 +297,6 @@ public class ReservationsController : Controller
         return RedirectToAction("Details", new { id });
 
     }
-    // Estados que ocupan una prenda
-    private static readonly ReservationStatus[] ActiveStatuses =
-    {
-    ReservationStatus.Pending,
-    ReservationStatus.Confirmed
-};
 
     // Comprueba si la reserva sigue activa
     private static bool IsActive(Reservation reservation)
@@ -283,7 +316,7 @@ public class ReservationsController : Controller
 
         return query;
     }
-    
+
     [HttpPost]
     public IActionResult Cancel(int id)
     {
@@ -320,6 +353,7 @@ public class ReservationsController : Controller
 
         return RedirectToAction("Details", new { id });
     }
+
 
     // TODO (issue #17): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #18)
     // El código ya está escrito aquí abajo, comentado. El modelo que funciona es LocationController.
