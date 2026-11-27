@@ -33,6 +33,9 @@ public class CategoriesController : Controller
 
         query = query.Include(c => c.ClothingItems);
 
+        ViewBag.search = search;
+        ViewBag.cantPrendas = cantPrendas;
+
         // ToList() es lo que ejecuta la consulta en la base de datos.
         var categories = query.OrderBy(r => r.Name).ToList();
         return View(categories);

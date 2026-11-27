@@ -24,12 +24,22 @@
             <label for="search" class="form-label">
                 Nombre
             </label>
-            <input id="search" name="search" value="@ViewBag.Search" class="form-control" placeholder="Nombre de la sede" />
+            <input id="search" name="search" value="@ViewBag.search" class="form-control" placeholder="Nombre de la sede" />
         </div>
 
+        @*
         <div class="col-md">
             <label for="city" class="form-label">Ciudad</label>
             <input id="city" name="city" value="@ViewBag.city" class="form-control" placeholder="Ciudad" />
+        </div>
+        *@
+        <div class="col-md">
+            @Html.DropDownList(
+                "city",
+                (SelectList)ViewBag.Cities,
+                "Todas las ciudades",
+                new { @class = "form-control" }
+            )
         </div>
         
         <div class="col-lg-2 col-12 d-flex gap-2">

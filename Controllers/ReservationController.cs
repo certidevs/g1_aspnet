@@ -11,6 +11,7 @@ using G1AspNet.Enums;
 using G1AspNet.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace G1AspNet.Controllers;
@@ -20,10 +21,13 @@ public class ReservationsController : Controller
 
     private readonly ApplicationDbContext context;
 
-    public ReservationsController(ApplicationDbContext context)
+    private readonly UserManager <ApplicationUser> userManager;
+
+    public ReservationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
     {
 
         this.context = context;
+        this.userManager = userManager;
 
     }
     // Estados que ocupan una prenda
@@ -79,9 +83,24 @@ public class ReservationsController : Controller
     private void LoadData()
     {
 
-        ViewBag.Users = new SelectList(context.Users.OrderBy(u => u.UserName), "Id", "UserName");
+        if (User.IsInRole(RoleNames.Admin))
+        {
+            
+            var users = userManager.GetUsersInRoleAsync(RoleNames.User).Result;     
+                
+            ViewBag.Users = new SelectList(users.OrderBy(u => u.UserName), "Id", "UserName");
 
-        ViewBag.ClothingItems = new SelectList(context.ClothingItems.OrderBy(c => c.Name), "Id", "Name");
+        }
+        else
+        {
+
+            ViewBag.Users = new SelectList(context.Users.Where(u => u.Id == User.GetRequiredUserId()), "Id", "UserName");
+            
+
+        }
+        
+
+        ViewBag.ClothingItems = new SelectList(context.ClothingItems, "Id", "Name");
 
     }
 

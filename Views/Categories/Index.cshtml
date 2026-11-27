@@ -22,12 +22,14 @@
     <div class="row g-2 align-items-end">
         <div class="col-md">
             <label for="search" class="form-label">Nombre</label>
-            <input id="search" name="search" class="form-control" placeholder="Nombre de la categoría" />
+            <input id="search" name="search" value="@ViewBag.search" class="form-control" placeholder="Nombre de la categoría" />
         </div>
+        @*
         <div class="col-md">
             <label for="cantPrendas" class="form-label">Cantidad</label>
-            <input id="cantPrendas" name="cantPrendas" class="form-control" placeholder="Cantidad de prendas" />
+            <input id="cantPrendas" name="cantPrendas" value="@ViewBag.cantPrendas" class="form-control" placeholder="Cantidad de prendas" />
         </div>
+        *@
         <div class="col-lg-2 col-12 d-flex gap-2">
             <button class="btn btn-primary" type="submit">
                 Buscar

@@ -20,9 +20,15 @@ public class Location
 
     // Opcionales: con string? el formulario deja guardar el campo vacío (con string, MVC lo exige).
     [StringLength(10, ErrorMessage = "El código postal no puede superar los 10 caracteres.")]
+    [RegularExpression(
+        @"^\d{5}$",
+        ErrorMessage = "El código postal debe tener exactamente 5 dígitos")]
     public string? PostalCode { get; set; }
 
     [StringLength(20, ErrorMessage = "El teléfono no puede superar los 20 caracteres.")]
+    [RegularExpression(
+        @"^[6789]\d{8}$",
+        ErrorMessage = "El teléfono debe tener 9 dígitos y comenzar por 6, 7, 8 o 9")]
     public string? Phone { get; set; }
 
     [StringLength(100, ErrorMessage = "El horario no puede superar los 100 caracteres.")]

@@ -136,11 +136,12 @@ public class ClothingItemsController : Controller
         // TODO: crear LoadSizes con las tallas de la query
 
         return View(clothingItems);
-
     }
 
     public IActionResult Details(int id, bool returnToDonation = false)
     {
+        // TODO: CArgar reservas solo para usuario logado: Todas para admins, solo las propias para usuarios
+
         var clothingItem = context.ClothingItems
             .Include(i => i.Category)
             .Include(i => i.Location)
