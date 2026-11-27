@@ -24,7 +24,8 @@
     <div class="row g-2 align-items-end">
         <div class="col-md">
             <label for="search" class="form-label">Buscar</label>
-            <input id="search" name="search" value="@ViewBag.Search" class="form-control" placeholder="Nombre de la prenda" />
+            <input id="search" name="search" value="@ViewBag.Search" class="form-control"
+                   placeholder="Nombre de la prenda" />
         </div>
         <div class="col-md">
             <label class="form-label" for="categoryId">Categoría</label>
@@ -64,7 +65,15 @@ else
     <div class="table-responsive border rounded">
         <table class="table align-middle mb-0">
             <thead>
-                <tr><th>Prenda</th><th>Categoría</th><th>Talla</th><th>Color</th><th>Estado</th><th>Sede</th><th></th></tr>
+                <tr>
+                    <th>Prenda</th>
+                    <th>Categoría</th>
+                    <th>Talla</th>
+                    <th>Color</th>
+                    <th>Estado</th>
+                    <th>Sede</th>
+                    <th></th>
+                </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
@@ -74,21 +83,23 @@ else
                         <td>@item.Category?.Name</td>
                         <td>@item.Size</td>
                         <td>@Html.DisplayFor(m => item.Color)</td>
-                        <td><span class="badge @(item.Status == ItemStatus.Available ? "text-bg-success" : "text-bg-secondary")">@Html.DisplayFor(m => item.Status)</span></td>
-                        <td>@item.Location?.Name</td>
-                        <td class="text-end">
-                            @if (User.IsInRole(RoleNames.Admin))
-                            {
-                                <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
-                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline"
-                                    onsubmit="return confirm('¿Seguro que quieres eliminar esta prenda?');">
-                                    <button class="btn btn-outline-danger" type="submit">Eliminar</button>
-                                </form>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
+                        <td><span
+                            class="badge @(item.Status == ItemStatus.Available ? "text-bg-success" : "text-bg-secondary")">@Html.DisplayFor(m
+                            => item.Status)</span></td>
+                            <td>@item.Location?.Name</td>
+                            <td class="text-end">
+                                @if (User.IsInRole(RoleNames.Admin))
+                                {
+                                    <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Id">Editar</a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline"
+                                          onsubmit="return confirm('¿Seguro que quieres eliminar esta prenda?');">
+                                        <button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }

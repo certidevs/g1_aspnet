@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace G1AspNet.Controllers;
 
@@ -61,87 +62,19 @@ public class ClothingItemsController : Controller
             query = query.Where(i => i.Name.ToLower().Contains(search.Trim().ToLower()));
         }
 
-        if (categoryId > 0)
-        {
-            query = query.Where(i => i.CategoryId == categoryId);
-            ViewBag.CategoryId = categoryId;
-        }
+        ViewBag.Search = search;
 
-        if (color is not null)
-        {
-            query = query.Where(i => i.Color == color);
-        }
-
-        if (material is not null)
-        {
-            query = query.Where(i => i.Material == material);
-        }
-
-        if (!string.IsNullOrWhiteSpace(size))
-        {
-            query = query.Where(i => i.Size == size);
-        }
-
-        if (condition is not null)
-        {
-            query = query.Where(i => i.Condition == condition);
-        }
-
-        if (status is not null)
-        {
-            query = query.Where(i => i.Status == status);
-        }
-
-        if (locationId > 0)
-        {
-            query = query.Where(i => i.LocationId == locationId);
-        }
-
-        // Ordenar
-
-        query = query
+        var clothingItems = query.OrderBy(i => i.Name)
             .Include(i => i.Category)
             .Include(i => i.Location)
-            .Include(i => i.Donation);
-
-        query = sortBy switch
-        {
-            "category" => sortDescending
-                ? query.OrderByDescending(i => i.Category!.Name)
-                : query.OrderBy(i => i.Category!.Name),
-            "size"=> sortDescending
-                ? query.OrderByDescending(i => i.Size)
-                : query.OrderBy(i => i.Size),
-            "color"=> sortDescending
-            ?query.OrderByDescending(i => i.Color!.ToString())
-                : query.OrderBy(i => i.Color!.ToString()),
-            "state"=> sortDescending
-                ? query.OrderByDescending(i => i.Status!.ToString())
-                : query.OrderBy(i => i.Status!.ToString()),
-            "location"=> sortDescending
-                ?query.OrderByDescending(i => i.Location!.Name)
-                : query.OrderBy(i => i.Location!.Name),
-            _ => sortDescending
-                ? query.OrderByDescending(i => i.Name)
-                : query.OrderBy(i => i.Name)
-        };
-
-        var clothingItems = query.ToList();
-
-        // Options para el formulario de filtrado
-        LoadCategories("Todas", categoryId.ToString());
-        LoadLocations("Todas", locationId.ToString());
-
-        // TODO: crear LoadSizes con las tallas de la query
-
-        // TODO: Borrar tests metidos en ViewBag
-        ViewBag.color = color;
-        ViewBag.status = status;
+            .Include(i => i.Donation)
+            .ToList();
 
         return View(clothingItems);
+
     }
 
-    public IActionResult Details(int id, int? donationId, bool returnToDonation = false)
+    public IActionResult Details(int id, bool returnToDonation = false)
     {
         var clothingItem = context.ClothingItems
             .Include(i => i.Category)
@@ -154,7 +87,6 @@ public class ClothingItemsController : Controller
         {
             return NotFound();
         }
-        ViewBag.DonationId = donationId;
 
         ViewBag.ReturnToDonation = returnToDonation;
         return View(clothingItem);
@@ -164,12 +96,14 @@ public class ClothingItemsController : Controller
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpGet]
-    public IActionResult Create(int? donationId, bool returnToDonation = false)
+    public IActionResult Create(int? donationId)
     {
+        bool returnToDonation = false;
         var clothingItem = new ClothingItem { };
-        if (donationId != null)
+        if (donationId is not null)
         {
             clothingItem.DonationId = donationId;
+            ViewBag.ReturnToDonation = true;
         }
 
         LoadDonations("Selecciona la donacion");
@@ -178,14 +112,13 @@ public class ClothingItemsController : Controller
         ViewBag.ReturnToDonation = returnToDonation;
 
         return View("Form", clothingItem);
-        return View("Form", clothingItem);
     }
 
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Save(ClothingItem clothingItem, int? donationId, bool returnToDonation = false)
+    public async Task<IActionResult> Save(ClothingItem clothingItem, bool returnToDonation = false)
     {
         if (!ModelState.IsValid)
         {
@@ -193,6 +126,7 @@ public class ClothingItemsController : Controller
             LoadDonations("Selecciona la donacion");
             LoadLocations("Selecciona la sede");
             LoadCategories("Selecciona la categoria");
+            ViewBag.ReturnToDonation = returnToDonation;
             return View("Form", clothingItem);
         }
 
@@ -207,7 +141,7 @@ public class ClothingItemsController : Controller
         }
 
         // guardado de imagenes
-        if(clothingItem.ImageFile != null && clothingItem.ImageFile.Length > 0)
+        if (clothingItem.ImageFile != null && clothingItem.ImageFile.Length > 0)
         {
             // saca la ubicación de las imagenes
             string carpeta = Path.Combine(
@@ -245,12 +179,20 @@ public class ClothingItemsController : Controller
         {
             context.ClothingItems.Update(clothingItem);
         }
-
+        ;
+        ViewBag.ReturnToDonation = returnToDonation;
         context.SaveChanges();
 
-        ViewBag.ReturnToDonation = returnToDonation;
         TempData["Message"] = "Prenda guardada correctamente.";
-        return RedirectToAction("Details", new { id = clothingItem.Id });
+        if (returnToDonation && clothingItem.DonationId is not null)
+        {
+            return RedirectToAction("Details", "Donations", new { id = clothingItem.DonationId });
+        }
+        else
+        {
+            return RedirectToAction("Details", new { id = clothingItem.Id });
+
+        }
     }
 
     [Authorize(Roles = RoleNames.Admin)]
@@ -275,7 +217,7 @@ public class ClothingItemsController : Controller
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
-    public IActionResult Delete(int id, int? donationId, bool returnToDonation = false)
+    public IActionResult Delete(int id, bool returnToDonation = false)
     {
         var clothingItem = context.ClothingItems.Find(id);
         if (clothingItem == null)
@@ -287,7 +229,11 @@ public class ClothingItemsController : Controller
         if (context.Reservations.Any(r => r.ClothingItemId == id))
         {
             TempData["Error"] = "No se puede eliminar la prenda: tiene reservas. Edítala y ponla en estado Retirada.";
-            return RedirectToAction("Details", new { id });
+            return RedirectToAction("Details", new
+            {
+                id,
+                returnToDonation
+            });
         }
 
         // eliminación de la imagen si contiene una relacionada
@@ -296,14 +242,15 @@ public class ClothingItemsController : Controller
             DeleteImage(clothingItem.ImageFileName);
         }
 
+        // Se elimina la prenda de la base de datos, pero el objeto clothingItem sigue en RAM y se puede consultar sus mnétodos antes de que desapareca con el return
         context.ClothingItems.Remove(clothingItem);
         context.SaveChanges();
 
-        ViewBag.ReturnToDonation = returnToDonation;
         TempData["Message"] = "Prenda borrada.";
-        if (donationId is not null)
+
+        if (returnToDonation && clothingItem.DonationId is not null)
         {
-            return RedirectToAction("Details", "Donations", new { id = donationId });
+            return RedirectToAction("Details", "Donations", new { id = clothingItem.DonationId });
         }
         else
         {
@@ -311,7 +258,7 @@ public class ClothingItemsController : Controller
         }
     }
 
-     [Authorize(Roles = RoleNames.Admin)]
+    [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
     private void DeleteImage(string? imageFileName)
     {
