@@ -179,4 +179,17 @@ Lo que funciona ahora mismo.
 
 ## 8. Dudas, ruegos y preguntas
 
--
+## 9. Correcciones del mentor
+
+presentaar el equipo dar paso con nombre  
+evitar el tema de la historia, presentar la problematica sin nombrar
+crear un dato minimo flujo crear editar elimar
+el orden de presentacion, de mas grande a mas pequeño primero sedes -> donaciones -> categorias -> vestuario -> reservas
+Explicar mas lo de expirar  -> cambiar el nombre a "liberar caducadas" o simil
+colocar los estados de colorinchis
+primero admin y luego usuario, hacerlo todo de una, tener dos ventanas abiertas, una con admin y otra con usuario
+cambiar el nombre del usuario y el de admin para darle mas personalidad 
+añadir review a las reservas, aun que sean de mentirilla, decir que se plantea a futuro
+
+hacer el scroll de la pagina de inicio
+eneseñar el modo claro y modo oscuro

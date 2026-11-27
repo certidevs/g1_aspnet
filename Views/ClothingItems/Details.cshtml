@@ -30,7 +30,7 @@
         }
         else if (Model.Status == ItemStatus.Available)
         {
-            <form asp-controller="Reservations" asp-action="Reserve" method="post" class="mb-3">
+            <form asp-controller="Reservation" asp-action="Reserve" method="post" class="mb-3">
                 <input type="hidden" name="clothingItemId" value="@Model.Id" />
                 <button class="btn btn-success" type="submit"> Reservar esta prenda</button>
             </form>
