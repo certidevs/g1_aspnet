@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using G1AspNet.Data;
 using G1AspNet.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 namespace G1AspNet.Controllers;
@@ -42,6 +43,15 @@ public class LocationController : Controller
         {
             query = query.Where(r =>  r.City.ToLower().Contains(city.ToLower()));
         }
+
+
+        // Valores de busqueda en el viewBag
+        ViewBag.search = search;
+        ViewBag.city = city;
+
+        // lista de ciudades disponibles
+        var cities = context.Locations.Select(l => l.City).Distinct().ToList();
+        ViewBag.Cities = new SelectList(cities);
 
 
         // ToList() es lo que ejecuta la consulta en la base de datos.
