@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace G1AspNet.Controllers;
 
@@ -20,7 +21,7 @@ public class ClothingItemsController : Controller
         this.environment = environment;
     }
 
-    public IActionResult Index(string? search, ClothingColor? color, ClothingMaterial? Material, SizeType? SizeType, string? Size, ItemCondition? Condition, ItemStatus? Status, int? donationId)
+    public IActionResult Index(string? search, ClothingColor? color, ClothingMaterial? Material, SizeType? SizeType, string? Size, ItemCondition? Condition, ItemStatus? Status)
     {
 
         // TODO: ¿Filtrar por periodo en el que está libre
@@ -34,7 +35,7 @@ public class ClothingItemsController : Controller
         }
 
         ViewBag.Search = search;
-        ViewBag.donationId = donationId;
+
 
         var clothingItems = query.OrderBy(i => i.Name)
             .Include(i => i.Category)
@@ -42,20 +43,16 @@ public class ClothingItemsController : Controller
             .Include(i => i.Donation)
             .ToList();
 
-        if (donationId is not null)
-        {
-            return RedirectToAction("Details", "Donations", new { id = donationId });
-        }
-        else
-        {
-            return View(clothingItems);
 
-        }
+        return View(clothingItems);
+
+
     }
 
-    
 
-    public IActionResult Details(int id, int? donationId)
+
+    public IActionResult Details(int id, int? donationId,
+    int? returnToDonation)
     {
         var clothingItem = context.ClothingItems
             .Include(i => i.Category)
@@ -68,7 +65,8 @@ public class ClothingItemsController : Controller
         {
             return NotFound();
         }
-        ViewBag.DonationId = donationId;
+        ViewBag.donationId = donationId;
+        ViewBag.returnToDonation = returnToDonation;
 
         return View(clothingItem);
 
@@ -80,18 +78,19 @@ public class ClothingItemsController : Controller
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpGet]
-    public IActionResult Create(int? donationId)
+    public IActionResult Create(int? donationId, int? returnToDonation)
     {
         var clothingItem = new ClothingItem { };
         if (donationId != null)
         {
             clothingItem.DonationId = donationId;
         }
+        ViewBag.returnToDonation = returnToDonation;
 
         LoadDonations();
         LoadLocations();
         LoadCategories();
-        
+
 
         return View("Form", clothingItem);
     }
@@ -100,7 +99,7 @@ public class ClothingItemsController : Controller
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Save(ClothingItem clothingItem, int? donationId)
+    public async Task<IActionResult> Save(ClothingItem clothingItem, int? donationId, int? returnToDonation)
     {
         if (!ModelState.IsValid)
         {
@@ -121,9 +120,9 @@ public class ClothingItemsController : Controller
             }
         }
 
-        
+
         // guardado de imagenes
-        if(clothingItem.ImageFile != null && clothingItem.ImageFile.Length > 0)
+        if (clothingItem.ImageFile != null && clothingItem.ImageFile.Length > 0)
         {
             // saca la ubicación de las imagenes
             string carpeta = Path.Combine(
@@ -163,12 +162,12 @@ public class ClothingItemsController : Controller
         {
             context.ClothingItems.Update(clothingItem);
         }
-
+        ;
+        ViewBag.returnToDonation = returnToDonation;
         context.SaveChanges();
 
-
         TempData["Message"] = "Prenda guardada correctamente.";
-        if (donationId is not null)
+        if (returnToDonation == 1)
         {
             return RedirectToAction("Details", "Donations", new { id = donationId });
         }
@@ -202,8 +201,10 @@ public class ClothingItemsController : Controller
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
-    public IActionResult Delete(int id, int? donationId)
+    public IActionResult Delete(int id, int? donationId, int? returnToDonation)
     {
+        ViewBag.donationId = donationId;
+        ViewBag.returnToDonation = returnToDonation;
         var clothingItem = context.ClothingItems.Find(id);
         if (clothingItem == null)
         {
@@ -214,7 +215,12 @@ public class ClothingItemsController : Controller
         if (context.Reservations.Any(r => r.ClothingItemId == id))
         {
             TempData["Error"] = "No se puede eliminar la prenda: tiene reservas. Edítala y ponla en estado Retirada.";
-            return RedirectToAction("Details", new { id });
+            return RedirectToAction("Details", new
+            {
+                id,
+                donationId,
+                returnToDonation
+            });
         }
 
         // eliminación de la imagen si contiene una relacionada
@@ -226,14 +232,17 @@ public class ClothingItemsController : Controller
         context.ClothingItems.Remove(clothingItem);
         context.SaveChanges();
 
+
         TempData["Message"] = "Prenda borrada.";
-        if (donationId is not null)
+
+        if (returnToDonation == 1)
         {
             return RedirectToAction("Details", "Donations", new { id = donationId });
         }
         else
         {
             return RedirectToAction("Index");
+
         }
     }
 
