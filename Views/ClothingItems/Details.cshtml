@@ -14,7 +14,7 @@
             {
                 <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@Model.Id">Editar</a>
                 <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline"
-                      asp-route-donationId="@ViewBag.DonationId"
+                      asp-route-donationId="@ViewBag.DonationId" asp-route-returnToDonation="@ViewBag.returnToDonation"
                       onsubmit="return confirm('¿Seguro que quieres eliminar esta prenda?');">
                     <button class="btn btn-outline-danger" type="submit">Eliminar</button>
                 </form>
@@ -124,15 +124,14 @@
             }
 
 
-<label>@Model.ImageFileName</label>
-<img src="@Model.ImageFileName"
-             alt="@Model.Name"
-             style="width:200px;" />
-<br>
-<br>
-            @if (@ViewBag.donationId is not null)
+            <label>@Model.ImageFileName</label>
+            <img src="@Model.ImageFileName" alt="@Model.Name" style="width:200px;" />
+            <br>
+            <br>
+            @if (ViewBag.returnToDonation == 1)
             {
-                <a class="btn btn-outline-secondary" asp-controller="Donations" asp-action="Details" asp-route-id="@ViewBag.donationId">Volver a la donacion</a>
+                <a class="btn btn-outline-secondary" asp-controller="Donations" asp-action="Details"
+                   asp-route-id="@ViewBag.donationId">Volver a la donacion</a>
             }
             else
             {

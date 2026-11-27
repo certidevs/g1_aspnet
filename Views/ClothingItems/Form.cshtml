@@ -13,6 +13,7 @@
 <form asp-action="Save" method="post" class="col-lg-8" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
     <input type="hidden" asp-for="Id" />
+    <input type="hidden" id="returnToDonation" name="returnToDonation" value="@ViewBag.returnToDonation" />
 
     <div class="mb-3">
         <label class="form-label" asp-for="Name">Nombre</label>
@@ -97,10 +98,9 @@
         <input class="form-control" asp-for="ImageFile" type="file" accept="image/*"/>
     </div>
 
-    @* TODO: Añadir input de fichero para subir una imagen *@
 
     <button class="btn btn-primary" type="submit">Guardar</button>
-    <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+    <a class="btn btn-outline-secondary">Cancelar</a>
     
 </form>
 
