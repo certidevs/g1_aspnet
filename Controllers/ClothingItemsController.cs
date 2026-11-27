@@ -21,12 +21,40 @@ public class ClothingItemsController : Controller
         this.environment = environment;
     }
 
-    public IActionResult Index(string? search, ClothingColor? color, ClothingMaterial? Material, SizeType? SizeType, string? Size, ItemCondition? Condition, ItemStatus? Status)
+    public IActionResult Index(ClothingColor? color, 
+        ClothingMaterial? material, 
+        ItemCondition? condition, 
+        ItemStatus? status,
+        string size = "",
+        int locationId = 0,
+        int categoryId = 0,
+        string search = "",
+        string sortBy = "name",
+        bool sortDescending = false,
+        string returnTo = "",
+        int returnToId = 0)
     {
 
-        // TODO: ¿Filtrar por periodo en el que está libre
-        // TODO: ¿Valores por defecto de Condition y Status?
-        // TODO: ¿Filtrar por Location debe llegar parametro LocationId (o es un objeto tipo location)?
+// Limpiar
+
+        // Conservar la búsqueda tal como la introduce el usuario en el Viewbag antes de limpiarla
+        ViewBag.Search = search;
+        search = search.Trim();
+
+        string[] validSortBy = {"name", "category", "size", "color", "state", "location"};
+        sortBy = !validSortBy.Contains(sortBy.ToLower()) ? validSortBy[0] : sortBy.ToLower();
+        
+        ViewBag.SortBy = sortBy;
+        ViewBag.SortDescending = sortDescending;
+
+        string[] validReturnTo ={"index", "donation", "category"};
+        returnTo = !validReturnTo.Contains(returnTo.ToLower()) ? validReturnTo[0] : returnTo.ToLower();
+
+        ViewBag.ReturnTo = returnTo;
+        ViewBag.ReturnToId = returnToId;
+
+        // Filtrar
+
         var query = context.ClothingItems.AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(search))
@@ -34,26 +62,86 @@ public class ClothingItemsController : Controller
             query = query.Where(i => i.Name.ToLower().Contains(search.Trim().ToLower()));
         }
 
-        ViewBag.Search = search;
+        if (categoryId > 0)
+        {
+            query = query.Where(i => i.CategoryId == categoryId);
+            ViewBag.CategoryId = categoryId;
+        }
 
+        if (color is not null)
+        {
+            query = query.Where(i => i.Color == color);
+        }
 
-        var clothingItems = query.OrderBy(i => i.Name)
+        if (material is not null)
+        {
+            query = query.Where(i => i.Material == material);
+        }
+
+        if (!string.IsNullOrWhiteSpace(size))
+        {
+            query = query.Where(i => i.Size == size);
+        }
+
+        if (condition is not null)
+        {
+            query = query.Where(i => i.Condition == condition);
+        }
+
+        if (status is not null)
+        {
+            query = query.Where(i => i.Status == status);
+        }
+
+        if (locationId > 0)
+        {
+            query = query.Where(i => i.LocationId == locationId);
+        }
+
+        // Ordenar
+
+        query = query
             .Include(i => i.Category)
             .Include(i => i.Location)
-            .Include(i => i.Donation)
-            .ToList();
+            .Include(i => i.Donation);
 
+        query = sortBy switch
+        {
+            "category" => sortDescending
+                ? query.OrderByDescending(i => i.Category!.Name)
+                : query.OrderBy(i => i.Category!.Name),
+            "size"=> sortDescending
+                ? query.OrderByDescending(i => i.Size)
+                : query.OrderBy(i => i.Size),
+            "color"=> sortDescending
+            ?query.OrderByDescending(i => i.Color!.ToString())
+                : query.OrderBy(i => i.Color!.ToString()),
+            "state"=> sortDescending
+                ? query.OrderByDescending(i => i.Status!.ToString())
+                : query.OrderBy(i => i.Status!.ToString()),
+            "location"=> sortDescending
+                ?query.OrderByDescending(i => i.Location!.Name)
+                : query.OrderBy(i => i.Location!.Name),
+            _ => sortDescending
+                ? query.OrderByDescending(i => i.Name)
+                : query.OrderBy(i => i.Name)
+        };
+
+        var clothingItems = query.ToList();
+
+        // Options para el formulario de filtrado
+        LoadCategories("Todas", categoryId.ToString());
+        LoadLocations("Todas", locationId.ToString());
+
+        // TODO: crear LoadSizes con las tallas de la query
 
         return View(clothingItems);
-
-
     }
 
-
-
-    public IActionResult Details(int id, int? donationId,
-    int? returnToDonation)
+    public IActionResult Details(int id, bool returnToDonation = false)
     {
+        // TODO: CArgar reservas solo para usuario logado: Todas para admins, solo las propias para usuarios
+
         var clothingItem = context.ClothingItems
             .Include(i => i.Category)
             .Include(i => i.Location)
@@ -65,32 +153,29 @@ public class ClothingItemsController : Controller
         {
             return NotFound();
         }
-        ViewBag.donationId = donationId;
-        ViewBag.returnToDonation = returnToDonation;
 
+        ViewBag.ReturnToDonation = returnToDonation;
         return View(clothingItem);
-
-
-
     }
 
 
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpGet]
-    public IActionResult Create(int? donationId, int? returnToDonation)
+    public IActionResult Create(int? donationId)
     {
+        bool returnToDonation = false;
         var clothingItem = new ClothingItem { };
-        if (donationId != null)
+        if (donationId is not null)
         {
             clothingItem.DonationId = donationId;
+            ViewBag.ReturnToDonation = true;
         }
-        ViewBag.returnToDonation = returnToDonation;
 
-        LoadDonations();
-        LoadLocations();
-        LoadCategories();
-
+        LoadDonations("Selecciona la donacion");
+        LoadLocations("Selecciona la sede");
+        LoadCategories("Selecciona la categoria");
+        ViewBag.ReturnToDonation = returnToDonation;
 
         return View("Form", clothingItem);
     }
@@ -99,14 +184,15 @@ public class ClothingItemsController : Controller
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Save(ClothingItem clothingItem, int? donationId, int? returnToDonation)
+    public async Task<IActionResult> Save(ClothingItem clothingItem, bool returnToDonation = false)
     {
         if (!ModelState.IsValid)
         {
             // Hay que volver a cargar los desplegables, o el formulario reaparece sin opciones.
-            LoadDonations();
-            LoadLocations();
-            LoadCategories();
+            LoadDonations("Selecciona la donacion");
+            LoadLocations("Selecciona la sede");
+            LoadCategories("Selecciona la categoria");
+            ViewBag.ReturnToDonation = returnToDonation;
             return View("Form", clothingItem);
         }
 
@@ -119,7 +205,6 @@ public class ClothingItemsController : Controller
                 DeleteImage(actual.ImageFileName);
             }
         }
-
 
         // guardado de imagenes
         if (clothingItem.ImageFile != null && clothingItem.ImageFile.Length > 0)
@@ -152,8 +237,6 @@ public class ClothingItemsController : Controller
             clothingItem.ImageFileName = $"/images/clothingItems/{nombreArchivo}";
         }
 
-
-
         if (clothingItem.Id == 0)
         {
             context.ClothingItems.Add(clothingItem);
@@ -163,13 +246,13 @@ public class ClothingItemsController : Controller
             context.ClothingItems.Update(clothingItem);
         }
         ;
-        ViewBag.returnToDonation = returnToDonation;
+        ViewBag.ReturnToDonation = returnToDonation;
         context.SaveChanges();
 
         TempData["Message"] = "Prenda guardada correctamente.";
-        if (returnToDonation == 1)
+        if (returnToDonation && clothingItem.DonationId is not null)
         {
-            return RedirectToAction("Details", "Donations", new { id = donationId });
+            return RedirectToAction("Details", "Donations", new { id = clothingItem.DonationId });
         }
         else
         {
@@ -178,11 +261,9 @@ public class ClothingItemsController : Controller
         }
     }
 
-
-
     [Authorize(Roles = RoleNames.Admin)]
     [HttpGet]
-    public IActionResult Edit(int id)
+    public IActionResult Edit(int id, int? donationId, bool returnToDonation = false)
     {
         var clothingItem = context.ClothingItems.Find(id);
         if (clothingItem == null)
@@ -190,21 +271,20 @@ public class ClothingItemsController : Controller
             return NotFound();
         }
 
-        LoadDonations();
-        LoadLocations();
-        LoadCategories();
+        LoadDonations("Selecciona la donacion");
+        LoadLocations("Selecciona la sede");
+        LoadCategories("Selecciona la categoria");
+        ViewBag.ReturnToDonation = returnToDonation;
 
-        return View("Form", clothingItem);
+            return View("Form", clothingItem);
     }
 
 
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
-    public IActionResult Delete(int id, int? donationId, int? returnToDonation)
+    public IActionResult Delete(int id, bool returnToDonation = false)
     {
-        ViewBag.donationId = donationId;
-        ViewBag.returnToDonation = returnToDonation;
         var clothingItem = context.ClothingItems.Find(id);
         if (clothingItem == null)
         {
@@ -218,7 +298,6 @@ public class ClothingItemsController : Controller
             return RedirectToAction("Details", new
             {
                 id,
-                donationId,
                 returnToDonation
             });
         }
@@ -229,23 +308,21 @@ public class ClothingItemsController : Controller
             DeleteImage(clothingItem.ImageFileName);
         }
 
+        // Se elimina la prenda de la base de datos, pero el objeto clothingItem sigue en RAM y se puede consultar sus mnétodos antes de que desapareca con el return
         context.ClothingItems.Remove(clothingItem);
         context.SaveChanges();
 
-
         TempData["Message"] = "Prenda borrada.";
 
-        if (returnToDonation == 1)
+        if (returnToDonation && clothingItem.DonationId is not null)
         {
-            return RedirectToAction("Details", "Donations", new { id = donationId });
+            return RedirectToAction("Details", "Donations", new { id = clothingItem.DonationId });
         }
         else
         {
             return RedirectToAction("Index");
-
         }
     }
-
 
     [Authorize(Roles = RoleNames.Admin)]
     [HttpPost]
@@ -270,61 +347,60 @@ public class ClothingItemsController : Controller
         }
     }
 
-
-
-
-    private void LoadDonations()
+    private void LoadCategories(string placeHolder = "", string selectedItemId = "")
     {
-        var donations = context.Donations.OrderByDescending(d => d.DonatedAt).ToList();
-
-        var donationOptions = donations.Select(d => new
-        {
-            Id = d.Id,
-            Name = $"{d.DonorName} ({d.DonatedAt.ToString("dd-MM-yyyy")})"
-        });
+        var categories = context.Categories
+            .OrderBy(c => c.Name)
+            .ToList();
 
         var placeholderOption = new SelectListItem
         {
             Value = "",
-            Text = "Selecciona la donación de origen",
+            Text = placeHolder,
         };
-
-        ViewBag.Donations = new SelectList(donationOptions, "Id", "Name")
-        .Prepend(placeholderOption);
+        
+        ViewBag.Categories = new SelectList(categories, "Id", "Name", selectedItemId)
+            .Prepend(placeholderOption);
     }
 
+    private void LoadDonations(string placeHolder = "", string selectedItemId = "")
+    {
+        var donations = context.Donations
+            .Include(d => d.Location)
+            .OrderByDescending(d => d.DonatedAt)
+            .ThenBy(d => d.Location!.Name)
+            .Select(d => new
+                {
+                    Id = d.Id,
+                    Name = $"{d.DonorName} ({d.Location!.Name} {d.DonatedAt.ToString("dd-MM-yyyy")})"
+                })
+            .ToList();
 
+        var placeholderOption = new SelectListItem
+        {
+            Value = "",
+            Text = placeHolder,
+        };
 
-    private void LoadLocations()
+        ViewBag.Donations = new SelectList(donations, "Id", "Name", selectedItemId)
+            .Prepend(placeholderOption);
+    }
+
+    private void LoadLocations(string placeHolder = "", string selectedItemId = "")
     {
         var locations = context.Locations
-        .Where(l => l.IsActive)
-        .OrderBy(l => l.Name)
-        .ToList();
+            .Where(l => l.IsActive)
+            .OrderBy(l => l.Name)
+            .ToList();
 
         var placeholderOption = new SelectListItem
         {
             Value = "",
-            Text = "Selecciona la sede",
+            Text = placeHolder,
         };
 
-        ViewBag.Locations = new SelectList(locations, "Id", "Name")
-        .Prepend(placeholderOption);
-    }
-
-
-
-    private void LoadCategories()
-    {
-        var categories = context.Categories.OrderBy(c => c.Name).ToList();
-        var placeholderOption = new SelectListItem
-        {
-            Value = "",
-            Text = "Selecciona la categoría",
-        };
-
-        ViewBag.Categories = new SelectList(categories, "Id", "Name")
-        .Prepend(placeholderOption);
+        ViewBag.Locations = new SelectList(locations, "Id", "Name", selectedItemId)
+            .Prepend(placeholderOption);
     }
 
     // TODO (issue #15): Create, Edit, Save y Delete con su vista Form (las vistas, en la issue #16)

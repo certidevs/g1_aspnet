@@ -405,7 +405,7 @@ public static class DbInitializer
                 },
                 new ClothingItem
                 {
-                    Name = "Americana negra de Mario",
+                    Name = "Camisa azul de vestir",
                     Description = "Camisa de vestir de manga larga.",
                     Color = ClothingColor.Blue,
                     Material = ClothingMaterial.Cotton,

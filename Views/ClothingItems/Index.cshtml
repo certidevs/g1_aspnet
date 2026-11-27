@@ -1,3 +1,4 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @model List<ClothingItem>
 @{
     ViewData["Title"] = "Vestuario";
@@ -25,6 +26,31 @@
             <label for="search" class="form-label">Buscar</label>
             <input id="search" name="search" value="@ViewBag.Search" class="form-control"
                    placeholder="Nombre de la prenda" />
+        </div>
+        <div class="col-md">
+            <label class="form-label" for="categoryId">Categoría</label>
+            <select class="form-select" name="categoryId" asp-items="ViewBag.Categories"></select>
+        </div>
+        <div class="col-md">
+            PlaceHolder Select Tallas
+        </div>
+        <div class="col-md">
+            <label class="form-label" for="color">Color</label>
+            <select class="form-select" name="color" asp-items="Html.GetEnumSelectList<ClothingColor>()">
+                <option value="">Selecciona el color</option>
+            </select>
+            @ViewBag.color
+        </div>
+        <div class="col-md">
+            <label class="form-label" for="status">Estado</label>
+            <select class="form-select" name="status" asp-items="Html.GetEnumSelectList<ItemStatus>()">
+                <option value="">Selecciona el estado de la prenda</option>
+            </select>
+            @ViewBag.status
+        </div>
+        <div class="col-md">
+            <label class="form-label" for="locationId">Sede</label>
+            <select class="form-select" name="locationId" asp-items="ViewBag.Locations"></select>
         </div>
         <div class="col-md-auto"><button class="btn btn-primary" type="submit">Buscar</button></div>
     </div>
